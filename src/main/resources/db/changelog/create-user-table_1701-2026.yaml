@@ -1,0 +1,265 @@
+databaseChangeLog:
+  - changeSet:
+      id: ca544623-262e-4423-a493-c2b30fa58688
+      author: luannv
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: full_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: address
+                  type: varchar(255)
+
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+
+              - column:
+                  name: gender
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: "ref MASTER_DICTIONARY, category='gender'"
+
+              - column:
+                  name: user_status
+                  type: VARCHAR(30)
+                  defaultValue: PENDING_VERIFICATION
+
+              # ========== BASE ENTITY FIELDS ==========
+              - column:
+                  name: created_by
+                  type: varchar(50)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+              - column:
+                  name: updated_date
+                  type: datetime
+
+              # fk fields
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_users_role
+  # create users
+  - changeSet:
+      id: 75149bbb-9d70-49c6-bbec-a6c1a2581037
+      author: luannv
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: e21b31c7-4254-4b82-a6ed-792573cb7005
+              - column:
+                  name: username
+                  value: sysadmin
+              - column:
+                  name: password
+                  # pwd: sysadmin
+                  value: $2a$10$QsxsuUD/z2hipUg1jeTY7e4FcU/GJK1vnmUvJ49B5cNF9LjKiU.cW
+              - column:
+                  name: full_name
+                  value: "System Administrator"
+              - column:
+                  name: address
+                  value: "Hanoi"
+              - column:
+                  name: email
+                  value: "sysadmin@lutaco.domain.local"
+              - column:
+                  name: gender
+                  value: MALE
+              - column:
+                  name: user_status
+                  value: ACTIVE
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+              - column:
+                  name: role_id
+                  valueNumeric: 1
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: f7b3ada0-8505-4e95-a245-fe90520c4351
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  # admin
+                  value: $2a$12$PJEaNTjra11iQjZ2PfuD6elxQmvDGbprat7rR6Gx5y9ItlOrEdLey
+              - column:
+                  name: full_name
+                  value: "Administrator"
+              - column:
+                  name: address
+                  value: "Hanoi"
+              - column:
+                  name: email
+                  value: "admin@lutaco.domain.local"
+              - column:
+                  name: gender
+                  value: MALE
+              - column:
+                  name: user_status
+                  value: ACTIVE
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+              - column:
+                  name: role_id
+                  valueNumeric: 2  # ADMIN = 2
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 7a620c3a-e268-49d8-bd52-11ca96833549
+              - column:
+                  name: username
+                  value: user
+              - column:
+                  name: password
+                  # user
+                  value: $2a$12$eGjh2gkKngS.q8NiNKgLCOzanwDyGsdsuhutiVevTfn..GPLNVsjq
+              - column:
+                  name: full_name
+                  value: "Normal User"
+              - column:
+                  name: address
+                  value: "Hanoi"
+              - column:
+                  name: email
+                  value: "user@lutaco.domain.local"
+              - column:
+                  name: gender
+                  value: FEMALE
+              - column:
+                  name: user_status
+                  value: ACTIVE
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+              - column:
+                  name: role_id
+                  valueNumeric: 3  # USER = 3
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 5845c7cd-53b7-4959-abed-1b37be71592d
+              - column:
+                  name: username
+                  value: premuser
+              - column:
+                  name: password
+                  # premuser
+                  value: $2a$12$46Zho9pJcdXxJBrZXtZx/O5CiHsm5oBTmE8MZICmPpiEnjb6JXJje
+              - column:
+                  name: full_name
+                  value: "Premium User"
+              - column:
+                  name: address
+                  value: "Hanoi"
+              - column:
+                  name: email
+                  value: "premuser@lutaco.domain.local"
+              - column:
+                  name: gender
+                  value: FEMALE
+              - column:
+                  name: user_status
+                  value: ACTIVE
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+              - column:
+                  name: role_id
+                  valueNumeric: 4  # PREMIUM_USER = 4
+

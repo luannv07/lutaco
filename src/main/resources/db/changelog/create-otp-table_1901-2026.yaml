@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1bc2acdb-bd1f-4aca-a1ae-59064d0a785d
+      author: luannv
+      changes:
+        - createTable:
+            tableName: otps
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: char(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: otp_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: "OTP for REGISTER, LOGIN..."
+              - column:
+                  name: expiry_time
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: char(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_resend_count
+                  type: integer
+                  defaultValueNumeric: 5
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_attempt
+                  type: integer
+                  defaultValueNumeric: 5
+                  constraints:
+                    nullable: false
+              - column:
+                  name: verified_at
+                  type: datetime
+
+        - addUniqueConstraint:
+            tableName: otps
+            constraintName: uk_otp_user_id_otp_type
+            columnNames: user_id, otp_type
+        - addForeignKeyConstraint:
+            onDelete: cascade
+            baseTableName: otps
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_otps_user
+        # cách này là viết sql thuần để tạo constraint, các bảng sau sẽ thử trải nghiệm những cái có sẵn
+        - sql:
+            sql: |
+              alter table otps
+              add constraint chk_otps_otp_type
+              check (otp_type in (
+                'LOGIN',
+                'REGISTER',
+                'FORGOT_PASSWORD'
+              ));

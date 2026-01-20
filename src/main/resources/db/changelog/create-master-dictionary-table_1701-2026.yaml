@@ -1,0 +1,151 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5dbbb855-3e1e-4228-8d3a-c0076b178e07
+      author: luannv
+      changes:
+        - createTable:
+            tableName: master_dictionary
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: code
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: value
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+
+              - column:
+                  name: is_active
+                  type: TINYINT(1)
+                  defaultValueNumeric: 1
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+              - column:
+                  name: updated_date
+                  type: datetime
+
+        - addUniqueConstraint:
+            tableName: master_dictionary
+            columnNames: category, code
+            constraintName: uk_master_dictionary_category_code
+  - changeSet:
+      id: 6b305440-fa5a-485e-ba0b-1222bceabf8f
+      author: luannv
+      changes:
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: GENDER }
+              - column: { name: code, value: MALE }
+              - column: { name: value, value: Nam }
+              - column: { name: description, value: Giới tính nam }
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: GENDER }
+              - column: { name: code, value: FEMALE }
+              - column: { name: value, value: Nữ }
+              - column: { name: description, value: Giới tính nữ }
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: PENDING_VERIFICATION }
+              - column: { name: value, value: Chưa xác thực }
+              - column: { name: description, value: Tài khoản chưa xác thực email }
+              - column: { name: created_by, value: system }
+              - column: { name: created_date, valueDate: current_timestamp }
+              - column: { name: updated_by, value: system }
+              - column: { name: updated_date, valueDate: current_timestamp }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: ACTIVE }
+              - column: { name: value, value: Hoạt động }
+              - column: { name: description, value: Tài khoản đang hoạt động }
+              - column: { name: created_by, value: system }
+              - column: { name: created_date, valueDate: current_timestamp }
+              - column: { name: updated_by, value: system }
+              - column: { name: updated_date, valueDate: current_timestamp }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: DISABLED_BY_USER }
+              - column: { name: value, value: Ngưng hoạt động }
+              - column: { name: description, value: Người dùng tự vô hiệu hóa tài khoản }
+              - column: { name: created_by, value: system }
+              - column: { name: created_date, valueDate: current_timestamp }
+              - column: { name: updated_by, value: system }
+              - column: { name: updated_date, valueDate: current_timestamp }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: BANNED }
+              - column: { name: value, value: Bị khóa }
+              - column: { name: description, value: Tài khoản bị quản trị viên khóa }
+              - column: { name: created_by, value: system }
+              - column: { name: created_date, valueDate: current_timestamp }
+              - column: { name: updated_by, value: system }
+              - column: { name: updated_date, valueDate: current_timestamp }

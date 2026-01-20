@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05806be3-8edf-4c08-98b9-301ac0ba0e6b
+      author: luannv
+      changes:
+        - sql:
+            sql: |
+              alter table users
+              add constraint chk_user_status
+              check (user_status in ('PENDING_VERIFICATION', 'ACTIVE', 'DISABLED_BY_USER', 'BANNED'))

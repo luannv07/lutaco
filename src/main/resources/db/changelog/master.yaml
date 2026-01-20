@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/create-role-table_1701-2026.yaml
+  - include:
+      file: db/changelog/create-user-table_1701-2026.yaml
+  - include:
+      file: db/changelog/create-master-dictionary-table_1701-2026.yaml
+  - include:
+      file: db/changelog/create-constraint-user_1701-2026.yaml
+  - include:
+      file: db/changelog/create-invalidated-token-table_1701-2026.yaml
+  - include:
+      file: db/changelog/create-refresh-token-table_1801-2026.yaml
+  - include:
+      file: db/changelog/create-otp-table_1901-2026.yaml

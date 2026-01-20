@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3a3b886b-e473-4a31-8d93-181fdd85ff88
+      author: luannv
+      changes:
+        - createTable:
+            tableName: invalidated_tokens
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: jti
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: expiry_time
+                  type: datetime
+
+        - createIndex:
+            tableName: invalidated_tokens
+            indexName: idx_invalidated_token_expiry_date
+            columns:
+              - column:
+                  name: expiry_time

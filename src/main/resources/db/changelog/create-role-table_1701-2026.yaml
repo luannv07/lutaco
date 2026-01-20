@@ -1,0 +1,128 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1d097229-854c-4494-95c3-dcafd0fd8de7
+      author: luannv
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: varchar(255)
+              # ========== BASE ENTITY FIELDS ==========
+              - column:
+                  name: created_by
+                  type: varchar(50)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+              - column:
+                  name: updated_date
+                  type: datetime
+
+  # create roles
+  - changeSet:
+      id: 260fcfe7-ba3f-4b32-8db2-35fd0f01a661
+      author: luannv
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: SYS_ADMIN
+              - column:
+                  name: description
+                  value: "Quyền quản trị hệ thống cao nhất"
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ADMIN
+              - column:
+                  name: description
+                  value: "Quyền quản trị hệ thống"
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: USER
+              - column:
+                  name: description
+                  value: "Người dùng bình thường"
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: PREMIUM_USER
+              - column:
+                  name: description
+                  value: "Người dùng cao cấp, có thêm quyền đặc biệt"
+              - column:
+                  name: created_by
+                  value: system
+              - column:
+                  name: created_date
+                  valueDate: current_timestamp
+              - column:
+                  name: updated_by
+                  value: system
+              - column:
+                  name: updated_date
+                  valueDate: current_timestamp
