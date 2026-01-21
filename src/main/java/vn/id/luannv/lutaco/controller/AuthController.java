@@ -113,7 +113,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 BaseResponse.success(
                         null,
-                        MessageKeyConst.Success.SENT
+                        MessageKeyConst.Success.SUCCESS
                 )
         );
     }
