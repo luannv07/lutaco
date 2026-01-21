@@ -62,8 +62,17 @@ public class OtpServiceImpl implements OtpService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
 
+        otpRepository.findSnapshot(user.getId(), otpType).ifPresent(otp -> {
+            LocalDateTime lastSendTime =
+                    otp.getExpiryTime()
+                            .minusMinutes(expirationTime / 60000);
+
+            if (lastSendTime.plusMinutes(maxDelay / 60000).isAfter(LocalDateTime.now()))
+                throw new BusinessException(ErrorCode.OTP_SEND_PREVENT);
+        });
+
         String newCode = NumberUtils.generateOtp();
-        LocalDateTime newExpiry = LocalDateTime.now().plusMinutes(expirationTime);
+        LocalDateTime newExpiry = LocalDateTime.now().plusMinutes(expirationTime / 60000);
 
         otpRepository.insertIfNotExists(
                 newCode,
@@ -74,10 +83,7 @@ public class OtpServiceImpl implements OtpService {
                 maxAttempt
         );
 
-        if (newExpiry.plusMinutes(-1 * expirationTime).plusMinutes(maxDelay).isBefore(LocalDateTime.now()))
-            throw new BusinessException(ErrorCode.OTP_SEND_PREVENT);
-
-        if (newExpiry.plusMinutes(-1 * expirationTime).plusMinutes(maxTimeAttemptBlocked).isBefore(LocalDateTime.now()))
+        if (newExpiry.minusMinutes(expirationTime / 60000).plusMinutes(maxTimeAttemptBlocked / 60000).isBefore(LocalDateTime.now()))
             otpRepository.resetMaxResendCount(user.getId(), otpType.name(), maxResendCount);
 
         int updated = otpRepository.resendOtp(
@@ -124,7 +130,7 @@ public class OtpServiceImpl implements OtpService {
         if (otp.getVerifiedAt() != null) {
             user.setUserStatus(UserStatus.ACTIVE);
             userRepository.save(user);
-            return;
+            throw new BusinessException(ErrorCode.OTP_ALREADY_VERIFIED);
         }
 
         if (otp.getExpiryTime().isBefore(LocalDateTime.now()))
