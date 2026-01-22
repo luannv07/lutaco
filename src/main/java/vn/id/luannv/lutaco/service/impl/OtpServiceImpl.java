@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +22,7 @@ import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.NumberUtils;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -55,24 +57,36 @@ public class OtpServiceImpl implements OtpService {
     @Value("${otp.max-time-attemp-blocked}")
     long maxTimeAttemptBlocked;
 
+    @PostConstruct
+    public void init() {
+        expirationTime = expirationTime > 0 ? expirationTime / 60000 : 5;
+        maxDelay = maxDelay > 0 ? maxDelay / 60000 : 1;
+        maxTimeAttemptBlocked = maxTimeAttemptBlocked > 0 ? maxTimeAttemptBlocked / 60000 : 30;
+        maxAttempt = maxAttempt > 0 ? maxAttempt / 60000 : 5;
+        maxResendCount = maxResendCount > 0 ? maxResendCount / 60000 : 5;
+    }
+
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void sendOtp(String email, OtpType otpType) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+        LocalDateTime now = LocalDateTime.now();
 
         otpRepository.findSnapshot(user.getId(), otpType).ifPresent(otp -> {
             LocalDateTime lastSendTime =
                     otp.getExpiryTime()
-                            .minusMinutes(expirationTime / 60000);
+                            .minusMinutes(expirationTime);
 
-            if (lastSendTime.plusMinutes(maxDelay / 60000).isAfter(LocalDateTime.now()))
+            Duration duration = Duration.between(lastSendTime, now);
+
+            if (!duration.isNegative() && duration.compareTo(Duration.ofMinutes(maxDelay)) < 0)
                 throw new BusinessException(ErrorCode.OTP_SEND_PREVENT);
         });
 
         String newCode = NumberUtils.generateOtp();
-        LocalDateTime newExpiry = LocalDateTime.now().plusMinutes(expirationTime / 60000);
+        LocalDateTime newExpiry = LocalDateTime.now().plusMinutes(expirationTime);
 
         otpRepository.insertIfNotExists(
                 newCode,
@@ -83,7 +97,7 @@ public class OtpServiceImpl implements OtpService {
                 maxAttempt
         );
 
-        if (newExpiry.minusMinutes(expirationTime / 60000).plusMinutes(maxTimeAttemptBlocked / 60000).isBefore(LocalDateTime.now()))
+        if (newExpiry.minusMinutes(expirationTime).plusMinutes(maxTimeAttemptBlocked).isBefore(LocalDateTime.now()))
             otpRepository.resetMaxResendCount(user.getId(), otpType.name(), maxResendCount);
 
         int updated = otpRepository.resendOtp(
@@ -93,10 +107,8 @@ public class OtpServiceImpl implements OtpService {
                 otpType.name()
         );
 
-
-        if (updated == 0) {
+        if (updated == 0)
             throw new BusinessException(ErrorCode.OTP_SEND_LIMIT_EXCEEDED);
-        }
 
         String subject = "Mã OTP | " + otpType.name()
                 + " | #" + UUID.randomUUID().toString()
