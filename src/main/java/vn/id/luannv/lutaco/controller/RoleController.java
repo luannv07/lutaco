@@ -2,12 +2,10 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +27,7 @@ public class RoleController {
 
     @GetMapping
     @Operation(summary = "Tìm kiếm danh sách role")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
     public ResponseEntity<BaseResponse<Page<Role>>> getAllRoles(@ModelAttribute RoleFilterRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -41,7 +39,7 @@ public class RoleController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết role theo id")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
     public ResponseEntity<BaseResponse<Role>> getRoleById(@PathVariable Integer id) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -53,7 +51,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Cập nhật role")
-    @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Role>> updateRole(
             @PathVariable Integer id,
             @RequestBody RoleUpdateRequest request

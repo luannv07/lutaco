@@ -4,25 +4,24 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
+import vn.id.luannv.lutaco.dto.request.LoginRequest;
 import vn.id.luannv.lutaco.dto.request.SendOtpRequest;
 import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
-import vn.id.luannv.lutaco.dto.request.LoginRequest;
 import vn.id.luannv.lutaco.dto.request.VerifyOtpRequest;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.AuthService;
-import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.JwtUtils;
 
@@ -60,6 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<Void>> logout(HttpServletRequest req) {
         String token = JwtUtils.resolveToken(req);
 
@@ -78,6 +78,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
+    @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(HttpServletRequest req) {
         String token = JwtUtils.resolveToken(req);
 
@@ -97,6 +98,7 @@ public class AuthController {
             summary = "API dùng để send/resend OTP, có giới hạn số lần yêu cầu"
     )
     @PostMapping("/send-otp")
+    @PreAuthorize("@securityPermission.isPendingVerification()")
     public ResponseEntity<BaseResponse<Void>> resendOtp(@Valid @RequestBody SendOtpRequest request) {
         otpService.sendOtp(request.getEmail(), request.getOtpType());
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -108,6 +110,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
+    @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<Void>> resendOtp(@Valid @RequestBody VerifyOtpRequest request) {
         otpService.verifyOtp(request);
         return ResponseEntity.status(HttpStatus.OK).body(

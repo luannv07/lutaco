@@ -2,10 +2,10 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +43,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @GetMapping("/{category}")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
     public ResponseEntity<BaseResponse<List<MasterDictionaryDto>>> getByCategory(
             @Parameter(
                     description = "Nhóm dữ liệu (GENDER, USER_STATUS, ...)",
@@ -68,6 +69,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @GetMapping("/{category}/{code}")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> getByCategoryAndCode(
             @Parameter(description = "Nhóm dữ liệu", example = "GENDER", required = true)
             @PathVariable String category,
@@ -92,7 +94,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @PostMapping
-    @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> create(
             @Valid
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -119,7 +121,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> update(
             @Parameter(description = "ID dictionary", example = "1", required = true)
             @PathVariable Integer id,

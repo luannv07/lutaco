@@ -1,5 +1,8 @@
 package vn.id.luannv.lutaco.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Parameter;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
@@ -32,7 +31,7 @@ public class UserController {
     UserService userService;
 
     @Operation(summary = "Lấy danh sách người dùng", description = "Tìm kiếm và phân trang danh sách người dùng")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<BaseResponse<Page<UserResponse>>> getUsers(
             @Parameter(description = "Các tiêu chí lọc người dùng") @ModelAttribute UserFilterRequest request) {
@@ -45,7 +44,7 @@ public class UserController {
 
     @Operation(summary = "Lấy thông tin chi tiết người dùng", description = "Lấy chi tiết người dùng theo ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or #id == authentication.principal.id and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<UserResponse>> getUser(
             @Parameter(description = "ID người dùng cần lấy") @PathVariable String id
     ) {
@@ -58,7 +57,7 @@ public class UserController {
 
     @Operation(summary = "Cập nhật người dùng", description = "Cập nhật thông tin người dùng theo ID")
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("(hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<UserResponse>> update(
             @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id,
             @Valid @RequestBody UserUpdateRequest request
@@ -72,7 +71,7 @@ public class UserController {
 
     @Operation(summary = "Cập nhật quyền người dùng", description = "Cập nhật thông tin người dùng theo ID")
     @PatchMapping("/{id}/role")
-    @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Void>> update(
             @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id,
             @Valid @RequestBody UserRoleRequest request
@@ -87,7 +86,7 @@ public class UserController {
 
     @Operation(summary = "Chỉnh sửa trạng thái người dùng", description = "Chỉnh sửa trạng thái người dùng theo ID")
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)")
     public ResponseEntity<BaseResponse<Void>> updateUserStatus(
             @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id, @RequestBody UserStatusSetRequest request) {
         userService.updateStatus(id, request);
@@ -105,7 +104,7 @@ public class UserController {
     )
     @PatchMapping("/{id}/password")
     @PreAuthorize(
-            "hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id"
+            "(hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
     public ResponseEntity<BaseResponse<Void>> updatePassword(
             @Parameter(description = "ID người dùng cần cập nhật")
