@@ -1,17 +1,12 @@
 package vn.id.luannv.lutaco.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
@@ -25,7 +20,6 @@ import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.UserMapper;
-import vn.id.luannv.lutaco.repository.MasterDictionaryRepository;
 import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.MasterDictionaryService;
@@ -33,7 +27,6 @@ import vn.id.luannv.lutaco.service.UserService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -50,7 +43,6 @@ public class UserServiceImpl implements UserService {
     public UserResponse create(UserCreateRequest request) {return null;}
 
     @Override
-    @Cacheable(value = "user_detail", key = "#id")
     public UserResponse getDetail(String id) {
         log.info("UserServiceImpl getDetail: {}", id);
 
@@ -79,7 +71,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "user_detail", key = "#id")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         log.info("UserServiceImpl update User: {} {}", id, request);
         MasterDictionaryDto dictionaryDto = masterDictionaryService.getByCategoryAndCode(MasterDictionaryType.GENDER.name(), request.getGender());
@@ -97,7 +88,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "user_detail", key = "#id")
     public void updateStatus(String id, UserStatusSetRequest request) {
         log.info("UserServiceImpl updateStatus: {} {}", id, request);
         User user = userRepository.findById(id)
@@ -125,7 +115,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "user_detail", key = "#id")
     public void updateUserRole(String id, UserRoleRequest request) {
         log.info("UserServiceImpl updateUserRole: {}", request);
         // need to update
@@ -141,7 +130,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
     @Override
-    @Cacheable(value = "user_detail", key = "#id")
     public void updatePassword(String id, UpdatePasswordRequest request) {
 
         User user = userRepository.findById(id)

@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +33,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "role_detail", key = "#id", condition = "#id > 0")
     public Role getDetail(Integer id) {
         log.info("RoleServiceImpl getDetail: {}", id);
 
@@ -48,7 +45,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "role_list")
     public Page<Role> search(String name, Integer page, Integer size) {
         log.info("RoleServiceImpl search: name={}", name);
 
@@ -62,7 +58,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CachePut(value = "role_detail", key = "#id", condition = "#id > 0")
     public Role update(Integer id, RoleUpdateRequest request) {
         log.info("RoleServiceImpl update: id={}, request={}", id, request);
 
@@ -79,7 +74,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CachePut(value = "role_detail", key = "#id", condition = "#id > 0")
     public void deleteById(Integer id) {
         log.info("RoleServiceImpl deleteById: {}", id);
 

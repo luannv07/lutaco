@@ -21,6 +21,7 @@ import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.NumberUtils;
+import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -62,8 +63,8 @@ public class OtpServiceImpl implements OtpService {
         expirationTime = expirationTime > 0 ? expirationTime / 60000 : 5;
         maxDelay = maxDelay > 0 ? maxDelay / 60000 : 1;
         maxTimeAttemptBlocked = maxTimeAttemptBlocked > 0 ? maxTimeAttemptBlocked / 60000 : 30;
-        maxAttempt = maxAttempt > 0 ? maxAttempt / 60000 : 5;
-        maxResendCount = maxResendCount > 0 ? maxResendCount / 60000 : 5;
+        maxAttempt = maxAttempt > 0 ? maxAttempt : 5;
+        maxResendCount = maxResendCount > 0 ? maxResendCount : 5;
     }
 
     @Override
@@ -72,6 +73,10 @@ public class OtpServiceImpl implements OtpService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+
+        if (!user.getUsername().equalsIgnoreCase(SecurityUtils.getCurrentUsername()))
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+
         LocalDateTime now = LocalDateTime.now();
 
         otpRepository.findSnapshot(user.getId(), otpType).ifPresent(otp -> {
@@ -88,7 +93,7 @@ public class OtpServiceImpl implements OtpService {
         String newCode = NumberUtils.generateOtp();
         LocalDateTime newExpiry = LocalDateTime.now().plusMinutes(expirationTime);
 
-        otpRepository.insertIfNotExists(
+        int affected = otpRepository.insertIfNotExists(
                 newCode,
                 otpType.name(),
                 newExpiry,
@@ -97,18 +102,23 @@ public class OtpServiceImpl implements OtpService {
                 maxAttempt
         );
 
-        if (newExpiry.minusMinutes(expirationTime).plusMinutes(maxTimeAttemptBlocked).isBefore(LocalDateTime.now()))
-            otpRepository.resetMaxResendCount(user.getId(), otpType.name(), maxResendCount);
+        log.info("affected: {}", affected);
 
-        int updated = otpRepository.resendOtp(
-                newCode,
-                newExpiry,
-                user.getId(),
-                otpType.name()
-        );
+        if (affected == 0) {
+            if (newExpiry.minusMinutes(expirationTime).plusMinutes(maxTimeAttemptBlocked).isBefore(LocalDateTime.now()))
+                otpRepository.resetMaxResendCount(user.getId(), otpType.name(), maxResendCount);
 
-        if (updated == 0)
-            throw new BusinessException(ErrorCode.OTP_SEND_LIMIT_EXCEEDED);
+            int updated = otpRepository.resendOtp(
+                    newCode,
+                    newExpiry,
+                    user.getId(),
+                    otpType.name()
+            );
+
+            if (updated == 0)
+                throw new BusinessException(ErrorCode.OTP_SEND_LIMIT_EXCEEDED);
+        }
+
 
         String subject = "Mã OTP | " + otpType.name()
                 + " | #" + UUID.randomUUID().toString()
@@ -134,14 +144,26 @@ public class OtpServiceImpl implements OtpService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
 
-        otpRepository.verifyOtpAtomic(request.getCode(), user.getId(), request.getOtpType().name());
+        if (!user.getUsername().equalsIgnoreCase(SecurityUtils.getCurrentUsername()))
+            throw new BusinessException(ErrorCode.FORBIDDEN);
 
         Otp otp = otpRepository.findSnapshot(user.getId(), request.getOtpType())
                 .orElseThrow(() -> new BusinessException(ErrorCode.OTP_SEND_FAILED));
+        final int attempt = otp.getMaxAttempt();
 
-        if (otp.getVerifiedAt() != null) {
+        otpRepository.verifyOtpAtomic(request.getCode(), user.getId(), request.getOtpType().name());
+
+        Otp afterQuery = otpRepository.findSnapshot(user.getId(), request.getOtpType())
+                .orElseThrow(() -> new BusinessException(ErrorCode.OTP_SEND_FAILED));
+
+        log.info("attempt and after query attempt: {} {}", attempt, afterQuery.getMaxAttempt());
+        if (attempt == afterQuery.getMaxAttempt() && afterQuery.getMaxAttempt() != 0) {
             user.setUserStatus(UserStatus.ACTIVE);
             userRepository.save(user);
+            return;
+        }
+
+        if (otp.getVerifiedAt() != null) {
             throw new BusinessException(ErrorCode.OTP_ALREADY_VERIFIED);
         }
 

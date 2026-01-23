@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.entity.InvalidatedToken;
@@ -27,8 +26,8 @@ public class InvalidatedTokenServiceImpl implements InvalidatedTokenService {
     }
 
     @Override
-    @Cacheable(value = "invalidated_token", key = "#jti")
     public boolean existByJti(String jti) {
+        log.info("existByJti {} is {}", jti, invalidatedTokenRepository.existsByJti(jti));
         return invalidatedTokenRepository.existsByJti(jti);
     }
 

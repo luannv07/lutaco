@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface OtpRepository extends JpaRepository<Otp, Integer> {
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
             UPDATE otps
             SET
@@ -59,7 +59,7 @@ public interface OtpRepository extends JpaRepository<Otp, Integer> {
                 :userId, :maxResend, :maxAttempt
             )
             """, nativeQuery = true)
-    void insertIfNotExists(@Param("code") String code,
+    int insertIfNotExists(@Param("code") String code,
                            @Param("otpType") String otpType,
                            @Param("expiryTime") LocalDateTime expiryTime,
                            @Param("userId") String userId,

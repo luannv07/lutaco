@@ -3,8 +3,6 @@ package vn.id.luannv.lutaco.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
 import vn.id.luannv.lutaco.entity.MasterDictionary;
@@ -15,7 +13,6 @@ import vn.id.luannv.lutaco.repository.MasterDictionaryRepository;
 import vn.id.luannv.lutaco.service.MasterDictionaryService;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +23,6 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
     MasterDictionaryMapper mapper;
 
     @Override
-    @Cacheable(value = "master_dict_category", key = "#category")
     public List<MasterDictionaryDto> getByCategory(String category) {
         return mapper.toDtoList(
                 repository.findByCategoryAndIsActiveTrue(category)
@@ -34,7 +30,6 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
     }
 
     @Override
-    @Cacheable(value = "master_dict_category_and_code", key = "#category + '-' + #code")
     public MasterDictionaryDto getByCategoryAndCode(String category, String code) {
         MasterDictionary entity = repository
                 .findByCategoryAndCode(category.toUpperCase(), code.toUpperCase())
@@ -50,7 +45,6 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
     }
 
     @Override
-    @CachePut(value = "master_dict_category_and_code", key = "#dto.category + '-' + #dto.code")
     public MasterDictionaryDto update(Integer id, MasterDictionaryDto dto) {
         MasterDictionary entity = repository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
