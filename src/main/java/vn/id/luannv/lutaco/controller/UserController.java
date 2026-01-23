@@ -31,7 +31,7 @@ public class UserController {
     UserService userService;
 
     @Operation(summary = "Lấy danh sách người dùng", description = "Tìm kiếm và phân trang danh sách người dùng")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<BaseResponse<Page<UserResponse>>> getUsers(
             @Parameter(description = "Các tiêu chí lọc người dùng") @ModelAttribute UserFilterRequest request) {
@@ -44,7 +44,7 @@ public class UserController {
 
     @Operation(summary = "Lấy thông tin chi tiết người dùng", description = "Lấy chi tiết người dùng theo ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or #id == authentication.principal.id and @securityPermission.isActive()")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<UserResponse>> getUser(
             @Parameter(description = "ID người dùng cần lấy") @PathVariable String id
     ) {
@@ -57,7 +57,7 @@ public class UserController {
 
     @Operation(summary = "Cập nhật người dùng", description = "Cập nhật thông tin người dùng theo ID")
     @PutMapping("/{id}")
-    @PreAuthorize("(hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()")
+    @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<UserResponse>> update(
             @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id,
             @Valid @RequestBody UserUpdateRequest request
@@ -71,7 +71,7 @@ public class UserController {
 
     @Operation(summary = "Cập nhật quyền người dùng", description = "Cập nhật thông tin người dùng theo ID")
     @PatchMapping("/{id}/role")
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Void>> update(
             @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id,
             @Valid @RequestBody UserRoleRequest request
@@ -86,7 +86,7 @@ public class UserController {
 
     @Operation(summary = "Chỉnh sửa trạng thái người dùng", description = "Chỉnh sửa trạng thái người dùng theo ID")
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)")
     public ResponseEntity<BaseResponse<Void>> updateUserStatus(
             @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id, @RequestBody UserStatusSetRequest request) {
         userService.updateStatus(id, request);
@@ -104,7 +104,7 @@ public class UserController {
     )
     @PatchMapping("/{id}/password")
     @PreAuthorize(
-            "(hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
+            "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
     public ResponseEntity<BaseResponse<Void>> updatePassword(
             @Parameter(description = "ID người dùng cần cập nhật")

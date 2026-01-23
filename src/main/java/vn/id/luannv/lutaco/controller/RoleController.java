@@ -27,7 +27,7 @@ public class RoleController {
 
     @GetMapping
     @Operation(summary = "Tìm kiếm danh sách role")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<Page<Role>>> getAllRoles(@ModelAttribute RoleFilterRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -39,7 +39,7 @@ public class RoleController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết role theo id")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<Role>> getRoleById(@PathVariable Integer id) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -51,7 +51,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Cập nhật role")
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Role>> updateRole(
             @PathVariable Integer id,
             @RequestBody RoleUpdateRequest request

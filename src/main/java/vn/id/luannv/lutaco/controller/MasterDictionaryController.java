@@ -43,7 +43,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @GetMapping("/{category}")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<List<MasterDictionaryDto>>> getByCategory(
             @Parameter(
                     description = "Nhóm dữ liệu (GENDER, USER_STATUS, ...)",
@@ -69,7 +69,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @GetMapping("/{category}/{code}")
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> getByCategoryAndCode(
             @Parameter(description = "Nhóm dữ liệu", example = "GENDER", required = true)
             @PathVariable String category,
@@ -94,7 +94,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @PostMapping
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> create(
             @Valid
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -121,7 +121,7 @@ public class MasterDictionaryController {
             content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
     )
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> update(
             @Parameter(description = "ID dictionary", example = "1", required = true)
             @PathVariable Integer id,
