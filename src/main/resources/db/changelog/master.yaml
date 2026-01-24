@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/create-refresh-token-table_1801-2026.yaml
   - include:
       file: db/changelog/create-otp-table_1901-2026.yaml
+  - include:
+      file: db/changelog/create-pay-os-table_2401-2026.yaml

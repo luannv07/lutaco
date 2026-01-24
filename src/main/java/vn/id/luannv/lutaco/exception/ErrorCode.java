@@ -54,8 +54,14 @@ public enum ErrorCode {
     OTP_EXPIRED("otp.expired", HttpStatus.BAD_REQUEST),
     OTP_MAX_ATTEMPT("otp.maxAttempt", HttpStatus.BAD_REQUEST),
     OTP_ALREADY_VERIFIED("otp.alreadyVerified", HttpStatus.BAD_REQUEST),
-    ;
 
+    // PAYMENT
+    PAYMENT_PROVIDER_ERROR("payment.provider.error", HttpStatus.BAD_REQUEST),
+    // cái này là xử lí chung của đống error code trả về từ payos api
+    PAYMENT_SYSTEM_ERROR("payment.system.error", HttpStatus.BAD_REQUEST),
+    EXTERNAL_SERVICE_UNAVAILABLE("external.service.unavailable", HttpStatus.SERVICE_UNAVAILABLE),
+    PAYMENT_PROVIDER_UNAVAILABLE("payment.provider.unavailable", HttpStatus.SERVICE_UNAVAILABLE),
+    INVALID_SIGNATURE("invalid.signature", HttpStatus.BAD_REQUEST);
     String message;
     HttpStatus httpStatus;
 }

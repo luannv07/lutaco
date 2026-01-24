@@ -1,0 +1,103 @@
+databaseChangeLog:
+  - changeSet:
+      id: c8a6d26d-1cdf-40af-9a2b-fe7f707c975f
+      author: luannv
+      changes:
+        - createTable:
+            tableName: pay_os
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: order_code
+                  type: integer
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: payment_link_id
+                  type: varchar(64)
+                  constraints:
+                    unique: true
+
+              - column:
+                  name: user_id
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: amount
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: currency
+                  type: varchar(10)
+                  defaultValue: VND
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: varchar(255)
+
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+
+              # ===== base entity fields =====
+              - column:
+                  name: created_by
+                  type: varchar(100)
+
+              - column:
+                  name: created_date
+                  type: datetime
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_by
+                  type: varchar(100)
+
+              - column:
+                  name: updated_date
+                  type: datetime
+
+              - column:
+                  name: paid_at
+                  type: datetime
+
+        # ===== indexes =====
+        - createIndex:
+            tableName: pay_os
+            indexName: idx_pay_os_user
+            columns:
+              - column:
+                  name: user_id
+
+        # ===== foreign key =====
+        - addForeignKeyConstraint:
+            baseTableName: pay_os
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_pay_os_user

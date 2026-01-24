@@ -20,7 +20,7 @@ import vn.id.luannv.lutaco.repository.OtpRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.OtpService;
-import vn.id.luannv.lutaco.util.NumberUtils;
+import vn.id.luannv.lutaco.util.RandomUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.Duration;
@@ -90,7 +90,7 @@ public class OtpServiceImpl implements OtpService {
                 throw new BusinessException(ErrorCode.OTP_SEND_PREVENT);
         });
 
-        String newCode = NumberUtils.generateOtp();
+        String newCode = RandomUtils.generateOtp();
         LocalDateTime newExpiry = LocalDateTime.now().plusMinutes(expirationTime);
 
         int affected = otpRepository.insertIfNotExists(
