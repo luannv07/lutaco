@@ -28,6 +28,17 @@ services:
     networks:
       - backend-net
 
+  ngrok:
+    image: ngrok/ngrok:3
+    container_name: ngrok
+    restart: unless-stopped
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command: http host.docker.internal:8080
+    networks:
+      - backend-net
+    ports:
+      - "4040:4040"
 volumes:
   mysql_data:
   redis_data:

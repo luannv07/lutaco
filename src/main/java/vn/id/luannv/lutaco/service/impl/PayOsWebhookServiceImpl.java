@@ -13,6 +13,7 @@ import vn.id.luannv.lutaco.entity.PayOS;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.PaymentStatus;
+import vn.id.luannv.lutaco.enumerate.PaymentType;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -44,7 +45,10 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
 
         PayOS payOS = payOSRepository.getPayOSByOrderCode(request.getData().getOrderCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
-        if (payOS.getStatus() == PaymentStatus.PAID)
+
+        int updatedRows = payOSRepository
+                .updatePayOsStatus(PaymentStatus.PAID, PaymentType.UPGRADE_PREMIUM, payOS.getOrderCode(), PaymentStatus.PENDING);
+        if (updatedRows == 0)
             return;
 
         User user = userRepository.findById(payOSRepository.getUserIdByOrderCode(payOS.getOrderCode()))
@@ -60,7 +64,6 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
         }
 
         userRepository.save(user);
-        payOSRepository.save(payOS);
     }
 }
 
