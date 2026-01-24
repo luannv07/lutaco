@@ -10,6 +10,7 @@ public class SecurityConstants {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/webjars/**",
-            "/test/**"
+            "/test/**",
+            "/webhook/payos"
     );
 }

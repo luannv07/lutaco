@@ -2,8 +2,6 @@ package vn.id.luannv.lutaco.exception;
 
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.TypeMismatchException;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -11,21 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -169,6 +163,29 @@ public class GlobalExceptionHandler {
                         ErrorCode.SYSTEM_ERROR
                 )
         );
+    }
+
+    @ExceptionHandler(SocketException.class)
+    public ResponseEntity<BaseResponse<Void>> handleSocketException(SocketException ex) {
+        log.warn("[NETWORK] Socket error: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(BaseResponse.error(
+                        Map.of(),
+                        ErrorCode.EXTERNAL_SERVICE_UNAVAILABLE
+                ));
+    }
+
+    @ExceptionHandler(WebClientRequestException.class)
+    public ResponseEntity<BaseResponse<Void>> handleWebClientRequestException(WebClientRequestException ex) {
+        log.warn("[PAYMENT] PayOS connection error: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(BaseResponse.error(
+                        Map.of(),
+                        ErrorCode.PAYMENT_PROVIDER_UNAVAILABLE
+                ));
     }
 
 
