@@ -37,11 +37,13 @@ public class PayOSWebhookController {
      * @return trả về một message thành công, hoặc throw nếu như ko validate được signature
      */
     @PostMapping("/webhook/payos")
-    public ResponseEntity<BaseResponse<Void>> handleWebhook(
-            @RequestBody PayOsWebhookRequest request
-    ) {
+    public ResponseEntity<BaseResponse<Void>> handleWebhook(@RequestBody PayOsWebhookRequest request) {
         log.info("handleWebhook received request={}", request);
-        payOsWebhookService.handle(request);
+        try {
+            payOsWebhookService.handle(request);
+        } catch (Exception e) {
+            log.error("handleWebhook exception={}", e.getMessage());
+        }
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success(null, MessageKeyConst.Success.SUCCESS)

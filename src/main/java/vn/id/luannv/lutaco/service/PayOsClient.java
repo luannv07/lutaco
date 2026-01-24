@@ -61,7 +61,7 @@ public class PayOsClient {
 
     @Transactional(dontRollbackOn = BusinessException.class)
     public PayOSResponse createPayment(PaymentType paymentType) {
-        int latestOrderCode = payOSRepository.findFirstByOrderByOrderCodeDesc()
+        Integer latestOrderCode = payOSRepository.findFirstByOrderByOrderCodeDesc()
                 .map(PayOS::getOrderCode)
                 .orElse(0);
         User currentUser = userRepository.findByUsername(SecurityUtils.getCurrentUsername())
@@ -129,15 +129,17 @@ public class PayOsClient {
     }
 
     public void confirmHookUrl(Map<String, Object> hookLink) {
+        hookLink.putIfAbsent("webhookUrl", "");
+
         webClient.post()
                 .uri("confirm-webhook")
                 .bodyValue(hookLink)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, resp ->
-                        resp.bodyToMono(String.class)
+                        resp.bodyToMono(Map.class)
                                 .flatMap(body -> {
                                     log.error("[PAYOS] confirm-webhook response error [body]: {}", body);
-                                    return Mono.error(() -> new BusinessException(ErrorCode.SYSTEM_ERROR));
+                                    return Mono.error(() -> new BusinessException(ErrorCode.SYSTEM_ERROR, body));
                                 })
                 )
                 .bodyToMono(Object.class)
