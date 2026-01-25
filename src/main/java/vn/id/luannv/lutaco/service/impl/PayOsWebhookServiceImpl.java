@@ -37,6 +37,10 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
     @Value("${payment.check-sum-key}")
     String checkSumKey;
 
+    @NonFinal
+    @Value("${payment.amount}")
+    int amount;
+
     @Override
     @Transactional
     public void handle(PayOsWebhookRequest request) {
@@ -46,8 +50,14 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
         PayOS payOS = payOSRepository.getPayOSByOrderCode(request.getData().getOrderCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
+        if (amount != request.getData().getAmount())
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+
         int updatedRows = payOSRepository
-                .updatePayOsStatus(PaymentStatus.PAID, PaymentType.UPGRADE_PREMIUM, payOS.getOrderCode(), PaymentStatus.PENDING);
+                .updatePayOsStatus(PaymentStatus.PAID,
+                        PaymentType.UPGRADE_PREMIUM,
+                        request.getData().getOrderCode(),
+                        PaymentStatus.PENDING);
         if (updatedRows == 0)
             return;
 

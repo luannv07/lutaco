@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.PayOSResponse;
@@ -23,11 +22,23 @@ public class PayOSController {
     PayOsService payOsService;
 
     @PostMapping("/premium-user")
-    public ResponseEntity<BaseResponse<PayOSResponse>> createPayment() {
+    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success(
                                 payOsService.createPayment(PaymentType.UPGRADE_PREMIUM),
+                                MessageKeyConst.Success.CREATED
+                        )
+                );
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize(value = "(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.loggedIn() and @securityPermission.active()")
+    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(@PathVariable String id) {
+        return ResponseEntity.ok()
+                .body(
+                        BaseResponse.success(
+                                payOsService.getDetailPayment(id),
                                 MessageKeyConst.Success.CREATED
                         )
                 );

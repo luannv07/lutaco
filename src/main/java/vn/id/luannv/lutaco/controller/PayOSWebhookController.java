@@ -50,6 +50,14 @@ public class PayOSWebhookController {
                 );
     }
 
+    /**
+     * API này là gián tiếp để gọi đến <a href="https://api-merchant.payos.vn/confirm-webhook">POST [api-merchant.payos.vn/confirm-webhook]</a>
+     * body là một Map với field là: { webhookUrl: link đến url nhận hook từ payos khi có thao tác với bill ck}
+     *
+     * @param confirm body request
+     * @return kết quả thành công và log hiện 1 post từ papyos (log thành công, thất bại kèm mã lỗi + mô tả)
+     * @apiNote Chỉ tài khoản có quyền quản lí hệ thống (SYS_ADMIN) mới có quyền gửi
+     */
     @PostMapping("/api/v1/confirm-webhook")
     @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Void>> handleConfirmWebhook(@RequestBody Map<String, Object> confirm) {

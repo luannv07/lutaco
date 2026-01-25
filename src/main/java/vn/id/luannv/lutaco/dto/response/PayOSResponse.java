@@ -3,16 +3,19 @@ package vn.id.luannv.lutaco.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PayOSResponse {
+public class PayOSResponse<T> {
 
     String code;
     String desc;
-    PayOSData data;
+    T data;
     String signature;
 
     @lombok.Data
@@ -20,7 +23,7 @@ public class PayOSResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public static class PayOSData {
+    public static class PayOSDataCreated {
         String bin;
         String accountNumber;
         String accountName;
@@ -32,6 +35,23 @@ public class PayOSResponse {
         String status;
         String checkoutUrl;
         String qrCode;
+    }
+
+    @lombok.Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class PayOSDataDetail {
+        // id có thể là orderCode hoặc là payLinkOS
+        String id;
+        int orderCode;
+        int amount;
+        int amountPaid;
+        int amountRemaining;
+        String status;
+        Instant createdAt;
+        List<Object> transactions;
     }
 }
 
