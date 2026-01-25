@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -60,7 +61,7 @@ public class PayOsClient {
     }
 
     @Transactional(dontRollbackOn = BusinessException.class)
-    public PayOSResponse createPayment(PaymentType paymentType) {
+    public PayOSResponse<PayOSResponse.PayOSDataCreated> createPayment(PaymentType paymentType) {
         Integer latestOrderCode = payOSRepository.findFirstByOrderByOrderCodeDesc()
                 .map(PayOS::getOrderCode)
                 .orElse(0);
@@ -71,7 +72,7 @@ public class PayOsClient {
         // nếu muốn xử lí lại "not_" thì phải xử lí lại logic phía dưới cùng của hàm
         PayOS payOS = PayOS.builder()
                 .orderCode(latestOrderCode + 1)
-                .description("lutaco " + RandomUtils.randomAlphaNum(12) + " premium")
+                .description("lutaco " + RandomUtils.randomAlphaNum(10) + " premium")
                 .type(paymentType)
                 .user(currentUser)
                 .amount(amount)
@@ -92,8 +93,7 @@ public class PayOsClient {
 
         request.setSignature(signature);
 
-        log.info("PayOsClient createPayment request:{}", request);
-        PayOSResponse response = webClient.post()
+        PayOSResponse<PayOSResponse.PayOSDataCreated> response = webClient.post()
                 .uri("/v2/payment-requests")
                 .bodyValue(request)
                 .retrieve()
@@ -104,28 +104,48 @@ public class PayOsClient {
                                     return Mono.error(() -> new BusinessException(ErrorCode.PAYMENT_PROVIDER_ERROR));
                                 })
                 )
-                .bodyToMono(PayOSResponse.class)
+                .bodyToMono(new ParameterizedTypeReference<PayOSResponse<PayOSResponse.PayOSDataCreated>>() {
+                })
                 .block();
 
-        // trường hợp bị lỗi (chỉ trả về code và desc)
-        if (response != null && response.getData() != null && response.getSignature() != null) {
-            payOS.setPaymentLinkId(response.getData().getPaymentLinkId());
+        if (response != null) {
+            // lỗi (chỉ trả mã lỗi + mô tả)
+            if (response.getData() == null || response.getSignature() == null) {
+                // 231: mã đơn hàng đã tồn tại; cập nhật lại db những mã đơn hàng trên payos đã có, còn lại ko lưu
+                if (response.getCode() != null && response.getCode().equals("231")) {
+                    payOS.setStatus(PaymentStatus.FAILED);
+                    payOSRepository.save(payOS);
+                    throw new BusinessException(ErrorCode.PAYMENT_SYSTEM_ERROR);
+                }
+                PayOSResponse<PayOSResponse.PayOSDataDetail> detail =
+                        getDetailExecute(String.valueOf(payOS.getOrderCode()));
+
+                try {
+                    payOS.setStatus(PaymentStatus.valueOf(detail.getData().getStatus()));
+                } catch (Exception exception) {
+                    payOS.setStatus(PaymentStatus.UNKNOWN);
+                }
+            } else {
+                payOS.setStatus(PaymentStatus.PENDING);
+                payOS.setPaymentLinkId(response.getData().getPaymentLinkId());
+            }
         } else {
-            payOS.setStatus(PaymentStatus.FAILED);
-            // 231: mã đơn hàng đã tồn tại; cập nhật lại db những mã đơn hàng trên payos đã có, còn lại ko lưu
-            if (response != null && response.getCode() != null && response.getCode().equals("231"))
-                payOSRepository.save(payOS);
+            // khi mà response đã ko có thì tức là phía payos bị lỗi
+            throw new BusinessException(ErrorCode.PAYMENT_PROVIDER_ERROR);
         }
 
         if (payOS.getPaymentLinkId().contains("not_")) {
-            if (response != null && response.getCode() != null)
-                log.info("PayOsClient createPayment response [code]: {}", response.getCode());
-            if (response != null && response.getDesc() != null)
-                log.info("PayOsClient createPayment response [desc]: {}", response.getDesc());
-
+            log.info("PayOsClient createPayment response { [code : desc] : [{} : {}] } ", response.getCode(), response.getDesc());
+            log.info("PayosClient Description length response: [{}: {}]", payOS.getDescription(),
+                    payOS.getDescription().length());
             throw new BusinessException(ErrorCode.PAYMENT_SYSTEM_ERROR);
         }
+        payOSRepository.save(payOS);
         return response;
+    }
+
+    public PayOSResponse<PayOSResponse.PayOSDataDetail> getDetail(String id) {
+        return getDetailExecute(id);
     }
 
     public void confirmHookUrl(Map<String, Object> hookLink) {
@@ -145,6 +165,23 @@ public class PayOsClient {
                 .bodyToMono(Object.class)
                 .block();
         log.info("[PAYOS] confirm-webhook response successfully");
+    }
+
+    // get chi tiết trạng thái order cho đơn hàng nào đó theo orderCode
+    private PayOSResponse<PayOSResponse.PayOSDataDetail> getDetailExecute(String id) {
+        return webClient.get()
+                .uri("/v2/payment-requests/" + id)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, resp ->
+                        resp.bodyToMono(String.class)
+                                .flatMap(body -> {
+                                    log.error("[PAYOS] getDetail failed: {}", body);
+                                    return Mono.error(() -> new BusinessException(ErrorCode.PAYMENT_PROVIDER_ERROR));
+                                })
+                )
+                .bodyToMono(new ParameterizedTypeReference<PayOSResponse<PayOSResponse.PayOSDataDetail>>() {
+                })
+                .block();
     }
 }
 

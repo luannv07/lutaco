@@ -18,7 +18,12 @@ public class PayOsServiceImpl implements PayOsService {
     PayOsClient payOsClient;
 
     @Override
-    public PayOSResponse createPayment(PaymentType paymentType) {
+    public PayOSResponse<PayOSResponse.PayOSDataCreated> createPayment(PaymentType paymentType) {
         return payOsClient.createPayment(paymentType);
+    }
+
+    @Override
+    public PayOSResponse<PayOSResponse.PayOSDataDetail> getDetailPayment(String id) {
+        return payOsClient.getDetail(id);
     }
 }
