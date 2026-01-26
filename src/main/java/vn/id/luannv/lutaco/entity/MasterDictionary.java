@@ -32,11 +32,11 @@ public class MasterDictionary extends BaseEntity {
     @Column(name = "code", length = 50, nullable = false)
     String code;
 
-    @Column(name = "value", length = 100, nullable = false)
-    String value;
+    @Column(name = "value_vi", length = 100, nullable = false)
+    String valueVi;
 
-    @Column(name = "description", length = 255)
-    String description;
+    @Column(name = "value_en", length = 100, nullable = false)
+    String valueEn;
 
     @Column(name = "is_active")
     Boolean isActive;

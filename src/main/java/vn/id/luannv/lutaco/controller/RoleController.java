@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.RoleFilterRequest;
-import vn.id.luannv.lutaco.dto.request.RoleUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.service.RoleService;
@@ -45,21 +44,6 @@ public class RoleController {
                 BaseResponse.success(
                         roleService.getDetail(id),
                         MessageKeyConst.Success.SENT
-                )
-        );
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Cập nhật role")
-    @PreAuthorize("hasRole('SYS_ADMIN')")
-    public ResponseEntity<BaseResponse<Role>> updateRole(
-            @PathVariable Integer id,
-            @RequestBody RoleUpdateRequest request
-    ) {
-        return ResponseEntity.ok(
-                BaseResponse.success(
-                        roleService.update(id, request),
-                        MessageKeyConst.Success.UPDATED
                 )
         );
     }

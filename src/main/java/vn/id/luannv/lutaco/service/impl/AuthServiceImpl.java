@@ -15,6 +15,7 @@ import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
+import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.jwt.JwtService;
@@ -86,8 +87,10 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User entity = userMapper.toEntity(request);
-        Role role = roleRepository.findByName("USER").get();
+        Role role = roleRepository.findByName(UserType.USER.name())
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
+        entity.setUsername(request.getUsername().toLowerCase());
         entity.setRole(role);
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         entity.setGender(userGender);

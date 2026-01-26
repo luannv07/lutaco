@@ -209,6 +209,18 @@ databaseChangeLog:
               - column: { name: value_vi, value: Gói miễn phí }
               - column: { name: value_en, value: Freemium }
 
-
-
+  - changeSet:
+      # user & role
+      id: aea5d98d-f724-495d-9c07-1b99c4f3ac26
+      author: luannv
+      changes:
+        - delete:
+            tableName: users
+            where: username='premuser'
+        - delete:
+            tableName: roles
+            where: name='PREMIUM_USER'
+        - dropColumn:
+            tableName: roles
+            columnName: description
 
