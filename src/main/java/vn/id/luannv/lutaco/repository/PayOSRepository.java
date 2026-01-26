@@ -8,6 +8,8 @@ import vn.id.luannv.lutaco.entity.PayOS;
 import vn.id.luannv.lutaco.enumerate.PaymentStatus;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface PayOSRepository extends JpaRepository<PayOS, Long> {
@@ -24,4 +26,6 @@ public interface PayOSRepository extends JpaRepository<PayOS, Long> {
                           @Param("type") PaymentType paymentType,
                           @Param("orderCode") Integer orderCode,
                           @Param("statusSource") PaymentStatus source);
+
+    List<PayOS> findByStatusAndPaidAtIsNullAndCreatedDateIsLessThan(PaymentStatus paymentStatus, LocalDateTime localDateTime);
 }
