@@ -9,12 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
-import vn.id.luannv.lutaco.enumerate.MasterDictionaryType;
+import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -73,15 +72,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         log.info("UserServiceImpl update User: {} {}", id, request);
-        MasterDictionaryDto dictionaryDto = masterDictionaryService.getByCategoryAndCode(MasterDictionaryType.GENDER.name(), request.getGender());
 
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
                         new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
                                 Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())));
+        UserGender userGender = user.getGender();
+
+        try {
+            userGender = UserGender.valueOf(userGender.name());
+        } catch (IllegalArgumentException e) {
+            log.error("UserGender {} is not valid", userGender);
+        }
 
         userMapper.updateUser(request, user);
-        user.setGender(dictionaryDto.getCode());
+        user.setGender(userGender);
         User saved = userRepository.save(user);
 
         return userMapper.toResponse(saved);

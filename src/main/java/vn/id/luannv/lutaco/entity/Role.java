@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -23,8 +22,6 @@ public class Role extends BaseEntity {
     Integer id;
     @Column(name = "NAME", unique = true, nullable = false)
     String name;
-    @Column(name = "DESCRIPTION")
-    String description;
     @OneToMany(mappedBy = "role")
     @JsonIgnore
     List<User> users;

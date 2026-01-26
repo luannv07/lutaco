@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.dto.request.RoleUpdateRequest;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
@@ -26,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
     RoleRepository roleRepository;
 
     @Override
-    public Role create(RoleUpdateRequest request) {
+    public Role create(Role request) {
         log.info("RoleServiceImpl create: {}", request);
 
         throw new BusinessException(ErrorCode.SYSTEM_ERROR);
@@ -58,19 +57,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role update(Integer id, RoleUpdateRequest request) {
-        log.info("RoleServiceImpl update: id={}, request={}", id, request);
-
-        Role role = roleRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(
-                                ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())
-                        ));
-
-        role.setDescription(request.getDescription());
-
-        return role;
+    public Role update(Integer id, Role request) {
+        return null;
     }
 
     @Override

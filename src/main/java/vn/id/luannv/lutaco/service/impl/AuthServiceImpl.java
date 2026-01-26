@@ -7,15 +7,15 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
-import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
 import vn.id.luannv.lutaco.dto.request.LoginRequest;
+import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
-import vn.id.luannv.lutaco.enumerate.MasterDictionaryType;
 import vn.id.luannv.lutaco.enumerate.OtpType;
+import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
+import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.jwt.JwtService;
@@ -27,7 +27,6 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -79,14 +78,22 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByUsername(request.getUsername()))
             throw new BusinessException(ErrorCode.FIELD_EXISTS, Map.of("username", ErrorCode.FIELD_EXISTS.getMessage()));
 
-        MasterDictionaryDto dictionaryDto = masterDictionaryService.getByCategoryAndCode(MasterDictionaryType.GENDER.name(), request.getGender());
+        UserGender userGender = UserGender.OTHER;
+
+        try {
+            userGender = UserGender.valueOf(request.getGender());
+        } catch (IllegalArgumentException e) {
+            log.info("invalid gender: {}", e.getMessage());
+        }
 
         User entity = userMapper.toEntity(request);
-        Role role = roleRepository.findByName("USER").get();
+        Role role = roleRepository.findByName(UserType.USER.name())
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
+        entity.setUsername(request.getUsername().toLowerCase());
         entity.setRole(role);
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
-        entity.setGender(dictionaryDto.getCode());
+        entity.setGender(userGender);
         entity.setUserStatus(UserStatus.PENDING_VERIFICATION);
         entity = userRepository.save(entity);
 
