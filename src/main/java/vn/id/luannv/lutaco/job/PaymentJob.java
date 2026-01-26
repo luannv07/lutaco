@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public class PaymentJob {
 
     @Scheduled(fixedDelay = 30 * 60 * 1000)
     @Transactional
+    @Async
     public void reconcilePendingPayments() {
 
         log.info("⏰ Start reconcile pending payment");

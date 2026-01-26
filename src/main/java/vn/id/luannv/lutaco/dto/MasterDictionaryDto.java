@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -41,14 +40,16 @@ public class MasterDictionaryDto {
             example = "Nam",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    String value;
+    String valueVi;
 
-    @Size(max = 255, message = "{input.tooLong}")
+    @NotBlank(message = "{input.required}")
+    @Size(max = 100, message = "{input.tooLong}")
     @Schema(
-            description = "Mô tả thêm",
-            example = "Giới tính Nam"
+            description = "Nhãn hiển thị",
+            example = "Nam",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
-    String description;
+    String valueEn;
 
     @NotNull(message = "{input.required}")
     @Schema(

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
@@ -16,6 +17,7 @@ public class InvalidatedTokenCleanupJob {
     InvalidatedTokenService invalidatedTokenService;
 
     @Scheduled(fixedDelay = 30 * 60 * 1000)
+    @Async
     public void cleanupExpiredTokens() {
         log.info("⏰ Start cleaning expired invalidated tokens");
         invalidatedTokenService.deleteExpiredTokens();
