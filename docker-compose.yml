@@ -16,18 +16,6 @@ services:
     networks:
       - backend-net
 
-  redis:
-    image: redis:7
-    container_name: redis7
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
-    networks:
-      - backend-net
-
   ngrok:
     image: ngrok/ngrok:3
     container_name: ngrok
@@ -41,7 +29,6 @@ services:
       - "4040:4040"
 volumes:
   mysql_data:
-  redis_data:
 
 networks:
   backend-net:
