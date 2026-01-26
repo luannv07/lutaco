@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PayOSRepository extends JpaRepository<PayOS, Long> {
     Optional<PayOS> getPayOSByOrderCode(Integer orderCode);
 
-    @Query(value = "select p.user_id from pay_os p where p.order_coe = :orderCode", nativeQuery = true)
+    @Query(value = "select p.user_id from pay_os p where p.order_code = :orderCode", nativeQuery = true)
     String getUserIdByOrderCode(@Param("orderCode") Integer orderCode);
 
     Optional<PayOS> findFirstByOrderByOrderCodeDesc();

@@ -7,12 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestParam;
 import vn.id.luannv.lutaco.dto.request.UserFilterRequest;
 import vn.id.luannv.lutaco.entity.User;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 @Transactional
@@ -23,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             and (:#{#request.address} is null or lower(u.address) like concat('%', lower(:#{#request.address}), '%' ))
             and (:#{#request.userStatus} is null or u.userStatus = :#{#request.userStatus})
             and (:#{#request.roleId} is null or u.role.id = :#{#request.roleId})
+                    and (:#{#request.userPlan} is null or lower(u.userPlan) like concat('%', lower(:#{#request.userPlan}), '%'))
         order by u.createdDate desc
     """)
     Page<User> findByFilters(@Param("request") UserFilterRequest request, Pageable pageable);

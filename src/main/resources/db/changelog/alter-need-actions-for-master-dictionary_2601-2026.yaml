@@ -224,3 +224,28 @@ databaseChangeLog:
             tableName: roles
             columnName: description
 
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: user_plan
+                  type: varchar(20)
+                  defaultValue: FREEMIUM
+                  constraints:
+                    nullable: false
+        - update:
+            tableName: users
+            columns:
+              - column:
+                  name: user_plan
+                  value: FREEMIUM
+            where: role_id=3
+
+        - update:
+            tableName: users
+            columns:
+              - column:
+                  name: user_plan
+                  value: PREMIUM
+            where: role_id=1 or role_id=2
+
