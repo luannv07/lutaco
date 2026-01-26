@@ -3,9 +3,10 @@ package vn.id.luannv.lutaco.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.UserStatus;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -39,4 +40,5 @@ public class UserFilterRequest extends BaseFilterRequest {
             minimum = "1"
     )
     Integer roleId;
+    String userPlan;
 }
