@@ -1,0 +1,214 @@
+databaseChangeLog:
+  - changeSet:
+      # master_dictionary
+      id: a7903db5-ce3c-4342-b453-12d02fdb8f3a
+      author: luannv
+      changes:
+        # xoá hết data cũ
+        - delete:
+            tableName: master_dictionary
+            where: category is not null
+        - dropColumn:
+            tableName: master_dictionary
+            columns:
+              - column:
+                  name: value
+              - column:
+                  name: description
+        # thêm 2 cột vi/en
+        - addColumn:
+            tableName: master_dictionary
+            columns:
+              - column:
+                  name: value_vi
+                  type: varchar(100)
+              - column:
+                  name: value_en
+                  type: varchar(100)
+
+        - addDefaultValue:
+            tableName: master_dictionary
+            columnName: created_by
+            defaultValue: system
+        - addDefaultValue:
+            tableName: master_dictionary
+            columnName: created_date
+            defaultValueDate: current_timestamp
+        - addDefaultValue:
+            tableName: master_dictionary
+            columnName: updated_by
+            defaultValue: system
+        - addDefaultValue:
+            tableName: master_dictionary
+            columnName: updated_date
+            defaultValueDate: current_timestamp
+        # quyền hệ thống
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_TYPE }
+              - column: { name: code, value: SYS_ADMIN }
+              - column: { name: value_vi, value: Quản trị hệ thống }
+              - column: { name: value_en, value: System admin }
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_TYPE }
+              - column: { name: code, value: ADMIN }
+              - column: { name: value_vi, value: Quản trị viên }
+              - column: { name: value_en, value: Admin }
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_TYPE }
+              - column: { name: code, value: USER }
+              - column: { name: value_vi, value: Người dùng hệ thống }
+              - column: { name: value_en, value: User }
+        # trạng thái người dùng
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: PENDING_VERIFICATION }
+              - column: { name: value_vi, value: Chờ xác minh }
+              - column: { name: value_en, value: Pending verification }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: ACTIVE }
+              - column: { name: value_vi, value: Đang hoạt động }
+              - column: { name: value_en, value: Active }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: DISABLED_BY_USER }
+              - column: { name: value_vi, value: Người dùng vô hiệu hóa }
+              - column: { name: value_en, value: Disabled by user }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_STATUS }
+              - column: { name: code, value: BANNED }
+              - column: { name: value_vi, value: Bị cấm }
+              - column: { name: value_en, value: Banned }
+        # Giới tính
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_GENDER }
+              - column: { name: code, value: MALE }
+              - column: { name: value_vi, value: Nam }
+              - column: { name: value_en, value: Male }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_GENDER }
+              - column: { name: code, value: FEMALE }
+              - column: { name: value_vi, value: Nữ }
+              - column: { name: value_en, value: Female }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_GENDER }
+              - column: { name: code, value: OTHER }
+              - column: { name: value_vi, value: Khác }
+              - column: { name: value_en, value: Other }
+        # kiểu OTP (dùng cho việc gì)
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: OTP_TYPE }
+              - column: { name: code, value: LOGIN }
+              - column: { name: value_vi, value: Đăng nhập }
+              - column: { name: value_en, value: Login }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: OTP_TYPE }
+              - column: { name: code, value: REGISTER }
+              - column: { name: value_vi, value: Đăng ký }
+              - column: { name: value_en, value: Register }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: OTP_TYPE }
+              - column: { name: code, value: FORGOT_PASSWORD }
+              - column: { name: value_vi, value: Quên mật khẩu }
+              - column: { name: value_en, value: Forgot password }
+        # Trạng thái thanh toán
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: PAYMENT_STATUS }
+              - column: { name: code, value: PENDING }
+              - column: { name: value_vi, value: Chờ thanh toán }
+              - column: { name: value_en, value: Pending }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: PAYMENT_STATUS }
+              - column: { name: code, value: PAID }
+              - column: { name: value_vi, value: Đã thanh toán }
+              - column: { name: value_en, value: Paid }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: PAYMENT_STATUS }
+              - column: { name: code, value: CANCELLED }
+              - column: { name: value_vi, value: Đã hủy }
+              - column: { name: value_en, value: Cancelled }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: PAYMENT_STATUS }
+              - column: { name: code, value: FAILED }
+              - column: { name: value_vi, value: Thất bại }
+              - column: { name: value_en, value: Failed }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: PAYMENT_STATUS }
+              - column: { name: code, value: UNKNOWN }
+              - column: { name: value_vi, value: Không xác định }
+              - column: { name: value_en, value: Unknown }
+        # kiểu thanh toán (dùng cho việc gì)
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: PAYMENT_TYPE }
+              - column: { name: code, value: UPGRADE_PREMIUM }
+              - column: { name: value_vi, value: Nâng cấp tài khoản Premium }
+              - column: { name: value_en, value: Upgrade to Premium }
+        # gói đăng kí của người dùng
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_PLAN }
+              - column: { name: code, value: PREMIUM }
+              - column: { name: value_vi, value: Gói Premium }
+              - column: { name: value_en, value: Premium }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: category, value: USER_PLAN }
+              - column: { name: code, value: FREEMIUM }
+              - column: { name: value_vi, value: Gói miễn phí }
+              - column: { name: value_en, value: Freemium }
+
+
+
+
