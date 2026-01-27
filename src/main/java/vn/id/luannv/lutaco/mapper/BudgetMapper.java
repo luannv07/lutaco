@@ -13,6 +13,10 @@ public interface BudgetMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "currentBalance", source = "initialBalance")
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "updatedDate", ignore = true)
     Budget toEntity(BudgetCreateRequest request);
 
     @Mapping(target = "id", ignore = true)
@@ -20,5 +24,9 @@ public interface BudgetMapper {
     @Mapping(target = "initialBalance", ignore = true)
     @Mapping(target = "currentBalance", ignore = true)
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "updatedDate", ignore = true)
     void update(@MappingTarget Budget budget, BudgetUpdateRequest request);
 }

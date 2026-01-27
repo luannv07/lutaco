@@ -16,6 +16,8 @@ public interface UserMapper {
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
     @Mapping(target = "username", ignore = true)
+    @Mapping(target = "userPlan", ignore = true)
+    @Mapping(target = "refreshToken", ignore = true)
     User toEntity(UserCreateRequest request);
 
     @Mapping(target = "roleName", source = "role.name")
@@ -32,5 +34,7 @@ public interface UserMapper {
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "email", ignore = true)
+    @Mapping(target = "userPlan", ignore = true)
+    @Mapping(target = "refreshToken", ignore = true)
     void updateUser(UserUpdateRequest request, @MappingTarget User user);
 }
