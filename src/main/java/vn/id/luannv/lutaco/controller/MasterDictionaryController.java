@@ -29,6 +29,7 @@ import java.util.List;
         name = "Master Dictionary",
         description = "API quản lý danh mục dùng chung (lookup / cấu hình động)"
 )
+@PreAuthorize("isAuthenticated()")
 public class MasterDictionaryController {
 
     MasterDictionaryService service;

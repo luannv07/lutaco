@@ -26,6 +26,7 @@ import vn.id.luannv.lutaco.service.UserService;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "User API", description = "API quản lý người dùng")
+@PreAuthorize("isAuthenticated()")
 public class UserController {
 
     UserService userService;
