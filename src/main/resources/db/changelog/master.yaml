@@ -15,10 +15,7 @@ databaseChangeLog:
       file: db/changelog/create-otp-table_1901-2026.yaml
   - include:
       file: db/changelog/create-pay-os-table_2401-2026.yaml
-  <<<<<<< Updated upstream
-  =======
-- include:
-    file: db/changelog/alter-need-actions-for-master-dictionary_2601-2026.yaml
-- include:
-    file: db/changelog/2601-2026_create-budget.yaml
-  >>>>>>> Stashed changes
+  - include:
+      file: db/changelog/alter-need-actions-for-master-dictionary_2601-2026.yaml
+  - include:
+      file: db/changelog/2601-2026_create-budget.yaml

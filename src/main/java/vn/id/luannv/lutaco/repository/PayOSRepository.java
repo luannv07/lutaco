@@ -8,12 +8,14 @@ import vn.id.luannv.lutaco.entity.PayOS;
 import vn.id.luannv.lutaco.enumerate.PaymentStatus;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface PayOSRepository extends JpaRepository<PayOS, Long> {
     Optional<PayOS> getPayOSByOrderCode(Integer orderCode);
 
-    @Query(value = "select p.user_id from pay_os p where p.order_coe = :orderCode", nativeQuery = true)
+    @Query(value = "select p.user_id from pay_os p where p.order_code = :orderCode", nativeQuery = true)
     String getUserIdByOrderCode(@Param("orderCode") Integer orderCode);
 
     Optional<PayOS> findFirstByOrderByOrderCodeDesc();
@@ -24,4 +26,6 @@ public interface PayOSRepository extends JpaRepository<PayOS, Long> {
                           @Param("type") PaymentType paymentType,
                           @Param("orderCode") Integer orderCode,
                           @Param("statusSource") PaymentStatus source);
+
+    List<PayOS> findByStatusAndPaidAtIsNullAndCreatedDateIsLessThan(PaymentStatus paymentStatus, LocalDateTime localDateTime);
 }

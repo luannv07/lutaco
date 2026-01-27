@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.enumerate.UserGender;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,10 +32,14 @@ public class User extends BaseEntity {
     @Column(name = "EMAIL", nullable = false)
     String email;
     @Column(name = "GENDER", nullable = false)
-    String gender;
+    @Enumerated(EnumType.STRING)
+    UserGender gender;
     @Column(name = "USER_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     UserStatus userStatus;
+    @Column(name = "USER_PLAN", nullable = false)
+    @Enumerated(EnumType.STRING)
+    UserPlan userPlan;
     @JoinColumn(name = "ROLE_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     Role role;

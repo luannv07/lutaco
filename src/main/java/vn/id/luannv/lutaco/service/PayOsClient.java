@@ -24,6 +24,7 @@ import vn.id.luannv.lutaco.util.RandomUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,9 +71,11 @@ public class PayOsClient {
 
         // paymentLinkId thêm tiền tố "not_" để chỉ rằng cái link đó ko khả dụng, thay bằng uuid random,
         // nếu muốn xử lí lại "not_" thì phải xử lí lại logic phía dưới cùng của hàm
+        String desc = String.format("premium plan %s", RandomUtils.randomAlphaNum(10));
+
         PayOS payOS = PayOS.builder()
                 .orderCode(latestOrderCode + 1)
-                .description("lutaco " + RandomUtils.randomAlphaNum(10) + " premium")
+                .description(desc)
                 .type(paymentType)
                 .user(currentUser)
                 .amount(amount)
@@ -111,19 +114,21 @@ public class PayOsClient {
         if (response != null) {
             // lỗi (chỉ trả mã lỗi + mô tả)
             if (response.getData() == null || response.getSignature() == null) {
-                // 231: mã đơn hàng đã tồn tại; cập nhật lại db những mã đơn hàng trên payos đã có, còn lại ko lưu
-                if (response.getCode() != null && response.getCode().equals("231")) {
-                    payOS.setStatus(PaymentStatus.FAILED);
-                    payOSRepository.save(payOS);
-                    throw new BusinessException(ErrorCode.PAYMENT_SYSTEM_ERROR);
-                }
                 PayOSResponse<PayOSResponse.PayOSDataDetail> detail =
                         getDetailExecute(String.valueOf(payOS.getOrderCode()));
 
                 try {
                     payOS.setStatus(PaymentStatus.valueOf(detail.getData().getStatus()));
+                    if (payOS.getStatus() == PaymentStatus.PAID && payOS.getPaidAt() == null)
+                        payOS.setPaidAt(LocalDateTime.now());
                 } catch (Exception exception) {
                     payOS.setStatus(PaymentStatus.UNKNOWN);
+                }
+                payOSRepository.save(payOS);
+                // 231: mã đơn hàng đã tồn tại; cập nhật lại db những mã đơn hàng trên payos đã có, còn lại ko lưu
+                if (response.getCode() != null && response.getCode().equals("231")) {
+                    log.info("local server chưa có đơn, trên api đã có!!");
+                    throw new BusinessException(ErrorCode.PAYMENT_SYSTEM_ERROR);
                 }
             } else {
                 payOS.setStatus(PaymentStatus.PENDING);

@@ -15,6 +15,7 @@ public interface UserMapper {
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
+    @Mapping(target = "username", ignore = true)
     User toEntity(UserCreateRequest request);
 
     @Mapping(target = "roleName", source = "role.name")
