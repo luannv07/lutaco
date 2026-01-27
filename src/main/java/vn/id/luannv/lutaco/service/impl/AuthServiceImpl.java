@@ -5,15 +5,18 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
 import vn.id.luannv.lutaco.dto.request.LoginRequest;
 import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.OtpType;
-import vn.id.luannv.lutaco.enumerate.UserGender;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -92,10 +95,14 @@ public class AuthServiceImpl implements AuthService {
 
         entity.setUsername(request.getUsername().toLowerCase());
         entity.setRole(role);
+        entity.setUserPlan(UserPlan.FREEMIUM);
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         entity.setGender(userGender);
         entity.setUserStatus(UserStatus.PENDING_VERIFICATION);
         entity = userRepository.save(entity);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        authentication.setAuthenticated(true);
 
         otpService.sendOtp(entity.getEmail(), OtpType.REGISTER);
 

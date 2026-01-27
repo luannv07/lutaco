@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - changeSet:
+      id: 26c2bdf5-686d-4130-8357-13c2cbf6a1bc
+      author: luannv
+      changes:
+        - createTable:
+            tableName: budgets
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: budget_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: initial_balance
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: current_balance
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: varchar(255)
+
+              - column:
+                  name: status
+                  type: varchar(50)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_date
+                  type: datetime
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_date
+                  type: datetime
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: budgets
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_budgets_user
+
+        - addUniqueConstraint:
+            tableName: budgets
+            constraintName: uk_budget_user_id_budget_name
+            columnNames: user_id, budget_name
+
+  - changeSet:
+      id: c1c346a6-de4c-4270-824f-cc8ccc24a522
+      author: luannv
+      changes:
+        - insert:
+            tableName: budgets
+            columns:
+              - column:
+                  name: id
+                  value: 24373bea-5bc9-4e9f-9065-66785caf2dbe
+              - column:
+                  name: user_id
+                  value: 7a620c3a-e268-49d8-bd52-11ca96833549
+              - column:
+                  name: budget_name
+                  value: Ví MB Bank
+              - column:
+                  name: description
+                  value: Lương từ ví tích góp
+

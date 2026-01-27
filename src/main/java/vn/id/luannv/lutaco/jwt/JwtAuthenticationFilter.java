@@ -17,14 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import vn.id.luannv.lutaco.config.SecurityConstants;
 import vn.id.luannv.lutaco.entity.CustomUserDetails;
 import vn.id.luannv.lutaco.entity.User;
-import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.UserRepository;
-import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 @Slf4j
 @Component
@@ -37,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        log.debug("shouldNotFilter(): {} {}", request.getRequestURI(), request.getServletPath());
+        log.info("shouldNotFilter(): {} {}", request.getRequestURI(), request.getServletPath());
         return SecurityConstants.PUBLIC_URLS.contains(request.getRequestURI());
     }
 
@@ -46,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            log.info("Authorization header not found: {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }

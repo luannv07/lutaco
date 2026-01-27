@@ -231,6 +231,7 @@ databaseChangeLog:
                   name: user_plan
                   type: varchar(20)
                   defaultValue: FREEMIUM
+                  defaultOnNull: true
                   constraints:
                     nullable: false
         - update:

@@ -18,6 +18,7 @@ import vn.id.luannv.lutaco.service.PayOsService;
 @RequestMapping(("/api/v1/payment"))
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@PreAuthorize("isAuthenticated()")
 public class PayOSController {
     PayOsService payOsService;
 
