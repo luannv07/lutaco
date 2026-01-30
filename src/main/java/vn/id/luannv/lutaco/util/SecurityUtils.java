@@ -3,37 +3,40 @@ package vn.id.luannv.lutaco.util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import vn.id.luannv.lutaco.entity.CustomUserDetails;
-import vn.id.luannv.lutaco.entity.User;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
+import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 
 @Slf4j
 public class SecurityUtils {
     public static String getCurrentUsername() {
-        return getCurrentUser().getUsername();
-    }
-
-    public static String getCurrentRole() {
-        return getCurrentUser().getRole();
+        return getCurrentPrincipal().getUsername();
     }
 
     public static String getCurrentId() {
-        return getCurrentUser().getId();
+        return getCurrentPrincipal().getId();
     }
 
-    private static CustomUserDetails getCurrentUser() {
+    public static UserPlan getCurrentUserPlan() {
+        return getCurrentPrincipal().getUserPlan();
+    }
+
+    public static UserStatus getCurrentUserStatus() {
+        return getCurrentPrincipal().getStatus();
+    }
+
+    private static CustomUserDetails getCurrentPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
-        }
 
-        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+        if (authentication.getPrincipal() instanceof CustomUserDetails)
             return (CustomUserDetails) authentication.getPrincipal();
-        }
+
         log.info("getCurrentUserMethod: {}", authentication.getPrincipal().toString());
-        throw new BusinessException(ErrorCode.LOGIN_FAILED);
+        throw new BusinessException(ErrorCode.UNAUTHORIZED);
     }
 }

@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("refreshTokenService.findByTokenWithUser(request.getUsername()): {}", refreshTokenService.findByTokenWithUser(request.getUsername()));
             refreshTokenService.deleteRefreshToken(request.getUsername());
         }
-
+        log.info("chay den day roi ne?");
         return AuthenticateResponse.builder()
                 .accessToken(jwtAuthenticateService.generateToken(entity))
                 .refreshToken(refreshTokenService.createRefreshToken(request.getUsername()).getToken())

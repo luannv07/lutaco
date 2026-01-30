@@ -31,15 +31,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     JwtService jwtService;
     UserRepository userRepository;
 
-
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        log.info("shouldNotFilter(): {} {}", request.getRequestURI(), request.getServletPath());
-        return SecurityConstants.PUBLIC_URLS.contains(request.getRequestURI());
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return SecurityConstants.PUBLIC_URLS_SHOULD_NOT_AUTH
+                .stream().anyMatch(uri ->  request.getRequestURI().endsWith(uri));
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -49,21 +50,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authorizationHeader.substring(7);
+        if (jwtService.isValidToken(token))
+            throw new BadCredentialsException(ErrorCode.UNAUTHORIZED.getMessage());
 
         String username = jwtService.getUsernameFromToken(token);
         String role = jwtService.getRoleFromToken(token);
-
         User entity = userRepository
                 .findByUsername(username).orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
-
-        if (jwtService.isValidToken(token))
-            throw new BadCredentialsException(ErrorCode.UNAUTHORIZED.getMessage());
 
         CustomUserDetails customUserDetails = CustomUserDetails.builder()
                 .username(username)
                 .role(role)
                 .status(entity.getUserStatus())
                 .id(entity.getId())
+                .userPlan(entity.getUserPlan())
                 .build();
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 customUserDetails,

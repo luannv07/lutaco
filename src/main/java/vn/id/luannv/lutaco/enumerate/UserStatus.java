@@ -1,8 +1,5 @@
 package vn.id.luannv.lutaco.enumerate;
 
-import vn.id.luannv.lutaco.exception.BusinessException;
-import vn.id.luannv.lutaco.exception.ErrorCode;
-
 import java.util.Arrays;
 
 public enum UserStatus {

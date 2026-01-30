@@ -1,6 +1,5 @@
 package vn.id.luannv.lutaco.service;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;

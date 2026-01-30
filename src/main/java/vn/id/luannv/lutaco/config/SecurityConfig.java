@@ -15,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.jwt.JwtAccessDeniedHandler;
 import vn.id.luannv.lutaco.jwt.JwtAuthenticationEntryPoint;
 import vn.id.luannv.lutaco.jwt.JwtAuthenticationFilter;

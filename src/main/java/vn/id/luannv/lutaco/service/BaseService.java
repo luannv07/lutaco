@@ -1,7 +1,6 @@
 package vn.id.luannv.lutaco.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * Base interface service for system.

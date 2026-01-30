@@ -13,4 +13,9 @@ public class SecurityConstants {
             "/test/**",
             "/webhook/payos"
     );
+
+    public static final List<String> PUBLIC_URLS_SHOULD_NOT_AUTH = List.of(
+            "/api/v1/auth/login",
+            "/api/v1/auth/register"
+    );
 }

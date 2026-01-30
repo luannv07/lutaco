@@ -5,11 +5,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import vn.id.luannv.lutaco.entity.InvalidatedToken;
-import vn.id.luannv.lutaco.entity.MasterDictionary;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public interface InvalidatedTokenRepository extends JpaRepository<InvalidatedToken, Integer> {
 

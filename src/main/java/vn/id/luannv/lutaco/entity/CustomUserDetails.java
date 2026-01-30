@@ -1,12 +1,15 @@
 package vn.id.luannv.lutaco.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 
 import java.util.Collection;
@@ -22,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
     String role;
     String id;
     UserStatus status;
+    UserPlan userPlan;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

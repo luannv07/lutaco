@@ -1,13 +1,10 @@
 package vn.id.luannv.lutaco.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter

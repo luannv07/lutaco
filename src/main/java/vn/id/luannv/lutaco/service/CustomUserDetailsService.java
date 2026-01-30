@@ -3,8 +3,6 @@ package vn.id.luannv.lutaco.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,9 +11,6 @@ import vn.id.luannv.lutaco.entity.CustomUserDetails;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.UserRepository;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -40,10 +40,6 @@ public class JwtService {
     @NonFinal
     @Value("role")
     String roleClaim;
-//
-//    @NonFinal
-//    @Value("id")
-//    String idClaim;
 
     public String generateToken(User user) {
 
@@ -56,7 +52,6 @@ public class JwtService {
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + expirationTime))
                 .claim(roleClaim, "ROLE_" + user.getRole().getName())
-//                .claim(idClaim, user.getId())
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -114,10 +109,6 @@ public class JwtService {
     public String getRoleFromToken(String token) {
         return generateFieldFromToken(token, roleClaim);
     }
-
-//    public String getIdFromToken(String token) {
-//        return generateFieldFromToken(token, idClaim);
-//    }
 
     public String getJtiFromToken(String token) {
         return jwtClaimsSet(token).getJWTID();
