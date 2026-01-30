@@ -4,7 +4,8 @@ import java.util.List;
 
 public class SecurityConstants {
     public static final List<String> PUBLIC_URLS = List.of(
-            "/api/v1/auth/**",
+            "/api/v1/auth/login",
+            "/api/v1/auth/register",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
