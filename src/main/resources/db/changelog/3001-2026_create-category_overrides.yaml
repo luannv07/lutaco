@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-category-overrides
+      author: luannv
+      changes:
+
+        - createTable:
+            tableName: category_overrides
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: disabled
+                  type: boolean
+                  defaultValueBoolean: true
+                  defaultOnNull: true
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: fk_category_overrides_category
+            baseTableName: category_overrides
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+
+        - addUniqueConstraint:
+            tableName: category_overrides
+            constraintName: uk_category_overrides_user_category
+            columnNames: user_id, category_id
+
+        - createIndex:
+            tableName: category_overrides
+            indexName: idx_category_overrides_user
+            columns:
+              - column:
+                  name: user_id

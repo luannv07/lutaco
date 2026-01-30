@@ -1,0 +1,212 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9f4a2a6d-4c3f-4c9a-9b61-1c1d8d2e9a11
+      author: luannv
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: category_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: parent_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: is_system
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: owner_user_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: category_type
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: deleted_at
+                  type: datetime
+                  constraints:
+                    nullable: true
+                  remarks: cột này khác null tức là đã bị xoá bởi admin, ko hiển thị ở toàn bộ user
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_date
+                  type: datetime
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_date
+                  type: datetime
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 3bcb3c16-2fcb-4d7c-bf1e-2bb2b63b3c90
+      author: luannv
+      changes:
+        - createIndex:
+            tableName: categories
+            indexName: idx_category_parent
+            columns:
+              - column:
+                  name: parent_id
+
+        - addUniqueConstraint:
+            tableName: categories
+            constraintName: uk_category_user_name
+            columnNames: owner_user_id, category_name
+
+        - addForeignKeyConstraint:
+            constraintName: fk_categories_id_parent_id
+            baseTableName: categories
+            baseColumnNames: parent_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+
+        - sql:
+            sql: |
+              ALTER TABLE categories
+              ADD CONSTRAINT chk_categories_category_type
+              CHECK (UPPER(category_type) IN ('EXPENSE', 'INCOME'));
+
+  - changeSet:
+      id: e8e077a5-16c6-4d67-a03d-fbf2073f7e85
+      author: luannv
+      changes:
+
+        # ========= EXPENSE ROOT =========
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: a3f6e9e4-4c9b-4e17-9e7f-0d3b3d2c8a01 }
+              - column: { name: category_name, value: Ăn uống }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: b71f3c6a-9d34-4b0c-bf02-6c88a3f0c123 }
+              - column: { name: category_name, value: Sinh hoạt }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: d02f9c3b-62a8-4bdb-9e16-78b7f20e8a55 }
+              - column: { name: category_name, value: Di chuyển }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: f91c7e55-2e41-4f3a-8cdd-91bb6a2f5e8c }
+              - column: { name: category_name, value: Giải trí }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        # ========= EXPENSE CHILD =========
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 1a3b92fd-3df2-4b31-8fa3-1a6cb6c8f901 }
+              - column: { name: category_name, value: Ăn sáng }
+              - column: { name: parent_id, value: a3f6e9e4-4c9b-4e17-9e7f-0d3b3d2c8a01 }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 4d21fbc0-84ef-4a5e-91b7-09f89b07a012 }
+              - column: { name: category_name, value: Ăn trưa }
+              - column: { name: parent_id, value: a3f6e9e4-4c9b-4e17-9e7f-0d3b3d2c8a01 }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 9c2f8b7d-3a0d-44c2-98d6-efb1e4bfc321 }
+              - column: { name: category_name, value: Cafe }
+              - column: { name: parent_id, value: a3f6e9e4-4c9b-4e17-9e7f-0d3b3d2c8a01 }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 72c8e0c9-7e84-4e42-a8d6-3a6e1e94c821 }
+              - column: { name: category_name, value: Điện }
+              - column: { name: parent_id, value: b71f3c6a-9d34-4b0c-bf02-6c88a3f0c123 }
+              - column: { name: category_type, value: EXPENSE }
+              - column: { name: is_system, valueBoolean: true }
+
+        # ========= INCOME ROOT =========
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 5b7a8f41-0e4c-4d6b-8a2b-33a9c7a4e0aa }
+              - column: { name: category_name, value: Lương }
+              - column: { name: category_type, value: INCOME }
+              - column: { name: is_system, valueBoolean: true }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 8f2d91f3-7f90-41c3-b0c5-d1a7e0d5a9e2 }
+              - column: { name: category_name, value: Đầu tư }
+              - column: { name: category_type, value: INCOME }
+              - column: { name: is_system, valueBoolean: true }
+
+        # ========= INCOME CHILD =========
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: id, value: 6b1a2f88-bdf3-4f8a-b93e-31dcb8d7e901 }
+              - column: { name: category_name, value: Lương chính }
+              - column: { name: parent_id, value: 5b7a8f41-0e4c-4d6b-8a2b-33a9c7a4e0aa }
+              - column: { name: category_type, value: INCOME }
+              - column: { name: is_system, valueBoolean: true }

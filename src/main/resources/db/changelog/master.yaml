@@ -19,3 +19,7 @@ databaseChangeLog:
       file: db/changelog/alter-need-actions-for-master-dictionary_2601-2026.yaml
   - include:
       file: db/changelog/2601-2026_create-budget.yaml
+  - include:
+      file: db/changelog/3001-2026_create-category.yaml
+  - include:
+      file: db/changelog/3001-2026_create-category_overrides.yaml

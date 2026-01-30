@@ -25,7 +25,7 @@ public enum ErrorCode {
 
     // Generic entity errors
     ENTITY_NOT_FOUND("entity.notFound", HttpStatus.NOT_FOUND),
-    ENTITY_EXISTS("entity.exists", HttpStatus.BAD_REQUEST),
+    ENTITY_EXISTED("entity.exists", HttpStatus.BAD_REQUEST),
 
     // Business rules
     OPERATION_NOT_ALLOWED("operation.notAllowed", HttpStatus.BAD_REQUEST),
