@@ -19,23 +19,30 @@ import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.service.UserService;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "User API", description = "API quản lý người dùng")
+@Tag(
+        name = "User API",
+        description = "API quản lý người dùng hệ thống (tìm kiếm, cập nhật thông tin, phân quyền, trạng thái)"
+)
 @PreAuthorize("isAuthenticated()")
 public class UserController {
 
     UserService userService;
 
-    @Operation(summary = "Lấy danh sách người dùng", description = "Tìm kiếm và phân trang danh sách người dùng")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
     @GetMapping
+    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
+    @Operation(
+            summary = "Lấy danh sách người dùng",
+            description = "Tìm kiếm và phân trang danh sách người dùng theo các tiêu chí lọc"
+    )
     public ResponseEntity<BaseResponse<Page<UserResponse>>> getUsers(
-            @Parameter(description = "Các tiêu chí lọc người dùng") @ModelAttribute UserFilterRequest request) {
+            @Parameter(description = "Điều kiện lọc và phân trang người dùng")
+            @ModelAttribute UserFilterRequest request
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         userService.search(request, request.getPage(), request.getSize()),
@@ -43,11 +50,17 @@ public class UserController {
                 ));
     }
 
-    @Operation(summary = "Lấy thông tin chi tiết người dùng", description = "Lấy chi tiết người dùng theo ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id and @securityPermission.isActive()")
+    @PreAuthorize(
+            "hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id and @securityPermission.isActive()"
+    )
+    @Operation(
+            summary = "Lấy chi tiết người dùng",
+            description = "Lấy thông tin chi tiết người dùng theo ID"
+    )
     public ResponseEntity<BaseResponse<UserResponse>> getUser(
-            @Parameter(description = "ID người dùng cần lấy") @PathVariable String id
+            @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
+            @PathVariable String id
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
@@ -56,11 +69,17 @@ public class UserController {
                 ));
     }
 
-    @Operation(summary = "Cập nhật người dùng", description = "Cập nhật thông tin người dùng theo ID")
     @PutMapping("/{id}")
-    @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()")
+    @PreAuthorize(
+            "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
+    )
+    @Operation(
+            summary = "Cập nhật thông tin người dùng",
+            description = "Cập nhật thông tin hồ sơ người dùng theo ID"
+    )
     public ResponseEntity<BaseResponse<UserResponse>> update(
-            @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id,
+            @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
+            @PathVariable String id,
             @Valid @RequestBody UserUpdateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -70,11 +89,15 @@ public class UserController {
                 ));
     }
 
-    @Operation(summary = "Cập nhật quyền người dùng", description = "Cập nhật thông tin người dùng theo ID")
     @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('SYS_ADMIN')")
+    @Operation(
+            summary = "Cập nhật quyền người dùng",
+            description = "Thay đổi role của người dùng (chỉ SYS_ADMIN)"
+    )
     public ResponseEntity<BaseResponse<Void>> update(
-            @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id,
+            @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
+            @PathVariable String id,
             @Valid @RequestBody UserRoleRequest request
     ) {
         userService.updateUserRole(id, request);
@@ -85,13 +108,20 @@ public class UserController {
                 ));
     }
 
-    @Operation(summary = "Chỉnh sửa trạng thái người dùng", description = "Chỉnh sửa trạng thái người dùng theo ID")
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)")
+    @PreAuthorize(
+            "hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)"
+    )
+    @Operation(
+            summary = "Cập nhật trạng thái người dùng",
+            description = "Kích hoạt hoặc vô hiệu hoá tài khoản người dùng theo ID"
+    )
     public ResponseEntity<BaseResponse<Void>> updateUserStatus(
-            @Parameter(description = "ID người dùng cần cập nhật") @PathVariable String id, @RequestBody UserStatusSetRequest request) {
+            @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
+            @PathVariable String id,
+            @RequestBody UserStatusSetRequest request
+    ) {
         userService.updateStatus(id, request);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         null,
@@ -99,26 +129,24 @@ public class UserController {
                 ));
     }
 
-    @Operation(
-            summary = "Cập nhật mật khẩu",
-            description = "Người dùng tự đổi mật khẩu hoặc admin đổi mật khẩu cho user"
-    )
     @PatchMapping("/{id}/password")
     @PreAuthorize(
             "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
+    @Operation(
+            summary = "Cập nhật mật khẩu",
+            description = "Người dùng tự đổi mật khẩu hoặc admin đổi mật khẩu cho người dùng"
+    )
     public ResponseEntity<BaseResponse<Void>> updatePassword(
-            @Parameter(description = "ID người dùng cần cập nhật")
+            @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
             @PathVariable String id,
             @RequestBody UpdatePasswordRequest request
     ) {
         userService.updatePassword(id, request);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         null,
                         MessageKeyConst.Success.UPDATED
                 ));
     }
-
 }

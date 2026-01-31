@@ -12,12 +12,17 @@ import vn.id.luannv.lutaco.enumerate.OtpType;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(
+        name = "SendOtpRequest",
+        description = "Request dùng để gửi mã OTP đến email người dùng"
+)
 public class SendOtpRequest {
+
     @NotBlank(message = "{input.required}")
     @Email(message = "{input.invalid}")
     @Size(max = 255, message = "{input.tooLong}")
     @Schema(
-            description = "Email của người dùng",
+            description = "Địa chỉ email nhận mã OTP",
             example = "vanluandvlp@gmail.com",
             format = "email",
             maxLength = 255,
@@ -27,6 +32,7 @@ public class SendOtpRequest {
 
     @NotNull(message = "{input.required}")
     @Schema(
+            description = "Loại OTP được gửi (phục vụ đúng nghiệp vụ)",
             example = "REGISTER",
             requiredMode = Schema.RequiredMode.REQUIRED
     )

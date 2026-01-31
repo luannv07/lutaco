@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "UserFilterRequest",
-        description = "Request dùng để lọc và tìm kiếm người dùng"
+        description = "Request dùng để lọc, tìm kiếm và phân trang danh sách người dùng"
 )
 public class UserFilterRequest extends BaseFilterRequest {
 
@@ -31,14 +31,23 @@ public class UserFilterRequest extends BaseFilterRequest {
     )
     String address;
 
+    @Schema(
+            description = "Trạng thái người dùng",
+            example = "ACTIVE"
+    )
     String userStatus;
 
     @Min(value = 1, message = "RoleId phải lớn hơn 0")
     @Schema(
-            description = "ID của role",
+            description = "ID vai trò (role) của người dùng",
             example = "1",
             minimum = "1"
     )
     Integer roleId;
+
+    @Schema(
+            description = "Gói người dùng (FREE / PREMIUM)",
+            example = "FREE"
+    )
     String userPlan;
 }

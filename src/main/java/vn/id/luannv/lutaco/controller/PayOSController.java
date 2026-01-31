@@ -1,5 +1,8 @@
 package vn.id.luannv.lutaco.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,14 +18,23 @@ import vn.id.luannv.lutaco.service.PayOsService;
 
 @Slf4j
 @RestController
-@RequestMapping(("/api/v1/payment"))
+@RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
+@Tag(
+        name = "Payment / PayOS",
+        description = "API thanh toán tích hợp PayOS (nâng cấp tài khoản, truy vấn giao dịch)"
+)
 public class PayOSController {
+
     PayOsService payOsService;
 
     @PostMapping("/premium-user")
+    @Operation(
+            summary = "Tạo giao dịch nâng cấp Premium",
+            description = "Khởi tạo giao dịch thanh toán PayOS để nâng cấp tài khoản người dùng lên Premium"
+    )
     public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
         return ResponseEntity.ok()
                 .body(
@@ -34,8 +46,19 @@ public class PayOSController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize(value = "(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.loggedIn() and @securityPermission.active()")
-    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(@PathVariable String id) {
+    @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN'))")
+    @Operation(
+            summary = "Lấy chi tiết giao dịch PayOS",
+            description = "Truy vấn thông tin chi tiết của một giao dịch PayOS theo mã giao dịch"
+    )
+    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
+            @Parameter(
+                    description = "Mã giao dịch PayOS",
+                    example = "PAYOS_123456",
+                    required = true
+            )
+            @PathVariable String id
+    ) {
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success(

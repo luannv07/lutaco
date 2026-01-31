@@ -10,13 +10,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "UserRoleRequest",
-        description = "Request dùng để gán hoặc thay đổi vai trò cho người dùng"
+        description = "Request dùng để gán hoặc thay đổi vai trò (role) cho người dùng"
 )
 public class UserRoleRequest {
 
     @NotBlank(message = "{input.required}")
     @Schema(
-            description = "Tên role cần gán cho user",
+            description = "Tên role cần gán cho người dùng",
             example = "ADMIN",
             requiredMode = Schema.RequiredMode.REQUIRED
     )

@@ -9,9 +9,17 @@ import org.hibernate.validator.constraints.Length;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(
+        name = "TokenRequest",
+        description = "Request chứa token xác thực (thường dùng cho verify / refresh / logout)"
+)
 public class TokenRequest {
+
     @NotBlank(message = "{input.required}")
     @Length(max = 255, message = "{input.invalid}")
-    @Schema(defaultValue = "{{bearer_token}}")
+    @Schema(
+            description = "JWT token cần xử lý",
+            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    )
     String token;
 }

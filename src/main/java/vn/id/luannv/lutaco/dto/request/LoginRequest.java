@@ -10,12 +10,12 @@ import org.hibernate.validator.constraints.Length;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "LoginRequest",
-        description = "Dữ liệu đăng nhập hệ thống"
+        description = "Request dùng để xác thực người dùng khi đăng nhập hệ thống"
 )
 public class LoginRequest {
 
     @Schema(
-            description = "Tên đăng nhập của người dùng",
+            description = "Tên đăng nhập của người dùng (username hoặc email tuỳ cấu hình hệ thống)",
             example = "{{account_test}}",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
@@ -23,7 +23,7 @@ public class LoginRequest {
     String username;
 
     @Schema(
-            description = "Mật khẩu của người dùng",
+            description = "Mật khẩu đăng nhập tương ứng với username",
             example = "{{account_test}}",
             requiredMode = Schema.RequiredMode.REQUIRED
     )

@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,18 +9,61 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-/**
- * ko cần validate request bởi vì dùng builder ở phía be
+@Schema(
+        name = "PayOSRequest",
+        description = "Request gửi sang PayOS để khởi tạo giao dịch thanh toán. " +
+                "Request này được build nội bộ ở backend, không nhận trực tiếp từ client nên không cần validate."
+)
+/*
+ * Không cần validate request vì được build bằng builder ở phía backend
  */
 public class PayOSRequest {
+
+    @Schema(
+            description = "Mã đơn hàng duy nhất trong hệ thống, dùng để đối soát giao dịch",
+            example = "123456789",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
     Integer orderCode;
+
+    @Schema(
+            description = "Số tiền cần thanh toán (đơn vị: VND)",
+            example = "50000",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
     Integer amount;
+
+    @Schema(
+            description = "Mô tả nội dung thanh toán, sẽ hiển thị trên giao diện PayOS",
+            example = "Thanh toan nang cap tai khoan Premium"
+    )
     String description;
+
+    @Schema(
+            description = "URL PayOS redirect về khi người dùng huỷ thanh toán",
+            example = "https://example.com/payment/cancel"
+    )
     String cancelUrl;
+
+    @Schema(
+            description = "URL PayOS redirect về khi thanh toán thành công",
+            example = "https://example.com/payment/success"
+    )
     String returnUrl;
+
+    @Schema(
+            description = "Thời điểm hết hạn của link thanh toán (epoch time - giây)",
+            example = "1710000000"
+    )
     Integer expiredAt;
+
+    @Schema(
+            description = "Chữ ký (signature) dùng để xác thực request với PayOS",
+            example = "a1b2c3d4e5f6"
+    )
     String signature;
 }
+
 
 
 /**

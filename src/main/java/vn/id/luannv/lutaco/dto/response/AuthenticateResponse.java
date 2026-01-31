@@ -8,25 +8,29 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "AuthenticateResponse",
-        description = "Kết quả xác thực người dùng sau khi đăng nhập hoặc đăng ký"
+        description = "Response trả về sau khi người dùng đăng nhập hoặc đăng ký thành công"
 )
 public class AuthenticateResponse {
 
     @Schema(
-            description = "JWT token dùng để xác thực các request tiếp theo",
+            description = "JWT Access Token dùng để xác thực cho các request tiếp theo",
             example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     )
     String accessToken;
 
     @Schema(
-            description = "Trạng thái xác thực thành công hay không",
+            description = "JWT Refresh Token dùng để cấp lại access token khi hết hạn",
+            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh..."
+    )
+    String refreshToken;
+
+    @Schema(
+            description = "Trạng thái xác thực người dùng",
             example = "true"
     )
     Boolean authenticated;
-
-    String refreshToken;
 }

@@ -32,13 +32,20 @@ import java.util.Date;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
+
     AuthService authService;
     JwtService jwtService;
     OtpService otpService;
 
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<AuthenticateResponse>> login(@Valid @RequestBody LoginRequest request) {
-        return  ResponseEntity.status(HttpStatus.OK).body(
+    @Operation(
+            summary = "Đăng nhập",
+            description = "Xác thực người dùng bằng thông tin đăng nhập hợp lệ và trả về access token cùng refresh token"
+    )
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> login(
+            @Valid @RequestBody LoginRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
                 BaseResponse.success(
                         authService.login(request),
                         MessageKeyConst.Success.SENT
@@ -46,8 +53,11 @@ public class AuthController {
         );
     }
 
-    @Operation(summary = "Tạo người dùng mới", description = "Tạo một người dùng mới với thông tin được cung cấp")
     @PostMapping("/register")
+    @Operation(
+            summary = "Đăng ký người dùng",
+            description = "Tạo tài khoản người dùng mới và trả về thông tin xác thực sau khi đăng ký thành công"
+    )
     public ResponseEntity<BaseResponse<AuthenticateResponse>> create(
             @Valid @RequestBody UserCreateRequest request
     ) {
@@ -60,6 +70,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     @PreAuthorize("@securityPermission.isLoggedIn()")
+    @Operation(
+            summary = "Đăng xuất",
+            description = "Huỷ hiệu lực của JWT hiện tại bằng cách đưa token vào blacklist"
+    )
     public ResponseEntity<BaseResponse<Void>> logout(HttpServletRequest req) {
         String token = JwtUtils.resolveToken(req);
 
@@ -74,15 +88,20 @@ public class AuthController {
                         MessageKeyConst.Success.SUCCESS
                 )
         );
-
     }
 
     @PostMapping("/refresh-token")
     @PreAuthorize("@securityPermission.isLoggedIn()")
-    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(HttpServletRequest req) {
+    @Operation(
+            summary = "Làm mới access token",
+            description = "Cấp access token mới dựa trên token hiện tại còn hiệu lực"
+    )
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(
+            HttpServletRequest req
+    ) {
         String token = JwtUtils.resolveToken(req);
 
-        String username =  jwtService.getUsernameFromToken(token);
+        String username = jwtService.getUsernameFromToken(token);
         String jti = jwtService.getJtiFromToken(token);
         Date expiryTime = jwtService.getExpiryTimeFromToken(token);
 
@@ -94,12 +113,15 @@ public class AuthController {
         );
     }
 
-    @Operation(
-            summary = "API dùng để send/resend OTP, có giới hạn số lần yêu cầu"
-    )
     @PostMapping("/send-otp")
     @PreAuthorize("@securityPermission.isPendingVerification()")
-    public ResponseEntity<BaseResponse<Void>> resendOtp(@Valid @RequestBody SendOtpRequest request) {
+    @Operation(
+            summary = "Gửi hoặc gửi lại OTP",
+            description = "Gửi mã OTP theo loại yêu cầu, có giới hạn số lần gửi trong một khoảng thời gian"
+    )
+    public ResponseEntity<BaseResponse<Void>> resendOtp(
+            @Valid @RequestBody SendOtpRequest request
+    ) {
         otpService.sendOtp(request.getEmail(), request.getOtpType());
         return ResponseEntity.status(HttpStatus.OK).body(
                 BaseResponse.success(
@@ -111,7 +133,13 @@ public class AuthController {
 
     @PostMapping("/verify-otp")
     @PreAuthorize("@securityPermission.isLoggedIn()")
-    public ResponseEntity<BaseResponse<Void>> resendOtp(@Valid @RequestBody VerifyOtpRequest request) {
+    @Operation(
+            summary = "Xác thực OTP",
+            description = "Xác thực mã OTP người dùng đã nhận để hoàn tất bước xác minh tài khoản"
+    )
+    public ResponseEntity<BaseResponse<Void>> resendOtp(
+            @Valid @RequestBody VerifyOtpRequest request
+    ) {
         otpService.verifyOtp(request);
         return ResponseEntity.status(HttpStatus.OK).body(
                 BaseResponse.success(

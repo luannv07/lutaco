@@ -2,7 +2,6 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,32 +13,31 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.CategoryDto;
-import vn.id.luannv.lutaco.dto.request.*;
-import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
+import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
-import vn.id.luannv.lutaco.jwt.JwtService;
-import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.CategoryService;
-import vn.id.luannv.lutaco.service.OtpService;
-import vn.id.luannv.lutaco.util.JwtUtils;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api/v1/categories")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "Category API", description = "API quản lý danh mục")
+@Tag(
+        name = "Category API",
+        description = "API quản lý danh mục của người dùng, chỉ thao tác trên dữ liệu cá nhân"
+)
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
 /**
- * Toàn bộ các api bên dưới đều thao tác với data của chính bản thân
+ * Toàn bộ các API bên dưới chỉ thao tác với dữ liệu danh mục của chính người dùng hiện tại
  */
 public class CategoryController {
 
     CategoryService categoryService;
 
-    @Operation(summary = "Lấy danh sách danh mục của chính mình")
     @GetMapping
+    @Operation(
+            summary = "Lấy danh sách danh mục",
+            description = "Lấy danh sách danh mục của người dùng hiện tại, hỗ trợ lọc và phân trang"
+    )
     public ResponseEntity<BaseResponse<Page<CategoryDto>>> search(
             @ModelAttribute CategoryFilterRequest request
     ) {
@@ -51,8 +49,11 @@ public class CategoryController {
         );
     }
 
-    @Operation(summary = "Thêm danh mục")
     @PostMapping
+    @Operation(
+            summary = "Thêm danh mục mới",
+            description = "Tạo mới một danh mục cho người dùng hiện tại"
+    )
     public ResponseEntity<BaseResponse<Void>> create(
             @Valid @RequestBody CategoryDto request
     ) {
@@ -61,8 +62,11 @@ public class CategoryController {
                 .body(BaseResponse.success(null, MessageKeyConst.Success.CREATED));
     }
 
-    @Operation(summary = "Sửa danh mục")
     @PutMapping("/{categoryName}")
+    @Operation(
+            summary = "Cập nhật danh mục",
+            description = "Cập nhật thông tin danh mục dựa trên tên danh mục"
+    )
     public ResponseEntity<BaseResponse<Void>> update(
             @PathVariable String categoryName,
             @Valid @RequestBody CategoryDto request
@@ -73,13 +77,17 @@ public class CategoryController {
         );
     }
 
-    @Operation(summary = "Disable danh mục")
     @PatchMapping("/{categoryName}/disabled")
-    public ResponseEntity<BaseResponse<Void>> updateStatus(@PathVariable String categoryName) {
+    @Operation(
+            summary = "Vô hiệu hoá danh mục",
+            description = "Đánh dấu danh mục là không còn hoạt động (disable)"
+    )
+    public ResponseEntity<BaseResponse<Void>> updateStatus(
+            @PathVariable String categoryName
+    ) {
         categoryService.deleteById(categoryName);
         return ResponseEntity.ok(
                 BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
         );
     }
 }
-

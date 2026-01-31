@@ -9,15 +9,16 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
-        name = "UserDtoRequest",
-        description = "Request dùng để tạo mới hoặc đăng ký người dùng"
+        name = "UserUpdateRequest",
+        description = "Request dùng để cập nhật thông tin cơ bản của người dùng"
 )
 public class UserUpdateRequest {
 
     @Size(min = 2, max = 255, message = "{input.invalid}")
     @Schema(
-            description = "Họ và tên người dùng",
+            description = "Họ và tên đầy đủ của người dùng",
             example = "Nguyễn Văn Luận",
+            minLength = 2,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
     )
@@ -25,14 +26,14 @@ public class UserUpdateRequest {
 
     @Size(max = 255, message = "{input.tooLong}")
     @Schema(
-            description = "Địa chỉ người dùng",
+            description = "Địa chỉ hiện tại của người dùng",
             example = "Hà Nội",
             maxLength = 255
     )
     String address;
 
     @Schema(
-            description = "Giới tính người dùng",
+            description = "Giới tính của người dùng",
             example = "MALE",
             allowableValues = {"MALE", "FEMALE", "OTHER"},
             requiredMode = Schema.RequiredMode.REQUIRED

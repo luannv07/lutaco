@@ -26,18 +26,20 @@ import java.util.List;
 @RequestMapping("/api/v1/wallets")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "Wallet API", description = "API quản lý ngân sách cá nhân")
-@PreAuthorize("isAuthenticated()")
+@Tag(
+        name = "Wallet API",
+        description = "API quản lý wallet/ngân sách cá nhân của người dùng"
+)
+@PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
 public class WalletController {
 
     WalletService walletService;
 
+    @PostMapping
     @Operation(
             summary = "Tạo wallet mới",
-            description = "Người dùng tạo wallet mới (giới hạn theo user plan)"
+            description = "Người dùng tạo wallet mới theo giới hạn của gói dịch vụ"
     )
-    @PostMapping
-    @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<Wallet>> create(
             @Valid @RequestBody WalletCreateRequest request
     ) {
@@ -48,14 +50,17 @@ public class WalletController {
                 ));
     }
 
+    @PutMapping("/{walletName}")
     @Operation(
             summary = "Cập nhật wallet",
-            description = "Chỉnh sửa tên hoặc mô tả wallet của chính mình"
+            description = "Cập nhật tên hoặc mô tả wallet của chính người dùng"
     )
-    @PutMapping("/{walletName}")
-    @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<Wallet>> update(
-            @Parameter(description = "Tên wallet cần cập nhật")
+            @Parameter(
+                    description = "Tên wallet cần cập nhật",
+                    example = "personal-wallet",
+                    required = true
+            )
             @PathVariable String walletName,
             @Valid @RequestBody WalletUpdateRequest request
     ) {
@@ -66,14 +71,17 @@ public class WalletController {
                 ));
     }
 
-    @Operation(
-            summary = "Xoá wallet (user)",
-            description = "Người dùng xoá wallet của mình (chuyển sang INACTIVE)"
-    )
     @DeleteMapping("/{walletName}")
-    @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
+    @Operation(
+            summary = "Xoá wallet",
+            description = "Người dùng xoá wallet của mình (chuyển trạng thái sang INACTIVE)"
+    )
     public ResponseEntity<BaseResponse<Void>> delete(
-            @Parameter(description = "Tên wallet cần xoá")
+            @Parameter(
+                    description = "Tên wallet cần xoá",
+                    example = "personal-wallet",
+                    required = true
+            )
             @PathVariable String walletName
     ) {
         walletService.deleteByUser(walletName);
@@ -85,14 +93,17 @@ public class WalletController {
                 ));
     }
 
+    @GetMapping("/{walletName}")
     @Operation(
             summary = "Lấy chi tiết wallet",
-            description = "Lấy thông tin chi tiết một wallet của chính mình"
+            description = "Lấy thông tin chi tiết một wallet thuộc quyền sở hữu của user hiện tại"
     )
-    @GetMapping("/{walletName}")
-    @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<Wallet>> getDetail(
-            @Parameter(description = "Tên wallet cần lấy")
+            @Parameter(
+                    description = "Tên wallet cần lấy thông tin",
+                    example = "personal-wallet",
+                    required = true
+            )
             @PathVariable String walletName
     ) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -102,12 +113,11 @@ public class WalletController {
                 ));
     }
 
+    @GetMapping
     @Operation(
             summary = "Lấy danh sách wallet của tôi",
-            description = "Lấy toàn bộ wallet của user hiện tại"
+            description = "Lấy toàn bộ wallet của user đang đăng nhập"
     )
-    @GetMapping
-    @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<List<Wallet>>> getMyWallets() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
@@ -115,5 +125,4 @@ public class WalletController {
                         MessageKeyConst.Success.SENT
                 ));
     }
-
 }

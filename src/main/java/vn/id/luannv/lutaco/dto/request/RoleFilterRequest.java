@@ -12,12 +12,12 @@ import org.hibernate.validator.constraints.Length;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "RoleFilterRequest",
-        description = "Request dùng để lọc và tìm kiếm Role"
+        description = "Request dùng để lọc, tìm kiếm và phân trang danh sách Role"
 )
 public class RoleFilterRequest extends BaseFilterRequest {
 
     @Schema(
-            description = "Tên role cần tìm kiếm (tìm gần đúng, không phân biệt hoa thường)",
+            description = "Tên role cần tìm kiếm (tìm kiếm gần đúng, không phân biệt hoa thường)",
             example = "ADMIN"
     )
     @Length(max = 255, message = "{input.invalid}")
