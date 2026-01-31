@@ -19,4 +19,6 @@ public interface WalletService {
     Wallet getDetail(String walletName);
 
     List<Wallet> getMyWallets();
+
+    void createDefaultWallet(String userId);
 }

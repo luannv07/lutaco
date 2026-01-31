@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,6 +38,19 @@ public class GlobalExceptionHandler {
                 .body(BaseResponse
                         .error(ex.getParams(), ex.getErrorCode()));
     }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<?> handleInvalidDataAccess(InvalidDataAccessApiUsageException ex) {
+        log.error("Invalid JPA usage", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(BaseResponse.error(
+                        null,
+                        ErrorCode.PERSISTENCE_STATE_ERROR
+                ));
+    }
+
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<?> handleNoResourceFoundException(NoResourceFoundException ex) {
