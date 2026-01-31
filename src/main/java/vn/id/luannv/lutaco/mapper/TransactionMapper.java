@@ -7,16 +7,11 @@ import vn.id.luannv.lutaco.entity.Transaction;
 
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
-
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "transactionType", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
-    @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "updatedDate", ignore = true)
     Transaction toEntity(TransactionRequest request);
 
     @Mapping(target = "categoryId", source = "category.id")
