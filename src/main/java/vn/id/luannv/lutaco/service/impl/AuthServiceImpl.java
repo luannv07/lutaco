@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.*;
+import vn.id.luannv.lutaco.event.entity.UserRegistered;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.jwt.JwtService;
@@ -41,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     InvalidatedTokenService invalidatedTokenService;
     RefreshTokenService refreshTokenService;
     OtpService otpService;
+    ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public AuthenticateResponse login(LoginRequest request) {
@@ -67,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRED)
+    @Transactional
     public AuthenticateResponse register(UserCreateRequest request) {
         log.info("AuthServiceImpl create: {}", request.toString());
 
@@ -100,8 +103,13 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.setAuthenticated(true);
 
-        otpService.sendOtp(entity.getEmail(), OtpType.REGISTER);
-
+        applicationEventPublisher.publishEvent(
+                new UserRegistered(
+                    entity.getUsername(),
+                    entity.getEmail(),
+                    entity.getId()
+                )
+        );
         return AuthenticateResponse.builder()
                 .authenticated(true)
                 .accessToken(jwtAuthenticateService.generateToken(entity))
@@ -125,8 +133,8 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenService.findByTokenWithUser(username) != null)
             refreshTokenService.deleteRefreshToken(username);
 
-//        if (expiryTime.after(new Date()))
-//            invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
+        if (expiryTime.after(new Date()))
+            invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
 
         return AuthenticateResponse.builder()
                 .refreshToken(refreshTokenService.createRefreshToken(username).getToken())

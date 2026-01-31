@@ -3,7 +3,9 @@ package vn.id.luannv.lutaco.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.entity.Wallet;
@@ -19,6 +21,7 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -47,6 +50,29 @@ public class WalletServiceImpl implements WalletService {
         );
 
         return walletRepository.save(wallet);
+    }
+
+    @Override
+    @Transactional(noRollbackFor = BusinessException.class)
+    public void createDefaultWallet(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+
+        long count = walletRepository.countByUser_Id(userId);
+        if (count >= user.getUserPlan().getMaxWallets()) {
+            throw new BusinessException(ErrorCode.WALLET_LIMIT_EXCEEDED);
+        }
+
+        Wallet wallet = new Wallet();
+        wallet.setUser(user);
+        wallet.setWalletName("Ví mặc định");
+        wallet.setInitialBalance(0L);
+        wallet.setCurrentBalance(0L);
+        wallet.setDescription("Ví mặc định do hệ thống tạo.");
+        wallet.setStatus(WalletStatus.ACTIVE);
+
+        walletRepository.save(wallet);
+        log.info("💕 Ví mặc định đã được tạo !!");
     }
 
     @Override

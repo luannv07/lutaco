@@ -15,6 +15,7 @@ public enum ErrorCode {
     DATABASE_ERROR("db.error", HttpStatus.INTERNAL_SERVER_ERROR),
     UNAUTHORIZED("unauthorized", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("forbidden", HttpStatus.FORBIDDEN),
+    PERSISTENCE_STATE_ERROR("persistence.error", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Validation / Input errors
     VALIDATION_FAILED("input.invalid", HttpStatus.BAD_REQUEST),
