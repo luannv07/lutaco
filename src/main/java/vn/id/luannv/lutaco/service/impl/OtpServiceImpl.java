@@ -75,8 +75,9 @@ public class OtpServiceImpl implements OtpService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
 
-        if (!SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
-            throw new BusinessException(ErrorCode.FORBIDDEN);
+        if (otpType != OtpType.FORGOT_PASSWORD)
+            if (!SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
+                throw new BusinessException(ErrorCode.FORBIDDEN);
 
         LocalDateTime now = LocalDateTime.now();
 
