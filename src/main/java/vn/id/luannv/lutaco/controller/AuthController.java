@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
-import vn.id.luannv.lutaco.dto.request.LoginRequest;
-import vn.id.luannv.lutaco.dto.request.SendOtpRequest;
-import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
-import vn.id.luannv.lutaco.dto.request.VerifyOtpRequest;
+import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.jwt.JwtService;
@@ -97,18 +94,10 @@ public class AuthController {
             summary = "Làm mới access token",
             description = "Cấp access token mới dựa trên token hiện tại còn hiệu lực"
     )
-    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(
-            HttpServletRequest req
-    ) {
-        String token = JwtUtils.resolveToken(req);
-
-        String username = jwtService.getUsernameFromToken(token);
-        String jti = jwtService.getJtiFromToken(token);
-        Date expiryTime = jwtService.getExpiryTimeFromToken(token);
-
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 BaseResponse.success(
-                        authService.refreshToken(username, jti, expiryTime),
+                        authService.refreshToken(refreshToken.getRefreshToken()),
                         MessageKeyConst.Success.SUCCESS
                 )
         );

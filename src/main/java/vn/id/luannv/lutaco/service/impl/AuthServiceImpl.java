@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,9 +13,13 @@ import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.request.LoginRequest;
 import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
+import vn.id.luannv.lutaco.entity.RefreshToken;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
-import vn.id.luannv.lutaco.enumerate.*;
+import vn.id.luannv.lutaco.enumerate.UserGender;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
+import vn.id.luannv.lutaco.enumerate.UserStatus;
+import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.event.entity.UserRegistered;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
@@ -24,7 +27,10 @@ import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.mapper.UserMapper;
 import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
-import vn.id.luannv.lutaco.service.*;
+import vn.id.luannv.lutaco.service.AuthService;
+import vn.id.luannv.lutaco.service.InvalidatedTokenService;
+import vn.id.luannv.lutaco.service.OtpService;
+import vn.id.luannv.lutaco.service.RefreshTokenService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Date;
@@ -125,21 +131,22 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthenticateResponse refreshToken(String username, String jti, Date expiryTime) {
-
-        User entity = userRepository.findByUsername(username).orElseThrow(() ->
-                new BusinessException(ErrorCode.UNAUTHORIZED));
+    public AuthenticateResponse refreshToken(String refreshToken) {
+        RefreshToken entity = refreshTokenService.findByToken(refreshToken);
+        String username = refreshTokenService.getUsernameByToken(refreshToken);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENUM_NOT_FOUND));
 
         if (refreshTokenService.findByTokenWithUser(username) != null)
             refreshTokenService.deleteRefreshToken(username);
 
-        if (expiryTime.after(new Date()))
-            invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
+        if (entity.getExpiryTime().after(new Date()))
+            invalidatedTokenService.addInvalidatedToken(entity.getToken(), entity.getExpiryTime());
 
         return AuthenticateResponse.builder()
                 .refreshToken(refreshTokenService.createRefreshToken(username).getToken())
                 .authenticated(true)
-                .accessToken(jwtAuthenticateService.generateToken(entity))
+                .accessToken(jwtAuthenticateService.generateToken(user))
                 .build();
     }
 }

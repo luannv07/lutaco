@@ -18,6 +18,7 @@ public class SecurityConstants {
 
     public static final List<String> PUBLIC_URLS_SHOULD_NOT_AUTH = List.of(
             "/api/v1/auth/login",
+            "/api/v1/auth/refresh-token",
             "/api/v1/auth/register"
     );
 }

@@ -62,4 +62,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         refreshTokenRepository.deleteByUser(user);
     }
+
+    @Override
+    public RefreshToken findByToken(String token) {
+        return refreshTokenRepository.findByToken(token)
+                .filter(refreshToken -> refreshToken.getExpiryTime().after(new Date()))
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+    }
+
+    @Override
+    public String getUsernameByToken(String token) {
+        return refreshTokenRepository.findUsernameByToken(token)
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+    }
 }

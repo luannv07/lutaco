@@ -7,5 +7,9 @@ public interface RefreshTokenService {
 
     RefreshToken findByTokenWithUser(String username);
 
+    // token thực chất là key refreshToken khi login thành công
+    RefreshToken findByToken(String token);
+
+    String getUsernameByToken(String token);
     void deleteRefreshToken(String username);
 }

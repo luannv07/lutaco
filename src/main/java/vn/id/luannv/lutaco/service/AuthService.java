@@ -14,5 +14,5 @@ public interface AuthService {
     void logout(String jti, Date expiryTime);
 
 
-    AuthenticateResponse refreshToken(String username, String jti, Date expiryTime);
+    AuthenticateResponse refreshToken(String refreshToken);
 }
