@@ -20,7 +20,7 @@ import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
-import vn.id.luannv.lutaco.event.entity.UserRegistered;
+import vn.id.luannv.lutaco.event.entity.UserRegisteredEvent;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.jwt.JwtService;
@@ -63,11 +63,9 @@ public class AuthServiceImpl implements AuthService {
                 || entity.getUserStatus().equals(UserStatus.BANNED) )
 
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
-        if (refreshTokenService.findByTokenWithUser(request.getUsername()) != null) {
-            log.info("refreshTokenService.findByTokenWithUser(request.getUsername()): {}", refreshTokenService.findByTokenWithUser(request.getUsername()));
+        if (refreshTokenService.findByTokenWithUser(request.getUsername()) != null)
             refreshTokenService.deleteRefreshToken(request.getUsername());
-        }
-        log.info("chay den day roi ne?");
+
         return AuthenticateResponse.builder()
                 .accessToken(jwtAuthenticateService.generateToken(entity))
                 .refreshToken(refreshTokenService.createRefreshToken(request.getUsername()).getToken())
@@ -110,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
         authentication.setAuthenticated(true);
 
         applicationEventPublisher.publishEvent(
-                new UserRegistered(
+                new UserRegisteredEvent(
                     entity.getUsername(),
                     entity.getEmail(),
                     entity.getId()

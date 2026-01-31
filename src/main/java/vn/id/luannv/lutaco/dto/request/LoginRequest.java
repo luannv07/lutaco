@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
+import vn.id.luannv.lutaco.annotation.bind.AuditUsername;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,6 +21,7 @@ public class LoginRequest {
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     @Length(max = 255, message = "{input.invalid}")
+    @AuditUsername
     String username;
 
     @Schema(

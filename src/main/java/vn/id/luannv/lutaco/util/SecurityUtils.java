@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,5 +39,22 @@ public class SecurityUtils {
 
         log.info("getCurrentUserMethod: {}", authentication.getPrincipal().toString());
         throw new BusinessException(ErrorCode.UNAUTHORIZED);
+    }
+    public static String resolveClientIp(HttpServletRequest request) {
+        String[] headers = {
+                "X-Forwarded-For",
+                "X-Real-IP",
+                "CF-Connecting-IP",
+                "True-Client-IP"
+        };
+
+        for (String header : headers) {
+            String ip = request.getHeader(header);
+            if (ip != null && !ip.isBlank() && !"unknown".equalsIgnoreCase(ip)) {
+                return ip.split(",")[0].trim();
+            }
+        }
+
+        return request.getRemoteAddr();
     }
 }

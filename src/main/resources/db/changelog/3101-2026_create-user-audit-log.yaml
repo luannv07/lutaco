@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 70ff79c4-4e89-4d0e-b05c-e854ef11d522
+      author: luannv
+      changes:
+        - createTable:
+            tableName: user_audit_logs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_agent
+                  type: TEXT
+
+              - column:
+                  name: client_ip
+                  type: VARCHAR(45)
+
+              - column:
+                  name: request_uri
+                  type: VARCHAR(255)
+
+              - column:
+                  name: method_name
+                  type: VARCHAR(255)
+
+              - column:
+                  name: execution_time_ms
+                  type: BIGINT
+
+              - column:
+                  name: created_date
+                  type: DATETIME
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            tableName: user_audit_logs
+            indexName: idx_user_audit_logs_username
+            columns:
+              - column:
+                  name: username
+
+        - createIndex:
+            tableName: user_audit_logs
+            indexName: idx_user_audit_logs_method_name
+            columns:
+              - column:
+                  name: method_name

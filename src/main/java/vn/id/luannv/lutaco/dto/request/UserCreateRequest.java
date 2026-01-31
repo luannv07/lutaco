@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.annotation.bind.AuditUsername;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
