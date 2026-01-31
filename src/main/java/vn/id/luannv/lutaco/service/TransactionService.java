@@ -6,4 +6,5 @@ import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 
 public interface TransactionService extends
         BaseService<TransactionFilterRequest, TransactionResponse, TransactionRequest, String> {
+    void deleteByIdAndWalletId(String transactionId, String walletId);
 }

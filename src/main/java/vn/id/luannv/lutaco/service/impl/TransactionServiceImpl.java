@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,12 +15,14 @@ import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.Transaction;
 import vn.id.luannv.lutaco.entity.User;
+import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.TransactionType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.TransactionMapper;
 import vn.id.luannv.lutaco.repository.CategoryRepository;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
+import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
@@ -32,14 +35,19 @@ import java.time.LocalDateTime;
 public class TransactionServiceImpl implements TransactionService {
 
     TransactionRepository transactionRepository;
-    CategoryRepository categoryRepository;
     TransactionMapper transactionMapper;
+    CategoryRepository categoryRepository;
+    WalletRepository walletRepository;
 
     @Override
+    @Transactional
     public TransactionResponse create(TransactionRequest request) {
         log.info("TransactionServiceImpl create: {}", request);
 
         Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
+        Wallet wallet = walletRepository.findByUser_IdAndId(SecurityUtils.getCurrentId(), request.getWalletId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         Transaction transaction = transactionMapper.toEntity(request);
@@ -50,10 +58,21 @@ public class TransactionServiceImpl implements TransactionService {
 
         transaction.setCategory(category);
         transaction.setUser(User.builder().id(SecurityUtils.getCurrentId()).build());
+        applyBalance(wallet.getId(), transaction.getAmount(), transaction.getTransactionType());
 
         return transactionMapper.toResponse(
                 transactionRepository.save(transaction)
         );
+    }
+
+    private void applyBalance(String walletId, Long amount, TransactionType type) {
+        if (type == null)
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED);
+        int updatedRows = walletRepository.updateBalance(walletId, amount, type.name());
+        if (updatedRows == 0)
+            throw new BusinessException(ErrorCode.INSUFFICIENT_BALANCE);
+
+        log.info("TransactionServiceImpl amount & type: {} {}", amount, type);
     }
 
     @Override
@@ -109,14 +128,23 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void deleteById(String id) {
-        log.info("TransactionServiceImpl deleteById: {}", id);
+        throw new UnsupportedOperationException(ErrorCode.UNSUPPORTED_YET.getMessage());
+    }
 
-        Transaction transaction = transactionRepository.findById(id)
+    @Override
+    @Transactional
+    public void deleteByIdAndWalletId(String transactionId, String walletId) {
+        log.info("TransactionServiceImpl deleteById: {}", transactionId);
+
+        Transaction transaction = transactionRepository.findById(transactionId)
                 .filter(t -> t.getDeletedAt() == null)
                 .filter(t -> t.getUser().getId().equals(SecurityUtils.getCurrentId()))
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         transaction.setDeletedAt(LocalDateTime.now());
+        TransactionType reverse = transaction.getTransactionType() == TransactionType.EXPENSE ?
+                TransactionType.INCOME :  TransactionType.EXPENSE;
+        applyBalance(walletId, transaction.getAmount(), reverse);
         transactionRepository.save(transaction);
     }
 }

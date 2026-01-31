@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.service.TransactionService;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
@@ -114,7 +116,7 @@ public class TransactionController {
         );
     }
 
-    @PatchMapping("/{id}/disabled")
+    @PatchMapping("/{id}/{walletId}/disabled")
     @Operation(
             summary = "Xoá giao dịch (soft delete)",
             description = "Đánh dấu giao dịch là không còn hiệu lực, không xoá vật lý khỏi hệ thống"
@@ -125,9 +127,15 @@ public class TransactionController {
                     example = "TXN_123456",
                     required = true
             )
-            @PathVariable String id
+            @PathVariable String id,
+            @Parameter(
+                    description = "ID ví",
+                    example = "TXN_123456",
+                    required = true
+            )
+            @PathVariable String walletId
     ) {
-        transactionService.deleteById(id);
+        transactionService.deleteByIdAndWalletId(id, walletId);
         return ResponseEntity.ok(
                 BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
         );

@@ -16,6 +16,8 @@ public enum ErrorCode {
     UNAUTHORIZED("unauthorized", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("forbidden", HttpStatus.FORBIDDEN),
     PERSISTENCE_STATE_ERROR("persistence.error", HttpStatus.INTERNAL_SERVER_ERROR),
+    INSUFFICIENT_BALANCE("insufficient.balance", HttpStatus.INTERNAL_SERVER_ERROR),
+    UNSUPPORTED_YET("unsupported.yet", HttpStatus.BAD_REQUEST),
 
     // Validation / Input errors
     VALIDATION_FAILED("input.invalid", HttpStatus.BAD_REQUEST),

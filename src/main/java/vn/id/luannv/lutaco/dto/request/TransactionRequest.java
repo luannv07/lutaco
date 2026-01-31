@@ -51,6 +51,14 @@ public class TransactionRequest {
     )
     LocalDateTime transactionDate;
 
+    @NotNull(message = "{input.required}")
+    @Schema(
+            description = "Thời điểm phát sinh giao dịch",
+            example = "Ví MB Bank",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    String walletId;
+
     @Schema(
             description = "Ghi chú giao dịch",
             example = "Ăn trưa cùng bạn bè"
