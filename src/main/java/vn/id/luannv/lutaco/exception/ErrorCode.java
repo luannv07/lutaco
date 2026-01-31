@@ -21,7 +21,7 @@ public enum ErrorCode {
     REQUIRED_FIELD_MISSING("input.required", HttpStatus.BAD_REQUEST),
     FIELD_TOO_LONG("input.tooLong", HttpStatus.BAD_REQUEST),
     FIELD_TOO_SHORT("input.tooShort", HttpStatus.BAD_REQUEST),
-    FIELD_EXISTS("input.fieldExists", HttpStatus.BAD_REQUEST),
+    FIELD_EXISTED("input.fieldExists", HttpStatus.BAD_REQUEST),
 
     // Generic entity errors
     ENTITY_NOT_FOUND("entity.notFound", HttpStatus.NOT_FOUND),

@@ -11,15 +11,14 @@ import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, String> {
     @Query("select c from Category c where c.parent.id = :parentId")
     List<Category> findByParentId(@Param("parentId") String parentId);
 
-    Category findByCategoryName(String categoryName);
-
-    Category findByCategoryNameAndOwnerUserId(String categoryName, String ownerUserId);
+    Optional<Category> findByCategoryNameAndOwnerUserId(String categoryName, String ownerUserId);
     @Query("""
     select c
     from Category c
@@ -40,5 +39,18 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
             @Param("userId") String userId,
             Pageable pageable
     );
+
+    @Query("""
+    select c.parent.id
+    from Category c
+    where c.categoryName = :categoryName
+      and c.ownerUserId = :ownerUserId
+""")
+    String findParentIdByCategoryNameAndOwnerUserId(
+            @Param("categoryName") String categoryName,
+            @Param("ownerUserId") String ownerUserId
+    );
+
+    boolean existsByOwnerUserIdAndCategoryName(String ownerUserId, String categoryName);
 }
 

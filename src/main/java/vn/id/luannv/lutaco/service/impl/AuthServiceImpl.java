@@ -72,10 +72,10 @@ public class AuthServiceImpl implements AuthService {
         log.info("AuthServiceImpl create: {}", request.toString());
 
         if (userRepository.existsByEmail(request.getEmail()))
-            throw new BusinessException(ErrorCode.FIELD_EXISTS, Map.of("email", ErrorCode.FIELD_EXISTS.getMessage()));
+            throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("email", ErrorCode.FIELD_EXISTED.getMessage()));
 
         if (userRepository.existsByUsername(request.getUsername()))
-            throw new BusinessException(ErrorCode.FIELD_EXISTS, Map.of("username", ErrorCode.FIELD_EXISTS.getMessage()));
+            throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("username", ErrorCode.FIELD_EXISTED.getMessage()));
 
         UserGender userGender = UserGender.OTHER;
 

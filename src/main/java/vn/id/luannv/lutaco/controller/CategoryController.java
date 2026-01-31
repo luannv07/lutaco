@@ -62,22 +62,21 @@ public class CategoryController {
     }
 
     @Operation(summary = "Sửa danh mục")
-    @PutMapping("/{id}")
-    @PreAuthorize("#id == authentication.principal.id")
+    @PutMapping("/{categoryName}")
     public ResponseEntity<BaseResponse<Void>> update(
-            @PathVariable String id,
+            @PathVariable String categoryName,
             @Valid @RequestBody CategoryDto request
     ) {
-        categoryService.update(id, request);
+        categoryService.update(categoryName, request);
         return ResponseEntity.ok(
                 BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
         );
     }
 
     @Operation(summary = "Disable danh mục")
-    @PatchMapping("/{id}/disabled")
-    public ResponseEntity<BaseResponse<Void>> updateStatus(@PathVariable String id) {
-        categoryService.deleteById(id);
+    @PatchMapping("/{categoryName}/disabled")
+    public ResponseEntity<BaseResponse<Void>> updateStatus(@PathVariable String categoryName) {
+        categoryService.deleteById(categoryName);
         return ResponseEntity.ok(
                 BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
         );

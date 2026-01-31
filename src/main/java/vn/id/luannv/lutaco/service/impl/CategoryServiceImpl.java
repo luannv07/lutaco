@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,13 +19,11 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.CategoryMapper;
 import vn.id.luannv.lutaco.repository.CategoryOverrideRepository;
 import vn.id.luannv.lutaco.repository.CategoryRepository;
-import vn.id.luannv.lutaco.service.CategoryOverrideService;
 import vn.id.luannv.lutaco.service.CategoryService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -46,14 +45,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto create(CategoryDto request) {
         log.info("category create function: {}", request);
         String userId = SecurityUtils.getCurrentId();
         // thêm category hệ thống ma disabled trước đó
         if (categoryOverrideRepository.existsByCategory_CategoryNameAndUserId(request.getCategoryName(), userId)) {
             categoryOverrideRepository.restoreByCategoryName(request.getCategoryName(), userId);
-
-            Category entity = categoryRepository.findByCategoryNameAndOwnerUserId(request.getCategoryName(), userId);
+            log.info("category override function: {}", request.getCategoryName());
+            Category entity = categoryRepository.findByCategoryNameAndOwnerUserId(request.getCategoryName(), userId)
+                    .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
             return buildDto(entity);
         }
@@ -61,6 +62,10 @@ public class CategoryServiceImpl implements CategoryService {
         Category entity = categoryMapper.toEntity(request);
         categoryRepository.findById(request.getParentId())
                 .ifPresent(entity::setParent);
+        entity.setOwnerUserId(userId);
+        log.info("category create function: {}", request);
+        if (categoryRepository.existsByOwnerUserIdAndCategoryName(userId, entity.getCategoryName()))
+            throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("categoryName", ErrorCode.FIELD_EXISTED.getMessage()));
 
         return buildDto(categoryRepository.save(entity));
     }
@@ -73,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<CategoryDto> search(CategoryFilterRequest request, Integer page, Integer size) {
         CategoryType categoryType = null;
-        if (!CategoryType.isValidCategoryType(request.getCategoryType()))
+        if (request.getCategoryType() != null && !CategoryType.isValidCategoryType(request.getCategoryType()))
             categoryType = CategoryType.valueOf(request.getCategoryType());
 
         Pageable pageable = PageRequest.of(page-1, size);
@@ -81,12 +86,12 @@ public class CategoryServiceImpl implements CategoryService {
         Page<Category> categoryPage = categoryRepository
                 .advancedSearch(request.getCategoryName(), categoryType, SecurityUtils.getCurrentId(), pageable);
 
-        return categoryPage.map(categoryMapper::toDto);
+        return categoryPage.map(this::buildDto);
     }
 
     @Override
-    public CategoryDto update(String id, CategoryDto request) {
-        Category category = categoryRepository.findById(id)
+    public CategoryDto update(String categoryName, CategoryDto request) {
+        Category category = categoryRepository.findByCategoryNameAndOwnerUserId(categoryName, SecurityUtils.getCurrentId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         categoryMapper.update(category, request);
@@ -97,8 +102,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteById(String id) {
-        Category category = categoryRepository.findById(id)
+    public void deleteById(String categoryName) {
+        Category category = categoryRepository.findByCategoryNameAndOwnerUserId(categoryName, SecurityUtils.getCurrentId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         categoryOverrideRepository
