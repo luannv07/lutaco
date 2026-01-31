@@ -1,6 +1,6 @@
 package vn.id.luannv.lutaco.enumerate;
 
-public enum BudgetStatus {
+public enum WalletStatus {
     ACTIVE,
     INACTIVE,
     ARCHIVED

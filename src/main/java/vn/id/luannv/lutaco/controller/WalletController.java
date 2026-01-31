@@ -13,70 +13,70 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
-import vn.id.luannv.lutaco.dto.request.BudgetCreateRequest;
-import vn.id.luannv.lutaco.dto.request.BudgetUpdateRequest;
+import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
+import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
-import vn.id.luannv.lutaco.entity.Budget;
-import vn.id.luannv.lutaco.service.BudgetService;
+import vn.id.luannv.lutaco.entity.Wallet;
+import vn.id.luannv.lutaco.service.WalletService;
 
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/budgets")
+@RequestMapping("/api/v1/wallets")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "Budget API", description = "API quản lý ngân sách cá nhân")
+@Tag(name = "Wallet API", description = "API quản lý ngân sách cá nhân")
 @PreAuthorize("isAuthenticated()")
-public class BudgetController {
+public class WalletController {
 
-    BudgetService budgetService;
+    WalletService walletService;
 
     @Operation(
-            summary = "Tạo budget mới",
-            description = "Người dùng tạo budget mới (giới hạn theo user plan)"
+            summary = "Tạo wallet mới",
+            description = "Người dùng tạo wallet mới (giới hạn theo user plan)"
     )
     @PostMapping
     @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
-    public ResponseEntity<BaseResponse<Budget>> create(
-            @Valid @RequestBody BudgetCreateRequest request
+    public ResponseEntity<BaseResponse<Wallet>> create(
+            @Valid @RequestBody WalletCreateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
-                        budgetService.create(request),
+                        walletService.create(request),
                         MessageKeyConst.Success.CREATED
                 ));
     }
 
     @Operation(
-            summary = "Cập nhật budget",
-            description = "Chỉnh sửa tên hoặc mô tả budget của chính mình"
+            summary = "Cập nhật wallet",
+            description = "Chỉnh sửa tên hoặc mô tả wallet của chính mình"
     )
-    @PutMapping("/{budgetName}")
+    @PutMapping("/{walletName}")
     @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
-    public ResponseEntity<BaseResponse<Budget>> update(
-            @Parameter(description = "Tên budget cần cập nhật")
-            @PathVariable String budgetName,
-            @Valid @RequestBody BudgetUpdateRequest request
+    public ResponseEntity<BaseResponse<Wallet>> update(
+            @Parameter(description = "Tên wallet cần cập nhật")
+            @PathVariable String walletName,
+            @Valid @RequestBody WalletUpdateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
-                        budgetService.update(budgetName, request),
+                        walletService.update(walletName, request),
                         MessageKeyConst.Success.UPDATED
                 ));
     }
 
     @Operation(
-            summary = "Xoá budget (user)",
-            description = "Người dùng xoá budget của mình (chuyển sang INACTIVE)"
+            summary = "Xoá wallet (user)",
+            description = "Người dùng xoá wallet của mình (chuyển sang INACTIVE)"
     )
-    @DeleteMapping("/{budgetName}")
+    @DeleteMapping("/{walletName}")
     @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<Void>> delete(
-            @Parameter(description = "Tên budget cần xoá")
-            @PathVariable String budgetName
+            @Parameter(description = "Tên wallet cần xoá")
+            @PathVariable String walletName
     ) {
-        budgetService.deleteByUser(budgetName);
+        walletService.deleteByUser(walletName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
@@ -86,32 +86,32 @@ public class BudgetController {
     }
 
     @Operation(
-            summary = "Lấy chi tiết budget",
-            description = "Lấy thông tin chi tiết một budget của chính mình"
+            summary = "Lấy chi tiết wallet",
+            description = "Lấy thông tin chi tiết một wallet của chính mình"
     )
-    @GetMapping("/{budgetName}")
+    @GetMapping("/{walletName}")
     @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
-    public ResponseEntity<BaseResponse<Budget>> getDetail(
-            @Parameter(description = "Tên budget cần lấy")
-            @PathVariable String budgetName
+    public ResponseEntity<BaseResponse<Wallet>> getDetail(
+            @Parameter(description = "Tên wallet cần lấy")
+            @PathVariable String walletName
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
-                        budgetService.getDetail(budgetName),
+                        walletService.getDetail(walletName),
                         MessageKeyConst.Success.SENT
                 ));
     }
 
     @Operation(
-            summary = "Lấy danh sách budget của tôi",
-            description = "Lấy toàn bộ budget của user hiện tại"
+            summary = "Lấy danh sách wallet của tôi",
+            description = "Lấy toàn bộ wallet của user hiện tại"
     )
     @GetMapping
     @PreAuthorize("hasRole('USER') and @securityPermission.isActive()")
-    public ResponseEntity<BaseResponse<List<Budget>>> getMyBudgets() {
+    public ResponseEntity<BaseResponse<List<Wallet>>> getMyWallets() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
-                        budgetService.getMyBudgets(),
+                        walletService.getMyWallets(),
                         MessageKeyConst.Success.SENT
                 ));
     }

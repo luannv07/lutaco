@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
@@ -14,6 +15,7 @@ import lombok.experimental.FieldDefaults;
         name = "UserDtoRequest",
         description = "Request dùng để tạo mới hoặc đăng ký người dùng"
 )
+@Builder
 public class UserCreateRequest {
 
     @NotBlank(message = "{input.required}")

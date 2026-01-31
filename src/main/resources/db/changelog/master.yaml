@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/3001-2026_create-category.yaml
   - include:
       file: db/changelog/3001-2026_create-category_overrides.yaml
+  - include:
+      file: db/changelog/3101-2026_rename-budget-to-wallet.yaml

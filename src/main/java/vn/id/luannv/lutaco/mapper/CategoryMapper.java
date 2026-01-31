@@ -4,12 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import vn.id.luannv.lutaco.dto.CategoryDto;
-import vn.id.luannv.lutaco.dto.request.BudgetCreateRequest;
-import vn.id.luannv.lutaco.dto.request.BudgetUpdateRequest;
-import vn.id.luannv.lutaco.entity.Budget;
 import vn.id.luannv.lutaco.entity.Category;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {

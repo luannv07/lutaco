@@ -61,7 +61,8 @@ public enum ErrorCode {
     PAYMENT_SYSTEM_ERROR("payment.system.error", HttpStatus.BAD_REQUEST),
     EXTERNAL_SERVICE_UNAVAILABLE("external.service.unavailable", HttpStatus.SERVICE_UNAVAILABLE),
     PAYMENT_PROVIDER_UNAVAILABLE("payment.provider.unavailable", HttpStatus.SERVICE_UNAVAILABLE),
-    INVALID_SIGNATURE("invalid.signature", HttpStatus.BAD_REQUEST), BUDGET_LIMIT_EXCEEDED("budget.limitExceeded", HttpStatus.BAD_REQUEST),
+    INVALID_SIGNATURE("invalid.signature", HttpStatus.BAD_REQUEST),
+    WALLET_LIMIT_EXCEEDED("wallet.limitExceeded", HttpStatus.BAD_REQUEST),
     ;
     String message;
     HttpStatus httpStatus;

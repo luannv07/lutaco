@@ -3,12 +3,12 @@ package vn.id.luannv.lutaco.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import vn.id.luannv.lutaco.dto.request.BudgetCreateRequest;
-import vn.id.luannv.lutaco.dto.request.BudgetUpdateRequest;
-import vn.id.luannv.lutaco.entity.Budget;
+import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
+import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
+import vn.id.luannv.lutaco.entity.Wallet;
 
 @Mapper(componentModel = "spring")
-public interface BudgetMapper {
+public interface WalletMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "currentBalance", source = "initialBalance")
@@ -17,7 +17,7 @@ public interface BudgetMapper {
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
-    Budget toEntity(BudgetCreateRequest request);
+    Wallet toEntity(WalletCreateRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
@@ -28,5 +28,5 @@ public interface BudgetMapper {
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
-    void update(@MappingTarget Budget budget, BudgetUpdateRequest request);
+    void update(@MappingTarget Wallet wallet, WalletUpdateRequest request);
 }
