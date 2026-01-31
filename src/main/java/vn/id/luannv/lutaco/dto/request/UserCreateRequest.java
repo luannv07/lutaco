@@ -22,7 +22,7 @@ public class UserCreateRequest {
     @Size(min = 6, max = 255, message = "{input.invalid}")
     @Schema(
             description = "Tên đăng nhập của người dùng",
-            example = "luannv",
+            example = "{{register_account}}",
             minLength = 6,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
@@ -33,7 +33,7 @@ public class UserCreateRequest {
     @Size(min = 6, max = 255, message = "{input.invalid}")
     @Schema(
             description = "Mật khẩu đăng nhập (tối thiểu 6 ký tự)",
-            example = "luannv123",
+            example = "{{register_account}}",
             minLength = 6,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
