@@ -1,0 +1,126 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2a91c2f4-1f6e-4b92-9b8d-8e7a3f5c1a01
+      author: luannv
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: transaction_type
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: transaction_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: note
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: deleted_at
+                  type: datetime
+                  constraints:
+                    nullable: true
+                  remarks: khác null tức là transaction đã bị xoá (soft delete)
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_date
+                  type: datetime
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_date
+                  type: datetime
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 8d1f5c93-3c3a-4e68-9d9e-2b73f6a1c902
+      author: luannv
+      changes:
+        - createIndex:
+            tableName: transactions
+            indexName: idx_transactions_user
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: transactions
+            indexName: idx_transactions_category
+            columns:
+              - column:
+                  name: category_id
+
+        - addForeignKeyConstraint:
+            constraintName: fk_transactions_category
+            baseTableName: transactions
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+
+        - addForeignKeyConstraint:
+            constraintName: fk_transactions_user
+            baseTableName: transactions
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+
+        - sql:
+            sql: |
+              ALTER TABLE transactions
+              ADD CONSTRAINT chk_transactions_type
+              CHECK (UPPER(transaction_type) IN ('EXPENSE', 'INCOME'));

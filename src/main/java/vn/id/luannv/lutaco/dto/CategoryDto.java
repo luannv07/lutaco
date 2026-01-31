@@ -1,17 +1,13 @@
 package vn.id.luannv.lutaco.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

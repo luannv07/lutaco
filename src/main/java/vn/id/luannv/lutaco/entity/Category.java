@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Getter
