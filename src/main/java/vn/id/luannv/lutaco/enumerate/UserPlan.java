@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public enum UserPlan {
     PREMIUM(5),
     FREEMIUM(1);
-    int maxBudgets;
+    int maxWallets;
 }

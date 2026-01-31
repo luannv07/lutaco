@@ -21,7 +21,6 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.UserMapper;
 import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
-import vn.id.luannv.lutaco.service.MasterDictionaryService;
 import vn.id.luannv.lutaco.service.UserService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
@@ -35,7 +34,6 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     RoleRepository roleRepository;
-    MasterDictionaryService masterDictionaryService;
     PasswordEncoder passwordEncoder;
 
     @Override

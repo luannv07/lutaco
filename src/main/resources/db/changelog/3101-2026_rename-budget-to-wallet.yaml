@@ -1,0 +1,52 @@
+databaseChangeLog:
+  # xoá dữ liệu cũ đã tạo mặc định ở bảng budget (cũ)
+  - changeSet:
+      id: aa12846d-1669-4163-9211-abafc07cde94
+      author: luannv
+      changes:
+        - sql:
+            sql: |
+              DELETE FROM budgets;
+  # xoá fk, uk, đổi tên, cột thành wallet
+  - changeSet:
+      id: c4c57fa4-07d9-4504-b43b-e3cecd417513
+      author: luannv
+      changes:
+        - dropForeignKeyConstraint:
+            constraintName: fk_budgets_user
+            baseTableName: budgets
+
+        - dropUniqueConstraint:
+            constraintName: uk_budget_user_id_budget_name
+            tableName: budgets
+
+        - renameTable:
+            oldTableName: budgets
+            newTableName: wallets
+
+        - renameColumn:
+            tableName: wallets
+            oldColumnName: budget_name
+            newColumnName: wallet_name
+            columnDataType: varchar(100)
+  # tạo lại fk, uk
+  - changeSet:
+      id: 653a72da-05a3-40f5-94b7-f22481be10de
+      author: luannv
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: wallets
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: wallets_user
+
+        - addUniqueConstraint:
+            tableName: wallets
+            constraintName: uk_wallet_user_id_wallet_name
+            columnNames: user_id, wallet_name
+
+        - sql:
+            sql: |
+              alter table wallets
+              add check (upper(status) in ('ACTIVE', 'INACTIVE', 'ARCHIVED'))

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.BudgetStatus;
+import vn.id.luannv.lutaco.enumerate.WalletStatus;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -12,17 +12,17 @@ import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BUDGETS")
+@Table(name = "WALLETS")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Budget extends BaseEntity {
+public class Wallet extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "ID", updatable = false, nullable = false)
     String id;
 
-    @Column(name = "budget_name", nullable = false)
-    String budgetName;
+    @Column(name = "WALLET_name", nullable = false)
+    String walletName;
 
     @Column(name = "INITIAL_BALANCE", nullable = false)
     Long initialBalance;
@@ -35,7 +35,7 @@ public class Budget extends BaseEntity {
 
     @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
-    BudgetStatus status;
+    WalletStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)

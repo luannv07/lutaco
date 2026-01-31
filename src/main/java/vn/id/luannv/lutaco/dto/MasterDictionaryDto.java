@@ -7,12 +7,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "DTO quản lý danh mục dùng chung")
+@Data
 public class MasterDictionaryDto {
 
     @NotBlank(message = "{input.required}")

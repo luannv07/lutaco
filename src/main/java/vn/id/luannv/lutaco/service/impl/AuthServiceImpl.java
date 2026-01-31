@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +38,6 @@ public class AuthServiceImpl implements AuthService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     JwtService jwtAuthenticateService;
-    MasterDictionaryService masterDictionaryService;
     InvalidatedTokenService invalidatedTokenService;
     RefreshTokenService refreshTokenService;
     OtpService otpService;
@@ -72,10 +72,10 @@ public class AuthServiceImpl implements AuthService {
         log.info("AuthServiceImpl create: {}", request.toString());
 
         if (userRepository.existsByEmail(request.getEmail()))
-            throw new BusinessException(ErrorCode.FIELD_EXISTS, Map.of("email", ErrorCode.FIELD_EXISTS.getMessage()));
+            throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("email", ErrorCode.FIELD_EXISTED.getMessage()));
 
         if (userRepository.existsByUsername(request.getUsername()))
-            throw new BusinessException(ErrorCode.FIELD_EXISTS, Map.of("username", ErrorCode.FIELD_EXISTS.getMessage()));
+            throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("username", ErrorCode.FIELD_EXISTED.getMessage()));
 
         UserGender userGender = UserGender.OTHER;
 

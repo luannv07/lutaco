@@ -21,11 +21,11 @@ public enum ErrorCode {
     REQUIRED_FIELD_MISSING("input.required", HttpStatus.BAD_REQUEST),
     FIELD_TOO_LONG("input.tooLong", HttpStatus.BAD_REQUEST),
     FIELD_TOO_SHORT("input.tooShort", HttpStatus.BAD_REQUEST),
-    FIELD_EXISTS("input.fieldExists", HttpStatus.BAD_REQUEST),
+    FIELD_EXISTED("input.fieldExists", HttpStatus.BAD_REQUEST),
 
     // Generic entity errors
     ENTITY_NOT_FOUND("entity.notFound", HttpStatus.NOT_FOUND),
-    ENTITY_EXISTS("entity.exists", HttpStatus.BAD_REQUEST),
+    ENTITY_EXISTED("entity.exists", HttpStatus.BAD_REQUEST),
 
     // Business rules
     OPERATION_NOT_ALLOWED("operation.notAllowed", HttpStatus.BAD_REQUEST),
@@ -61,7 +61,8 @@ public enum ErrorCode {
     PAYMENT_SYSTEM_ERROR("payment.system.error", HttpStatus.BAD_REQUEST),
     EXTERNAL_SERVICE_UNAVAILABLE("external.service.unavailable", HttpStatus.SERVICE_UNAVAILABLE),
     PAYMENT_PROVIDER_UNAVAILABLE("payment.provider.unavailable", HttpStatus.SERVICE_UNAVAILABLE),
-    INVALID_SIGNATURE("invalid.signature", HttpStatus.BAD_REQUEST), BUDGET_LIMIT_EXCEEDED("budget.limitExceeded", HttpStatus.BAD_REQUEST),
+    INVALID_SIGNATURE("invalid.signature", HttpStatus.BAD_REQUEST),
+    WALLET_LIMIT_EXCEEDED("wallet.limitExceeded", HttpStatus.BAD_REQUEST),
     ;
     String message;
     HttpStatus httpStatus;
