@@ -1,0 +1,55 @@
+package vn.id.luannv.lutaco.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.enumerate.TransactionType;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "transactions")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Transaction extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_transactions_user")
+    )
+    User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "category_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_transactions_category")
+    )
+    Category category;
+
+    @Column(nullable = false)
+    Long amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type", nullable = false, length = 10)
+    TransactionType transactionType;
+
+    @Column(name = "transaction_date", nullable = false)
+    LocalDateTime transactionDate;
+
+    @Column(length = 255)
+    String note;
+
+    @Column(name = "deleted_at")
+    LocalDateTime deletedAt;
+}

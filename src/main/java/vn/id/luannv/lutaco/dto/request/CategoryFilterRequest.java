@@ -5,10 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
-import vn.id.luannv.lutaco.dto.CategoryDto;
-import vn.id.luannv.lutaco.enumerate.CategoryType;
-
-import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

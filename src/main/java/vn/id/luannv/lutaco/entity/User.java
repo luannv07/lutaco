@@ -15,6 +15,7 @@ import vn.id.luannv.lutaco.enumerate.UserStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "USERS")
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity {
     @Id
