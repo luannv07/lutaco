@@ -12,5 +12,9 @@ import lombok.experimental.FieldDefaults;
         description = "Request dùng để gửi lên token refresh(jti)"
 )
 public class RefreshTokenRequest {
+    @Schema(
+            description = "token code",
+            example = "{{refreshToken}}"
+    )
     String refreshToken;
 }
