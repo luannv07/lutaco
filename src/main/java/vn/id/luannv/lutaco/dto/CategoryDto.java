@@ -20,6 +20,12 @@ import java.util.List;
 public class CategoryDto {
 
     @Schema(
+            description = "ID Danh mục",
+            example = "7a65ebc9-6b23-415d-922b-9722cd94b0ec"
+    )
+    String id;
+
+    @Schema(
             description = "Tên danh mục",
             example = "Ăn uống"
     )

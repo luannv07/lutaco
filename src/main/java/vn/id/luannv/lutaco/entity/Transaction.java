@@ -21,13 +21,8 @@ public class Transaction extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "user_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_transactions_user")
-    )
-    User user;
+    @Column(name = "user_id", nullable = false, updatable = false)
+    String userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -36,6 +31,14 @@ public class Transaction extends BaseEntity {
             foreignKey = @ForeignKey(name = "fk_transactions_category")
     )
     Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "wallet_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_transactions_wallet")
+    )
+    Wallet wallet;
 
     @Column(nullable = false)
     Long amount;

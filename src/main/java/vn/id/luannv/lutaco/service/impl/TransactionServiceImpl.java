@@ -57,7 +57,8 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setTransactionType(TransactionType.valueOf(request.getTransactionType()));
 
         transaction.setCategory(category);
-        transaction.setUser(User.builder().id(SecurityUtils.getCurrentId()).build());
+        transaction.setUserId(SecurityUtils.getCurrentId());
+        transaction.setWallet(wallet);
         applyBalance(wallet.getId(), transaction.getAmount(), transaction.getTransactionType());
 
         return transactionMapper.toResponse(
@@ -81,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = transactionRepository.findById(id)
                 .filter(t -> t.getDeletedAt() == null)
-                .filter(t -> t.getUser().getId().equals(SecurityUtils.getCurrentId()))
+                .filter(t -> t.getId().equals(SecurityUtils.getCurrentId()))
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         return transactionMapper.toResponse(transaction);
@@ -94,9 +95,10 @@ public class TransactionServiceImpl implements TransactionService {
         Pageable pageable = PageRequest.of(page - 1, size);
 
         if (request.getTransactionType() != null
-                && !TransactionType.isValidTransactionType(request.getTransactionType())) {
+                && !TransactionType.isValidTransactionType(request.getTransactionType().name())) {
             request.setTransactionType(null);
         }
+        log.info("Passed");
 
         return transactionRepository
                 .findByFilters(request, SecurityUtils.getCurrentId(), pageable)
@@ -109,7 +111,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = transactionRepository.findById(id)
                 .filter(t -> t.getDeletedAt() == null)
-                .filter(t -> t.getUser().getId().equals(SecurityUtils.getCurrentId()))
+                .filter(t -> t.getId().equals(SecurityUtils.getCurrentId()))
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         transactionMapper.updateEntity(transaction, request);
@@ -138,7 +140,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = transactionRepository.findById(transactionId)
                 .filter(t -> t.getDeletedAt() == null)
-                .filter(t -> t.getUser().getId().equals(SecurityUtils.getCurrentId()))
+                .filter(t -> t.getId().equals(SecurityUtils.getCurrentId()))
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         transaction.setDeletedAt(LocalDateTime.now());

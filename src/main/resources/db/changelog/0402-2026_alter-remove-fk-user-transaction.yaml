@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: f26cfb9c-ef8e-48e9-932b-a6b12dd57593
+      author: luannv
+      changes:
+        - dropForeignKeyConstraint:
+            constraintName: fk_transactions_user
+            baseTableName: transactions
