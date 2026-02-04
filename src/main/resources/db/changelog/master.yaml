@@ -29,3 +29,7 @@ databaseChangeLog:
       file: db/changelog/3101-2026_create-transaction.yaml
   - include:
       file: db/changelog/3101-2026_create-user-audit-log.yaml
+  - include:
+      file: db/changelog/0402-2026_alter-add-wallet-column-transaction.yaml
+  - include:
+      file: db/changelog/0402-2026_alter-remove-fk-user-transaction.yaml

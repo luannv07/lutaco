@@ -66,4 +66,16 @@ public class TransactionResponse {
             example = "2026-01-01T10:31:00"
     )
     LocalDateTime createdDate;
+
+    @Schema(
+            description = "ID ví",
+            example = "b794886d-a7eb-4d41-ae22-04891ed3b352"
+    )
+    String walletId;
+
+    @Schema(
+            description = "Tên ví",
+            example = "Ví MB Bank"
+    )
+    String walletName;
 }

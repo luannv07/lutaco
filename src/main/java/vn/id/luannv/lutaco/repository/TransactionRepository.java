@@ -15,17 +15,16 @@ import vn.id.luannv.lutaco.entity.Transaction;
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
     @Query("""
-        select t from Transaction t
-        where t.user.id = :userId
-          and t.deletedAt is null
-          and (:#{#request.categoryId} is null or t.category.id = :#{#request.categoryId})
-          and (:#{#request.transactionType} is null or t.transactionType = :#{#request.transactionType})
-          and (:#{#request.fromDate} is null or t.transactionDate >= :#{#request.fromDate})
-          and (:#{#request.toDate} is null or t.transactionDate <= :#{#request.toDate})
-          and (:#{#request.minAmount} is null or t.amount >= :#{#request.minAmount})
-          and (:#{#request.maxAmount} is null or t.amount <= :#{#request.maxAmount})
-        order by t.transactionDate desc
-    """)
+    select t from Transaction t
+    where t.userId = :userId
+      and (:#{#request.walletName} is null or t.wallet.walletName = :#{#request.walletName})
+      and (:#{#request.categoryName} is null or t.category.categoryName = :#{#request.categoryName})
+      and (:#{#request.transactionType} is null or t.transactionType = :#{#request.transactionType})
+      and (:#{#request.fromDate} is null or t.transactionDate >= :#{#request.fromDate})
+      and (:#{#request.toDate} is null or t.transactionDate <= :#{#request.toDate})
+      and (:#{#request.minAmount} is null or t.amount >= :#{#request.minAmount})
+      and (:#{#request.maxAmount} is null or t.amount <= :#{#request.maxAmount})
+""")
     Page<Transaction> findByFilters(
             @Param("request") TransactionFilterRequest request,
             @Param("userId") String userId,

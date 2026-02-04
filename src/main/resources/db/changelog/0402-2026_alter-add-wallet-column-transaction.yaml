@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3c3b84c4-4140-4bbe-a7a5-6102338318d5
+      author: luannv
+      changes:
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: wallet_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_transactions_wallet
+            baseTableName: transactions
+            baseColumnNames: wallet_id
+            referencedTableName: wallets
+            referencedColumnNames: id
+            onDelete: restrict
