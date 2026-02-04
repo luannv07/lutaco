@@ -17,6 +17,14 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
 
     List<Wallet> findByUser_Id(String userId);
 
+    /**
+     * and :amount > 0
+     *           and (
+     *                 :type = 'INCOME'
+     *                 or (:type = 'EXPENSE' and w.currentBalance >= :amount)
+     *               )
+     * Cho phép trừ âm, nó là app wallet ko phải app ngân hàng
+     */
     @Modifying
     @Query("""
         update Wallet w
@@ -26,13 +34,8 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
                 when :type = 'INCOME' then w.currentBalance + :amount
             end
         where w.id = :walletId
-          and :amount > 0
-          and (
-                :type = 'INCOME'
-                or (:type = 'EXPENSE' and w.currentBalance >= :amount)
-              )
     """)
-    int updateBalance(
+    void updateBalance(
             @Param("walletId") String walletId,
             @Param("amount") Long amount,
             @Param("type") String type
@@ -40,5 +43,5 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
 
     Optional<Wallet> findByUser_IdAndWalletName(String userId, String walletName);
 
-    Optional<Wallet>  findByUser_IdAndId(String userId, String id);
+    Optional<Wallet> findByUser_IdAndId(String userId, String id);
 }

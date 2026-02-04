@@ -69,9 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
     private void applyBalance(String walletId, Long amount, TransactionType type) {
         if (type == null)
             throw new BusinessException(ErrorCode.VALIDATION_FAILED);
-        int updatedRows = walletRepository.updateBalance(walletId, amount, type.name());
-        if (updatedRows == 0)
-            throw new BusinessException(ErrorCode.INSUFFICIENT_BALANCE);
+        walletRepository.updateBalance(walletId, amount, type.name());
 
         log.info("TransactionServiceImpl amount & type: {} {}", amount, type);
     }
