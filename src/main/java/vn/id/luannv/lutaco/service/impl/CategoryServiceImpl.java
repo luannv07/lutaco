@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.CategoryDto;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
@@ -77,16 +78,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryDto> search(CategoryFilterRequest request, Integer page, Integer size) {
+        return null;
+    }
+
+    @Override
+    public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
         CategoryType categoryType = null;
-        if (request.getCategoryType() != null && !CategoryType.isValidCategoryType(request.getCategoryType()))
+        if (CategoryType.isValidCategoryType(request.getCategoryType()))
             categoryType = CategoryType.valueOf(request.getCategoryType());
 
-        Pageable pageable = PageRequest.of(page-1, size);
+        List<Category> categoryPage = categoryRepository
+                .advancedSearch(request.getCategoryName(), categoryType, SecurityUtils.getCurrentId());
 
-        Page<Category> categoryPage = categoryRepository
-                .advancedSearch(request.getCategoryName(), categoryType, SecurityUtils.getCurrentId(), pageable);
-
-        return categoryPage.map(this::buildDto);
+        return categoryPage.stream().map(this::buildDto).toList();
     }
 
     @Override
