@@ -5,19 +5,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.config.InsightThresholdConfig;
 import vn.id.luannv.lutaco.dto.InsightDto;
 import vn.id.luannv.lutaco.dto.response.CategoryExpenseResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.dto.response.WalletSummaryResponse;
-import vn.id.luannv.lutaco.entity.Transaction;
-import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.insight.InsightContext;
 import vn.id.luannv.lutaco.insight.InsightService;
-import vn.id.luannv.lutaco.insight.InsightServiceImpl;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.DashboardService;
@@ -27,11 +22,10 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static vn.id.luannv.lutaco.util.DateTimeUtils.convertSafeDate;
 
 @Slf4j
 @Service
@@ -42,6 +36,8 @@ public class DashboardServiceImpl implements DashboardService {
     TransactionRepository transactionRepository;
     InsightService insightService;
 
+    public static int bigDecimalScale = 4;
+
     @Override
     @Transactional
     public DashboardResponse handleSummary() {
@@ -49,14 +45,20 @@ public class DashboardServiceImpl implements DashboardService {
         List<WalletSummaryResponse> wallets = walletRepository
                 .findByUser_Id(currentUserId)
                 .stream().map(wallet -> WalletSummaryResponse.builder()
-                            .walletName(wallet.getWalletName())
-                            .balance(wallet.getCurrentBalance())
-                            .build())
+                        .walletName(wallet.getWalletName())
+                        .balance(wallet.getCurrentBalance())
+                        .build())
                 .toList();
         Long totalIncome = transactionRepository
-                .sumAmountByUser(currentUserId, CategoryType.INCOME, DateTimeUtils.convertSafeDate(null, false), DateTimeUtils.convertSafeDate(null, true));
+                .sumAmountByUser(currentUserId,
+                        CategoryType.INCOME,
+                        DateTimeUtils.convertSafeDate(null, false),
+                        DateTimeUtils.convertSafeDate(null, true));
         Long totalExpense = transactionRepository
-                .sumAmountByUser(currentUserId, CategoryType.EXPENSE, DateTimeUtils.convertSafeDate(null, false), DateTimeUtils.convertSafeDate(null, true));
+                .sumAmountByUser(currentUserId,
+                        CategoryType.EXPENSE,
+                        DateTimeUtils.convertSafeDate(null, false),
+                        DateTimeUtils.convertSafeDate(null, true));
         Long balance = Optional
                 .of(wallets.stream().mapToLong(WalletSummaryResponse::getBalance).sum())
                 .orElse(0L);
@@ -89,15 +91,23 @@ public class DashboardServiceImpl implements DashboardService {
                         startLastMonth,
                         endLastMonth)).orElse(0L);
 
-        List<CategoryExpenseResponse> expenseCategories = transactionRepository
-                .getCategoryPercentageOfTotal(currentUserId, CategoryType.EXPENSE)
-                .stream().map(cep ->
-                        CategoryExpenseResponse.builder()
-                                .categoryName(cep.getCategoryName())
-                                .amount(cep.getTotal())
-                                .ratioNormalized(CustomizeNumberUtils.formatDecimal(cep.getPct(), 2).doubleValue())
-                                .build())
-                .toList();
+        List<CategoryExpenseResponse> expenseCategories =
+                genCategoryChartInfoBetweenDate(startLastMonth, now);
+
+        BigDecimal sum = expenseCategories.stream()
+                .map(c -> BigDecimal.valueOf(c.getRatioNormalized()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal diff = BigDecimal.ONE.subtract(sum);
+
+        if (!expenseCategories.isEmpty() && diff.compareTo(BigDecimal.ZERO) != 0) {
+            CategoryExpenseResponse first = expenseCategories.get(0);
+            first.setRatioNormalized(
+                    BigDecimal.valueOf(first.getRatioNormalized())
+                            .add(diff)
+                            .doubleValue()
+            );
+        }
         InsightContext insightContext = InsightContext.builder()
                 .incomeThisMonth(totalIncomeThisMonth)
                 .incomeLastMonth(totalIncomeLastMonth)
@@ -134,7 +144,26 @@ public class DashboardServiceImpl implements DashboardService {
                         .build())
                 .build();
     }
-
+    private List<CategoryExpenseResponse> genCategoryChartInfoBetweenDate(LocalDateTime from, LocalDateTime to) {
+        return transactionRepository
+                .getCategoryPercentageOfTotal(SecurityUtils.getCurrentId(),
+                        CategoryType.EXPENSE.name(),
+                        DateTimeUtils.convertSafeDate(from, false),
+                        DateTimeUtils.convertSafeDate(to, true))
+                .stream()
+                .map(cep ->
+                        CategoryExpenseResponse.builder()
+                                .categoryName(cep.getCategoryParentName())
+                                .amount(cep.getTotal())
+                                .ratioNormalized(
+                                        BigDecimal.valueOf(cep.getPct())
+                                                .setScale(bigDecimalScale, RoundingMode.HALF_UP)
+                                                .doubleValue()
+                                )
+                                .build()
+                )
+                .toList();
+    }
     @Override
     public void exportBasic() {
 
@@ -151,7 +180,8 @@ public class DashboardServiceImpl implements DashboardService {
             return 100.0;
         }
         return CustomizeNumberUtils
-                .formatDecimal((current*1.0 - previous) / previous, 2)
-                .doubleValue() * 100;
+                .formatDecimal((current * 1.0 - previous) / previous, bigDecimalScale)
+                .multiply(BigDecimal.valueOf(100))
+                .doubleValue();
     }
 }

@@ -57,27 +57,32 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
             @Param("toDate") LocalDateTime toDate
     );
 
-    @Query("""
-with revenueByCategory as (
-    select 
-        coalesce(sum(t.amount), 0) as totalEachPart,
-        t.category.categoryName as cateName
-    from Transaction t
-    where t.userId = :userId
-      and t.category.categoryType = :categoryType
-    group by t.category.categoryName
-)
-select 
-    rbc.totalEachPart as total,
-    rbc.cateName as categoryName,
-    (rbc.totalEachPart * 1.0 / sum(rbc.totalEachPart) over()) as pct
-from revenueByCategory rbc
-order by (rbc.totalEachPart * 1.0 / sum(rbc.totalEachPart) over()) desc
-""")
+    @Query(value = """
+    with totalByParent as (
+        select if(c.parent_id is null, c.id, c.parent_id) as groupId, sum(t.amount) as eachTotal
+        from transactions t
+        join categories c on c.id = t.category_id
+        where t.user_id = :userId
+          and c.category_type = :categoryType
+          and t.transaction_date >= :fromDate
+          and t.transaction_date <=  :toDate
+        group by groupId
+    )
+    select
+        c.category_name categoryParentName,
+        tbp.groupId,
+        tbp.eachTotal total,
+        (tbp.eachTotal / sum(tbp.eachTotal) over ()) pct
+    from totalByParent tbp
+    join categories c on c.id = tbp.groupId
+    group by tbp.groupId, tbp.eachTotal, c.category_name
+""", nativeQuery = true)
     List<CategoryExpenseProjection> getCategoryPercentageOfTotal(
             @Param("userId") String userId,
-            @Param("categoryType") CategoryType categoryType
-            );
+            @Param("categoryType") String categoryType,
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate
+    );
 
 
 

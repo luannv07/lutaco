@@ -8,6 +8,6 @@ public class CustomizeNumberUtils {
         if (value == null) return BigDecimal.ZERO;
 
         return BigDecimal.valueOf(value.doubleValue())
-                .setScale(scale, RoundingMode.HALF_UP);
+                .setScale(scale, RoundingMode.HALF_UP).stripTrailingZeros();
     }
 }

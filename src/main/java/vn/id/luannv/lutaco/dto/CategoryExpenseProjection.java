@@ -1,7 +1,7 @@
 package vn.id.luannv.lutaco.dto;
 
 public interface CategoryExpenseProjection {
-    String getCategoryName();
+    String getCategoryParentName();
     Long getTotal();
     Double getPct();
 }

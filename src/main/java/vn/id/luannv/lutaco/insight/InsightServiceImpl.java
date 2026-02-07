@@ -1,45 +1,22 @@
 package vn.id.luannv.lutaco.insight;
 
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.NumberUtils;
 import vn.id.luannv.lutaco.config.InsightThresholdConfig;
 import vn.id.luannv.lutaco.dto.InsightDto;
-import vn.id.luannv.lutaco.dto.request.LoginRequest;
-import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
-import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.CategoryExpenseResponse;
-import vn.id.luannv.lutaco.entity.RefreshToken;
-import vn.id.luannv.lutaco.entity.Role;
-import vn.id.luannv.lutaco.entity.User;
-import vn.id.luannv.lutaco.enumerate.UserGender;
-import vn.id.luannv.lutaco.enumerate.UserPlan;
-import vn.id.luannv.lutaco.enumerate.UserStatus;
-import vn.id.luannv.lutaco.enumerate.UserType;
-import vn.id.luannv.lutaco.event.entity.UserRegisteredEvent;
-import vn.id.luannv.lutaco.exception.BusinessException;
-import vn.id.luannv.lutaco.exception.ErrorCode;
-import vn.id.luannv.lutaco.jwt.JwtService;
-import vn.id.luannv.lutaco.mapper.UserMapper;
-import vn.id.luannv.lutaco.repository.RoleRepository;
-import vn.id.luannv.lutaco.repository.UserRepository;
-import vn.id.luannv.lutaco.service.AuthService;
-import vn.id.luannv.lutaco.service.InvalidatedTokenService;
-import vn.id.luannv.lutaco.service.RefreshTokenService;
 import vn.id.luannv.lutaco.util.CustomizeNumberUtils;
-import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+import static vn.id.luannv.lutaco.service.impl.DashboardServiceImpl.bigDecimalScale;
 
 @Slf4j
 @Service
@@ -67,7 +44,7 @@ public class InsightServiceImpl implements InsightService {
         return InsightDto.builder()
                 .level(level)
                 .code(code)
-                .value(CustomizeNumberUtils.formatDecimal(value, 2).doubleValue() * 100.0)
+                .value(CustomizeNumberUtils.formatDecimal(value, bigDecimalScale).multiply(BigDecimal.valueOf(100)).doubleValue())
                 .unit(unit)
                 .colorTone(level.getColorTone())
                 .defaultColor(level.getColor())
