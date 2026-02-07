@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.TransactionType;
 
 import java.time.LocalDateTime;
 
@@ -23,12 +22,6 @@ public class TransactionFilterRequest extends BaseFilterRequest {
             example = "FOOD"
     )
     String categoryName;
-
-    @Schema(
-            description = "Loại giao dịch (INCOME / EXPENSE)",
-            example = "EXPENSE"
-    )
-    TransactionType transactionType;
 
     @Schema(
             description = "Thời gian bắt đầu (lọc từ ngày)",

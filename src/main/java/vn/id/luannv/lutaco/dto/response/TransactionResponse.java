@@ -3,7 +3,7 @@ package vn.id.luannv.lutaco.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.TransactionType;
+import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.time.LocalDateTime;
 
@@ -38,16 +38,17 @@ public class TransactionResponse {
     String categoryName;
 
     @Schema(
+            description = "Loại giao dịch",
+            example = "EXPENSE"
+    )
+    CategoryType categoryType;
+
+    @Schema(
             description = "Số tiền giao dịch",
             example = "150000"
     )
     Long amount;
 
-    @Schema(
-            description = "Loại giao dịch",
-            example = "EXPENSE"
-    )
-    TransactionType transactionType;
 
     @Schema(
             description = "Thời điểm phát sinh giao dịch",

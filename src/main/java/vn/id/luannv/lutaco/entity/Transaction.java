@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.TransactionType;
 
 import java.time.LocalDateTime;
 
@@ -42,10 +41,6 @@ public class Transaction extends BaseEntity {
 
     @Column(nullable = false)
     Long amount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_type", nullable = false, length = 10)
-    TransactionType transactionType;
 
     @Column(name = "transaction_date", nullable = false)
     LocalDateTime transactionDate;

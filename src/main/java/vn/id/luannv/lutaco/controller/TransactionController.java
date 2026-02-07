@@ -84,14 +84,13 @@ public class TransactionController {
             summary = "Tạo giao dịch mới",
             description = "Tạo mới một giao dịch cho người dùng hiện tại"
     )
-    public ResponseEntity<BaseResponse<Void>> create(
+    public ResponseEntity<BaseResponse<TransactionResponse>> create(
             @Valid
             @Parameter(description = "Thông tin giao dịch cần tạo")
             @RequestBody TransactionRequest request
     ) {
-        transactionService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(null, MessageKeyConst.Success.CREATED));
+                .body(BaseResponse.success(transactionService.create(request), MessageKeyConst.Success.CREATED));
     }
 
     @PutMapping("/{id}")
@@ -116,7 +115,7 @@ public class TransactionController {
         );
     }
 
-    @PatchMapping("/{id}/{walletId}/disabled")
+    @PatchMapping("/{id}/{walletId}/disable")
     @Operation(
             summary = "Xoá giao dịch (soft delete)",
             description = "Đánh dấu giao dịch là không còn hiệu lực, không xoá vật lý khỏi hệ thống"
@@ -124,18 +123,44 @@ public class TransactionController {
     public ResponseEntity<BaseResponse<Void>> delete(
             @Parameter(
                     description = "ID giao dịch",
-                    example = "TXN_123456",
+                    example = "05675404-6a6e-4478-b8fc-05ff6c8b7da2",
                     required = true
             )
             @PathVariable String id,
             @Parameter(
                     description = "ID ví",
-                    example = "TXN_123456",
+                    example = "ac4a7a82-ccc1-459b-8fc5-1b7836713f52",
                     required = true
             )
             @PathVariable String walletId
     ) {
         transactionService.deleteByIdAndWalletId(id, walletId);
+        return ResponseEntity.ok(
+                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+        );
+    }
+
+    @PatchMapping("/{id}/{walletId}/enable")
+    @Operation(
+            summary = "Phục hồi giao dịch (undo delete)",
+            description = "Phục hồi giao dịch, dành cho premium user"
+    )
+    @PreAuthorize("@securityPermission.isPremiumUser()")
+    public ResponseEntity<BaseResponse<Void>> unDelete(
+            @Parameter(
+                    description = "ID giao dịch",
+                    example = "05675404-6a6e-4478-b8fc-05ff6c8b7da2",
+                    required = true
+            )
+            @PathVariable String id,
+            @Parameter(
+                    description = "ID ví",
+                    example = "ac4a7a82-ccc1-459b-8fc5-1b7836713f52",
+                    required = true
+            )
+            @PathVariable String walletId
+    ) {
+        transactionService.restoreTransaction(id, walletId);
         return ResponseEntity.ok(
                 BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
         );
