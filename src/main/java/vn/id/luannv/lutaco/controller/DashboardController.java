@@ -9,11 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
+import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.service.DashboardService;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/dashboard")
@@ -33,10 +37,11 @@ public class DashboardController {
             description = "Provides a summary of key metrics for the dashboard."
     )
     @GetMapping("/summary")
-    public ResponseEntity<BaseResponse<DashboardResponse>> summary() {
+    public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "THIS_MONTH", required = false) String range) {
+        PeriodRange period = PeriodRange.from(range);
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        dashboardService.handleSummary(),
+                        dashboardService.handleSummary(period),
                         MessageKeyConst.Success.SENT
                 )
         );

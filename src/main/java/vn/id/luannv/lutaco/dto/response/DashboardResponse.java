@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.dto.InsightDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,17 +22,30 @@ public class DashboardResponse {
 
     List<CategoryExpenseResponse> topExpenseCategories;
 
-    MonthSummary thisMonth;
-    MonthSummary lastMonth;
-
-    GrowthRate growthRate;
+    PeriodComparison period;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public static class MonthSummary {
+    public static class PeriodComparison {
+
+        PeriodSummary current;
+        PeriodSummary previous;
+        GrowthRate growthRate;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class PeriodSummary {
+
+        LocalDateTime from;    // yyyy-MM-dd
+        LocalDateTime to;      // yyyy-MM-dd
+
         Long income;
         Long expense;
     }
@@ -42,11 +56,7 @@ public class DashboardResponse {
     @Builder
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class GrowthRate {
-        @DecimalMin(message = "dashboard.message.invalidConfig", value = "0.0")
-        @DecimalMax(message = "dashboard.message.invalidConfig", value = "100.0")
         Double income;
-        @DecimalMin(message = "dashboard.message.invalidConfig", value = "0.0")
-        @DecimalMax(message = "dashboard.message.invalidConfig", value = "100.0")
         Double expense;
         @Builder.Default
         String unit = "%";

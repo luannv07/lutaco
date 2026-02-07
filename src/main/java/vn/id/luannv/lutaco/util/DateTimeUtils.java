@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtils {
-    private static final LocalDateTime SAFE_MIN_DATE = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
-    private static final LocalDateTime SAFE_MAX_DATE = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
+    public static final LocalDateTime SAFE_MIN_DATE = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
+    public static final LocalDateTime SAFE_MAX_DATE = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
 
     public static String format(LocalDateTime dateTime, String pattern) {
         if (dateTime == null)

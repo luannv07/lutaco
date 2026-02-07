@@ -28,8 +28,8 @@ public class InsightServiceImpl implements InsightService {
     public List<InsightDto> generate(InsightContext ctx) {
         List<InsightDto> insights = new ArrayList<>();
 
-        expenseInsight(ctx.getExpenseThisMonth(), ctx.getExpenseLastMonth()).ifPresent(insights::add);
-        incomeInsight(ctx.getIncomeThisMonth(), ctx.getIncomeLastMonth()).ifPresent(insights::add);
+        expenseInsight(ctx.getCurrentExpense(), ctx.getPreviousExpense()).ifPresent(insights::add);
+        incomeInsight(ctx.getCurrentIncome(), ctx.getPreviousIncome()).ifPresent(insights::add);
         balanceInsight(ctx.getBalance()).ifPresent(insights::add);
         categoryInsight(ctx.getCategories()).ifPresent(insights::add);
 

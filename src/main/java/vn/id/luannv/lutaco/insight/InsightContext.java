@@ -12,10 +12,15 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InsightContext {
-    Long incomeThisMonth;
-    Long incomeLastMonth;
-    Long expenseThisMonth;
-    Long expenseLastMonth;
+    // current period
+    Long currentIncome;
+    Long currentExpense;
+
+    // previous comparable period
+    Long previousIncome;
+    Long previousExpense;
+
     Long balance;
+
     List<CategoryExpenseResponse> categories;
 }
