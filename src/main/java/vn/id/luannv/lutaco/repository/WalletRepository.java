@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.entity.Wallet;
-import vn.id.luannv.lutaco.enumerate.TransactionType;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
                 when :type = 'INCOME' then w.currentBalance + :amount
             end
         where w.id = :walletId
-    """)
+""")
     void updateBalance(
             @Param("walletId") String walletId,
             @Param("amount") Long amount,

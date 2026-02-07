@@ -37,14 +37,6 @@ public class TransactionRequest {
 
     @NotNull(message = "{input.required}")
     @Schema(
-            description = "Loại giao dịch (INCOME / EXPENSE)",
-            example = "EXPENSE",
-            requiredMode = Schema.RequiredMode.REQUIRED
-    )
-    String transactionType;
-
-    @NotNull(message = "{input.required}")
-    @Schema(
             description = "Thời điểm phát sinh giao dịch",
             example = "2024-01-15T10:30:00",
             requiredMode = Schema.RequiredMode.REQUIRED

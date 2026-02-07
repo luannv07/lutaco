@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: a6e34e4d-9230-4e6c-b1fc-c95b3c5c3cca
+      author: luannv
+      changes:
+        - dropColumn:
+            tableName: transactions
+            columnName: transaction_type

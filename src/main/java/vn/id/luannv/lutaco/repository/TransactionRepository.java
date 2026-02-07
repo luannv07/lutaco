@@ -1,14 +1,21 @@
 package vn.id.luannv.lutaco.repository;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.entity.Transaction;
+import vn.id.luannv.lutaco.entity.Wallet;
+import vn.id.luannv.lutaco.enumerate.CategoryType;
+
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -17,9 +24,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     @Query("""
     select t from Transaction t
     where t.userId = :userId
+      and t.deletedAt is null
       and (:#{#request.walletName} is null or t.wallet.walletName = :#{#request.walletName})
       and (:#{#request.categoryName} is null or t.category.categoryName = :#{#request.categoryName})
-      and (:#{#request.transactionType} is null or t.transactionType = :#{#request.transactionType})
       and (:#{#request.fromDate} is null or t.transactionDate >= :#{#request.fromDate})
       and (:#{#request.toDate} is null or t.transactionDate <= :#{#request.toDate})
       and (:#{#request.minAmount} is null or t.amount >= :#{#request.minAmount})
@@ -30,4 +37,17 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
             @Param("userId") String userId,
             Pageable pageable
     );
+
+    @Query("""
+    select t.category.categoryType from Transaction t
+    where t.id = :id
+""")
+    Object findCategoryTypeById(String id);
+
+    @Query("""
+    select t.wallet from Transaction t 
+    where t.id = :id and t.deletedAt is null
+""")
+    Optional<Wallet> findWalletWithTransactionId(@Param("id") String id);
 }
+

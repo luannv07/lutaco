@@ -83,9 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
-        CategoryType categoryType = null;
-        if (CategoryType.isValidCategoryType(request.getCategoryType()))
-            categoryType = CategoryType.valueOf(request.getCategoryType());
+        CategoryType categoryType = CategoryType.from(request.getCategoryType());
 
         List<Category> categoryPage = categoryRepository
                 .advancedSearch(request.getCategoryName(), categoryType, SecurityUtils.getCurrentId());
