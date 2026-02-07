@@ -48,7 +48,6 @@ public class AuthServiceImpl implements AuthService {
     JwtService jwtAuthenticateService;
     InvalidatedTokenService invalidatedTokenService;
     RefreshTokenService refreshTokenService;
-    OtpService otpService;
     ApplicationEventPublisher applicationEventPublisher;
 
     @Override
