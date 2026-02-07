@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import vn.id.luannv.lutaco.dto.CategoryDto;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.service.CategoryService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -38,12 +41,12 @@ public class CategoryController {
             summary = "Lấy danh sách danh mục",
             description = "Lấy danh sách danh mục của người dùng hiện tại, hỗ trợ lọc và phân trang"
     )
-    public ResponseEntity<BaseResponse<Page<CategoryDto>>> search(
+    public ResponseEntity<BaseResponse<List<CategoryDto>>> search(
             @ModelAttribute CategoryFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        categoryService.search(request, request.getPage(), request.getSize()),
+                        categoryService.searchNoPag(request),
                         MessageKeyConst.Success.SENT
                 )
         );

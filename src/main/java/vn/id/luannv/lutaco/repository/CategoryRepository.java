@@ -32,12 +32,12 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
       and (:categoryType is null
            or c.categoryType = :categoryType)
       and (c.ownerUserId = :userId or c.isSystem = true)
+      and c.parent is null
 """)
-    Page<Category> advancedSearch(
+    List<Category> advancedSearch(
             @Param("categoryName") String categoryName,
             @Param("categoryType") CategoryType categoryType,
-            @Param("userId") String userId,
-            Pageable pageable
+            @Param("userId") String userId
     );
 
     @Query("""

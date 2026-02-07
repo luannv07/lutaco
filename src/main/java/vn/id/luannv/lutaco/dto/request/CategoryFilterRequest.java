@@ -7,13 +7,12 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         description = "Request dùng để lọc và phân trang danh mục (Category)"
 )
-public class CategoryFilterRequest extends BaseFilterRequest {
+public class CategoryFilterRequest {
 
     @Schema(
             description = "Tên danh mục cần tìm kiếm (tìm gần đúng)",
