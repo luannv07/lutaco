@@ -23,6 +23,7 @@ import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
+import vn.id.luannv.lutaco.export.ExportContainer;
 import vn.id.luannv.lutaco.insight.InsightContext;
 import vn.id.luannv.lutaco.insight.InsightService;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
@@ -40,6 +41,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
+
+import static vn.id.luannv.lutaco.export.ExportContainer.createCommonStyles;
+import static vn.id.luannv.lutaco.export.ExportContainer.createMetaRow;
 
 @Slf4j
 @Service
@@ -176,103 +180,28 @@ public class DashboardServiceImpl implements DashboardService {
     public void exportBasic(HttpServletResponse response, PeriodRange period) {
         PeriodWindow window = PeriodWindowFactory.of(period);
 
-        LocalDateTime now = LocalDateTime.now();
-        String author = SecurityUtils.getCurrentUsername();
-        String authorId = SecurityUtils.getCurrentId();
-        String from = DateTimeUtils.format(window.getFrom(), "dd/MM/yyyy");
-        String to = DateTimeUtils.format(window.getTo(), "dd/MM/yyyy");
-        String exportedAt = DateTimeUtils.format(now, "dd/MM/yyyy HH:mm:ss");
+        ExportContainer.ExportContext ctx = new ExportContainer.ExportContext(
+                SecurityUtils.getCurrentUsername(),
+                SecurityUtils.getCurrentId(),
+                window,
+                LocalDateTime.now(),
+                period.name()
+        );
 
-        List<WalletSummaryResponse> wallets = getWallets(authorId);
-        DashboardResponse.DashboardOverview dashboardOverview =
-                buildDashboardOverview(wallets, authorId);
+        DashboardResponse.DashboardOverview overview =
+                buildDashboardOverview(getWallets(ctx.authorId()), ctx.authorId());
 
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook();
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+
+            ExportContainer.ExcelStyles styles = createCommonStyles(workbook);
+
             XSSFSheet sheet = workbook.createSheet("Overview");
-
-            /* ===== Styles ===== */
-            XSSFCellStyle boldStyle = workbook.createCellStyle();
-            XSSFFont boldFont = workbook.createFont();
-            boldFont.setBold(true);
-            boldStyle.setFont(boldFont);
-
-            XSSFCellStyle centerBold = workbook.createCellStyle();
-            centerBold.setFont(boldFont);
-            centerBold.setAlignment(HorizontalAlignment.CENTER);
-
-            XSSFCellStyle centerStyle = workbook.createCellStyle();
-            centerStyle.setAlignment(HorizontalAlignment.CENTER);
-
-            XSSFCellStyle moneyStyle = workbook.createCellStyle();
-            moneyStyle.setDataFormat(
-                    workbook.createDataFormat().getFormat("#,##0")
-            );
-            moneyStyle.setAlignment(HorizontalAlignment.CENTER);
-
-            int rowIdx = 0;
-
-            /* ===== Metadata ===== */
-            XSSFRow r0 = sheet.createRow(rowIdx++);
-            r0.createCell(0).setCellValue("Author:");
-            r0.createCell(1).setCellValue(author);
-            r0.getCell(0).setCellStyle(boldStyle);
-
-            XSSFRow r1 = sheet.createRow(rowIdx++);
-            r1.createCell(0).setCellValue("Period:");
-            r1.createCell(1).setCellValue(from + " - " + to);
-            r1.getCell(0).setCellStyle(boldStyle);
-
-            XSSFRow r2 = sheet.createRow(rowIdx++);
-            r2.createCell(0).setCellValue("Exported at:");
-            r2.createCell(1).setCellValue(exportedAt);
-            r2.getCell(0).setCellStyle(boldStyle);
-
-            rowIdx++;
-
-            /* ===== Title ===== */
-            XSSFRow titleRow = sheet.createRow(rowIdx++);
-            titleRow.createCell(0).setCellValue("OVERVIEW");
-            titleRow.getCell(0).setCellStyle(centerBold);
-
-            sheet.addMergedRegion(new CellRangeAddress(
-                    titleRow.getRowNum(),
-                    titleRow.getRowNum(),
-                    0, 3
-            ));
-
-            rowIdx++;
-
-            /* ===== Header ===== */
-            XSSFRow header = sheet.createRow(rowIdx++);
-            header.createCell(0).setCellValue("Total income");
-            header.createCell(1).setCellValue("Total expense");
-            header.createCell(2).setCellValue("Current balance");
-            header.createCell(3).setCellValue("Currency");
-
-            for (int i = 0; i < 4; i++) {
-                header.getCell(i).setCellStyle(centerBold);
-            }
-
-            /* ===== Values ===== */
-            XSSFRow values = sheet.createRow(rowIdx++);
-            values.createCell(0).setCellValue(dashboardOverview.getTotalIncome().doubleValue());
-            values.createCell(1).setCellValue(dashboardOverview.getTotalExpense().doubleValue());
-            values.createCell(2).setCellValue(dashboardOverview.getBalance().doubleValue());
-            values.createCell(3).setCellValue("VND");
-
-            for (int i = 0; i < 4; i++) {
-                values.getCell(i).setCellStyle(moneyStyle);
-                sheet.autoSizeColumn(i);
-            }
+            buildOverviewSheetXSSF(sheet, styles, ctx, overview);
 
             workbook.write(response.getOutputStream());
-            workbook.close();
             response.flushBuffer();
 
-            log.info("BasicReport XLSX: export success");
         } catch (Exception e) {
-            log.error("BasicReport XLSX: export failed", e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
     }
@@ -282,123 +211,118 @@ public class DashboardServiceImpl implements DashboardService {
     public void exportAdvanced(HttpServletResponse response, PeriodRange period) {
         PeriodWindow window = PeriodWindowFactory.of(period);
 
-        String userId = SecurityUtils.getCurrentId();
-        String author = SecurityUtils.getCurrentUsername();
-        LocalDateTime now = LocalDateTime.now();
+        ExportContainer.ExportContext ctx = new ExportContainer.ExportContext(
+                SecurityUtils.getCurrentUsername(),
+                SecurityUtils.getCurrentId(),
+                window,
+                LocalDateTime.now(),
+                period.name()
+        );
 
-        List<WalletSummaryResponse> wallets = getWallets(userId);
         DashboardResponse.DashboardOverview overview =
-                buildDashboardOverview(wallets, userId);
+                buildDashboardOverview(getWallets(ctx.authorId()), ctx.authorId());
 
         List<CategoryExpenseResponse> categories =
                 genCategoryChartInfoBetweenDate(window.getFrom(), window.getTo());
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 
-            /* ========= COMMON STYLES ========= */
-            XSSFCellStyle bold = workbook.createCellStyle();
-            XSSFFont boldFont = workbook.createFont();
-            boldFont.setBold(true);
-            bold.setFont(boldFont);
+            ExportContainer.ExcelStyles styles = createCommonStyles(workbook);
 
-            XSSFCellStyle centerBold = workbook.createCellStyle();
-            centerBold.setFont(boldFont);
-            centerBold.setAlignment(HorizontalAlignment.CENTER);
-
-            XSSFCellStyle money = workbook.createCellStyle();
-            money.setDataFormat(workbook.createDataFormat().getFormat("#,##0"));
-            money.setAlignment(HorizontalAlignment.CENTER);
-
-            /* ========= SHEET 1: OVERVIEW ========= */
-            XSSFSheet overviewSheet = workbook.createSheet("Overview");
+            /* ===== Sheet 1: Overview (reuse basic) ===== */
             buildOverviewSheetXSSF(
-                    overviewSheet,
-                    bold,
-                    centerBold,
-                    money,
-                    author,
-                    now,
-                    window,
+                    workbook.createSheet("Overview"),
+                    styles,
+                    ctx,
                     overview
             );
 
-            /* ========= SHEET 2: TOP EXPENSE ========= */
-            XSSFSheet expenseSheet = workbook.createSheet("Top Expenses");
-            buildTopExpenseSheetXSSF(expenseSheet, centerBold, money, categories);
-
-            /* ========= SHEET 3: PIE CHART ========= */
-            if (!categories.isEmpty()) {
-                XSSFSheet chartSheet = workbook.createSheet("Expense Chart");
-                buildExpensePieChartXSSF(workbook, chartSheet, categories);
-            }
-
-            response.setHeader(
-                    "Content-Disposition",
-                    "attachment; filename=dashboard-advanced.xlsx"
+            /* ===== Sheet 2: Top Expense ===== */
+            buildTopExpenseSheetXSSF(
+                    workbook.createSheet("Top Expenses"),
+                    styles.getCenterBold(),
+                    styles.getMoney(),
+                    categories
             );
+
+            /* ===== Sheet 3: Pie Chart ===== */
+            if (!categories.isEmpty()) {
+                buildExpensePieChartXSSF(
+                        workbook,
+                        workbook.createSheet("Expense Chart"),
+                        categories
+                );
+            }
 
             workbook.write(response.getOutputStream());
             response.flushBuffer();
-            log.info("AdvancedReport (.xlsx): export success");
 
         } catch (Exception e) {
-            log.error("AdvancedReport (.xlsx): export failed", e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
     }
 
-    private void buildOverviewSheetXSSF(XSSFSheet sheet, XSSFCellStyle bold, XSSFCellStyle centerBold, XSSFCellStyle money, String author, LocalDateTime now, PeriodWindow window, DashboardResponse.DashboardOverview overview) {
-        int r = 0;
-
-        Row r0 = sheet.createRow(r++);
-        r0.createCell(0).setCellValue("Author:");
-        r0.createCell(1).setCellValue(author);
-        r0.getCell(0).setCellStyle(bold);
-
-        Row r1 = sheet.createRow(r++);
-        r1.createCell(0).setCellValue("Period:");
-        r1.createCell(1).setCellValue(
-                DateTimeUtils.format(window.getFrom(), "dd/MM/yyyy")
-                        + " - "
-                        + DateTimeUtils.format(window.getTo(), "dd/MM/yyyy")
+    private void buildOverviewSheetXSSF(
+            XSSFSheet sheet,
+            ExportContainer.ExcelStyles styles,
+            ExportContainer.ExportContext ctx,
+            DashboardResponse.DashboardOverview overview
+    ) {
+        int rowIdx = 0;
+        rowIdx = ExportContainer.createTitleRow(
+                sheet,
+                rowIdx,
+                "REPORT INFO | TYPE: " + ctx.range(),
+                0,
+                2,
+                styles.getCenterBold()
         );
-        r1.getCell(0).setCellStyle(bold);
 
-        Row r2 = sheet.createRow(r++);
-        r2.createCell(0).setCellValue("Exported at:");
-        r2.createCell(1).setCellValue(
-                DateTimeUtils.format(now, "dd/MM/yyyy HH:mm:ss")
-        );
-        r2.getCell(0).setCellStyle(bold);
+        String from = DateTimeUtils.format(ctx.window().getFrom(), "dd/MM/yyyy");
+        String to = DateTimeUtils.format(ctx.window().getTo(), "dd/MM/yyyy");
+        String exportedAt = DateTimeUtils.format(ctx.exportedAt(), "dd/MM/yyyy HH:mm:ss");
 
-        r++;
+        /* ===== Metadata ===== */
+        rowIdx = createMetaRow(sheet, rowIdx, "Author:", ctx.author(), styles.getBold());
+        rowIdx = createMetaRow(sheet, rowIdx, "Period:", from + " - " + to, styles.getBold());
+        rowIdx = createMetaRow(sheet, rowIdx, "Exported at:", exportedAt, styles.getBold());
+        rowIdx = createMetaRow(sheet, rowIdx, "Currency: ", "VND", styles.getBold());
 
-        Row title = sheet.createRow(r++);
+        rowIdx++;
+
+        /* ===== Title ===== */
+        XSSFRow title = sheet.createRow(rowIdx++);
         title.createCell(0).setCellValue("OVERVIEW");
-        title.getCell(0).setCellStyle(centerBold);
-        sheet.addMergedRegion(
-                new CellRangeAddress(title.getRowNum(), title.getRowNum(), 0, 3)
-        );
+        title.getCell(0).setCellStyle(styles.getCenterBold());
 
-        r++;
+        sheet.addMergedRegion(new CellRangeAddress(
+                title.getRowNum(), title.getRowNum(), 0, 2
+        ));
 
-        Row header = sheet.createRow(r++);
-        header.createCell(0).setCellValue("Total income");
-        header.createCell(1).setCellValue("Total expense");
-        header.createCell(2).setCellValue("Current balance");
-        header.createCell(3).setCellValue("Currency");
+        rowIdx++;
 
-        for (int i = 0; i < 4; i++) header.getCell(i).setCellStyle(centerBold);
+        /* ===== Header ===== */
+        XSSFRow header = sheet.createRow(rowIdx++);
+        String[] headers = {
+                "Total income", "Total expense", "Current balance"
+        };
 
-        Row values = sheet.createRow(r++);
-        values.createCell(0).setCellValue(overview.getTotalIncome());
-        values.createCell(1).setCellValue(overview.getTotalExpense());
-        values.createCell(2).setCellValue(overview.getBalance());
-        values.createCell(3).setCellValue("VND");
+        for (int i = 0; i < headers.length; i++) {
+            header.createCell(i).setCellValue(headers[i]);
+            header.getCell(i).setCellStyle(styles.getCenterBold());
+        }
 
-        for (int i = 0; i < 4; i++) {
-            values.getCell(i).setCellStyle(money);
+        /* ===== Values ===== */
+        XSSFRow values = sheet.createRow(rowIdx++);
+
+        values.createCell(0).setCellValue(overview.getTotalIncome().doubleValue());
+        values.createCell(1).setCellValue(overview.getTotalExpense().doubleValue());
+        values.createCell(2).setCellValue(overview.getBalance().doubleValue());
+
+        for (int i = 0; i < 3; i++) {
+            values.getCell(i).setCellStyle(styles.getMoney());
             sheet.autoSizeColumn(i);
+            sheet.setColumnWidth(i, sheet.getColumnWidth(3) + 6 * 256);
         }
     }
 

@@ -39,7 +39,7 @@ public class DashboardController {
             description = "Provides a summary of key metrics for the dashboard."
     )
     @GetMapping("/summary")
-    public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "THIS_MONTH", required = false) String range) {
+    public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "LAST_1_MONTH", required = false) String range) {
         PeriodRange period = PeriodRange.from(range);
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -55,10 +55,9 @@ public class DashboardController {
     )
     @GetMapping("/export/basic")
     public void exportBasic(
-            HttpServletResponse response,
-            @RequestParam(defaultValue = "THIS_MONTH") String range
+            HttpServletResponse response
     ) {
-        PeriodRange period = PeriodRange.from(range);
+        PeriodRange period = PeriodRange.LAST_1_MONTH;
 
         response.setContentType(
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -76,10 +75,10 @@ public class DashboardController {
             description = "Exports a more detailed report of dashboard data to an Excel file. This feature is available only to premium users."
     )
     @GetMapping("/export/advanced")
-//    @PreAuthorize("@securityPermission.isPremiumUser()")
+    @PreAuthorize("@securityPermission.isPremiumUser()")
     public void exportAdvanced(
             HttpServletResponse response,
-            @RequestParam(defaultValue = "THIS_MONTH") String range
+            @RequestParam(defaultValue = "LAST_1_MONTH") String range
     ) {
         PeriodRange period = PeriodRange.from(range);
 

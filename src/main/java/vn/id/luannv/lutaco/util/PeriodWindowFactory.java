@@ -13,42 +13,14 @@ public class PeriodWindowFactory {
         LocalDateTime now = LocalDateTime.now();
 
         return switch (range) {
-            case LAST_7_DAYS -> {
-                LocalDateTime from = now.minusDays(7);
-                yield new PeriodWindow(
-                        from, now,
-                        from.minusDays(7), from
-                );
-            }
 
-            case THIS_MONTH -> {
-                LocalDateTime from = now.withDayOfMonth(1);
-                yield new PeriodWindow(
-                        from, now,
-                        from.minusMonths(1),
-                        from.minusSeconds(1)
-                );
-            }
+            case LAST_7_DAYS -> buildRolling(now, 7, TimeUnit.DAYS);
 
-            case LAST_MONTH -> {
-                LocalDateTime startThisMonth = now.withDayOfMonth(1);
-                LocalDateTime from = startThisMonth.minusMonths(1);
-                LocalDateTime to = startThisMonth.minusSeconds(1);
-                yield new PeriodWindow(
-                        from, to,
-                        from.minusMonths(1),
-                        from.minusSeconds(1)
-                );
-            }
+            case LAST_1_MONTH -> buildRolling(now, 1, TimeUnit.MONTHS);
 
-            case LAST_QUARTER -> {
-                LocalDateTime from = now.minusMonths(3);
-                yield new PeriodWindow(
-                        from, now,
-                        from.minusMonths(3),
-                        from
-                );
-            }
+            case LAST_3_MONTHS -> buildRolling(now, 3, TimeUnit.MONTHS);
+
+            case LAST_1_YEAR -> buildRolling(now, 1, TimeUnit.YEARS);
 
             case ALL_TIME -> new PeriodWindow(
                     SAFE_MIN_DATE,
@@ -57,5 +29,37 @@ public class PeriodWindowFactory {
                     SAFE_MIN_DATE
             );
         };
+    }
+
+    private static PeriodWindow buildRolling(
+            LocalDateTime now,
+            long amount,
+            TimeUnit unit
+    ) {
+        LocalDateTime from = minus(now, amount, unit);
+        LocalDateTime prevFrom = minus(from, amount, unit);
+
+        return new PeriodWindow(
+                from,
+                now,
+                prevFrom,
+                from
+        );
+    }
+
+    private static LocalDateTime minus(
+            LocalDateTime time,
+            long amount,
+            TimeUnit unit
+    ) {
+        return switch (unit) {
+            case DAYS -> time.minusDays(amount);
+            case MONTHS -> time.minusMonths(amount);
+            case YEARS -> time.minusYears(amount);
+        };
+    }
+
+    private enum TimeUnit {
+        DAYS, MONTHS, YEARS
     }
 }
