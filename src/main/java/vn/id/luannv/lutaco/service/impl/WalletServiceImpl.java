@@ -33,12 +33,15 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet create(WalletCreateRequest request) {
-
         String userId = SecurityUtils.getCurrentId();
+        long t1 = System.currentTimeMillis();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+        log.info("find user by id: {}ms", System.currentTimeMillis() - t1);
 
+        long t2 = System.currentTimeMillis();
         long count = walletRepository.countByUser_Id(userId);
+        log.info("count wallet by user id: {}ms", System.currentTimeMillis() - t2);
         if (count >= user.getUserPlan().getMaxWallets()) {
             throw new BusinessException(ErrorCode.WALLET_LIMIT_EXCEEDED);
         }
@@ -49,16 +52,23 @@ public class WalletServiceImpl implements WalletService {
                 request.getStatus() != null ? request.getStatus() : WalletStatus.ACTIVE
         );
 
-        return walletRepository.save(wallet);
+        long t3 = System.currentTimeMillis();
+        Wallet savedWallet = walletRepository.save(wallet);
+        log.info("save wallet: {}ms", System.currentTimeMillis() - t3);
+        return savedWallet;
     }
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void createDefaultWallet(String userId) {
+        long t1 = System.currentTimeMillis();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+        log.info("find user by id: {}ms", System.currentTimeMillis() - t1);
 
+        long t2 = System.currentTimeMillis();
         long count = walletRepository.countByUser_Id(userId);
+        log.info("count wallet by user id: {}ms", System.currentTimeMillis() - t2);
         if (count >= user.getUserPlan().getMaxWallets()) {
             throw new BusinessException(ErrorCode.WALLET_LIMIT_EXCEEDED);
         }
@@ -71,16 +81,20 @@ public class WalletServiceImpl implements WalletService {
         wallet.setDescription("Ví mặc định do hệ thống tạo.");
         wallet.setStatus(WalletStatus.ACTIVE);
 
+        long t3 = System.currentTimeMillis();
         walletRepository.save(wallet);
+        log.info("save default wallet: {}ms", System.currentTimeMillis() - t3);
         log.info("💕 Ví mặc định đã được tạo !!");
     }
 
     @Override
     public Wallet update(String walletName, WalletUpdateRequest request) {
-
         Wallet wallet = getMywalletOrThrow(walletName);
         walletMapper.update(wallet, request);
-        return walletRepository.save(wallet);
+        long t1 = System.currentTimeMillis();
+        Wallet savedWallet = walletRepository.save(wallet);
+        log.info("update wallet: {}ms", System.currentTimeMillis() - t1);
+        return savedWallet;
     }
 
     /**
@@ -88,10 +102,11 @@ public class WalletServiceImpl implements WalletService {
      */
     @Override
     public void deleteByUser(String walletName) {
-
         Wallet wallet = getMywalletOrThrow(walletName);
         wallet.setStatus(WalletStatus.INACTIVE);
+        long t1 = System.currentTimeMillis();
         walletRepository.save(wallet);
+        log.info("delete wallet by user: {}ms", System.currentTimeMillis() - t1);
     }
 
     /**
@@ -99,13 +114,16 @@ public class WalletServiceImpl implements WalletService {
      */
     @Override
     public void archiveByAdmin(String userId, String walletName) {
-
+        long t1 = System.currentTimeMillis();
         Wallet wallet = walletRepository
                 .findByUser_IdAndWalletName(userId, walletName)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENUM_NOT_FOUND));
+        log.info("find wallet by user id and wallet name: {}ms", System.currentTimeMillis() - t1);
 
         wallet.setStatus(WalletStatus.ARCHIVED);
+        long t2 = System.currentTimeMillis();
         walletRepository.save(wallet);
+        log.info("archive wallet by admin: {}ms", System.currentTimeMillis() - t2);
     }
 
     @Override
@@ -115,17 +133,22 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<Wallet> getMyWallets() {
-        return walletRepository.findByUser_Id(
+        long t1 = System.currentTimeMillis();
+        List<Wallet> wallets = walletRepository.findByUser_Id(
                 SecurityUtils.getCurrentId()
         );
+        log.info("find wallets by user id: {}ms", System.currentTimeMillis() - t1);
+        return wallets;
     }
 
     private Wallet getMywalletOrThrow(String walletName) {
-        return walletRepository
+        long t1 = System.currentTimeMillis();
+        Wallet wallet = walletRepository
                 .findByUser_IdAndWalletName(
                         SecurityUtils.getCurrentId(), walletName
                 )
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        log.info("find wallet by user id and wallet name: {}ms", System.currentTimeMillis() - t1);
+        return wallet;
     }
 }
-

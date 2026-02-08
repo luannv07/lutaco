@@ -173,8 +173,7 @@ public class TransactionServiceImpl implements TransactionService {
         Object cateTypeObj = transactionRepository.findCategoryTypeById(id);
         if (cateTypeObj == null)
             throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
-//
-//        CategoryType reverse = reverseCategory(CategoryType.from(cateTypeObj));
+
         transaction.setDeletedAt(null);
         transactionRepository.save(transaction);
         applyBalance(walletId, transaction.getAmount(), CategoryType.from(cateTypeObj));
