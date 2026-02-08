@@ -2,9 +2,11 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,13 +54,19 @@ public class DashboardController {
             description = "Exports a basic report of dashboard data to an Excel file."
     )
     @GetMapping("/export/basic")
-    public ResponseEntity<BaseResponse<Void>> exportBasic() {
-        dashboardService.exportBasic();
-        return ResponseEntity.ok(
-                BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.SENT
-                ));
+    public void exportBasic(
+            HttpServletResponse response,
+            @RequestParam(defaultValue = "THIS_MONTH") String range
+    ) {
+        PeriodRange period = PeriodRange.from(range);
+
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=basic-report.xls"
+        );
+
+        dashboardService.exportBasic(response, period);
     }
 
     @Operation(
