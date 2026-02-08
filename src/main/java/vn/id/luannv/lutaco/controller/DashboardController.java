@@ -60,10 +60,12 @@ public class DashboardController {
     ) {
         PeriodRange period = PeriodRange.from(range);
 
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setContentType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
         response.setHeader(
                 "Content-Disposition",
-                "attachment; filename=basic-report.xls"
+                "attachment; filename=basic-report.xlsx"
         );
 
         dashboardService.exportBasic(response, period);
@@ -74,13 +76,21 @@ public class DashboardController {
             description = "Exports a more detailed report of dashboard data to an Excel file. This feature is available only to premium users."
     )
     @GetMapping("/export/advanced")
-    @PreAuthorize("@securityPermission.isPremiumUser()")
-    public ResponseEntity<BaseResponse<Void>> exportAdvanced() {
-        dashboardService.exportAdvanced();
-        return ResponseEntity.ok(
-                BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.SENT
-                ));
+//    @PreAuthorize("@securityPermission.isPremiumUser()")
+    public void exportAdvanced(
+            HttpServletResponse response,
+            @RequestParam(defaultValue = "THIS_MONTH") String range
+    ) {
+        PeriodRange period = PeriodRange.from(range);
+
+        response.setContentType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=advanced-report.xlsx"
+        );
+
+        dashboardService.exportAdvanced(response, period);
     }
 }

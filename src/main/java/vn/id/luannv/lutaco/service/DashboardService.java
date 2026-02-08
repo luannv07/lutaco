@@ -9,5 +9,5 @@ import java.time.LocalDateTime;
 public interface DashboardService {
     DashboardResponse handleSummary(PeriodRange periodRange);
     void exportBasic(HttpServletResponse response, PeriodRange period);
-    void exportAdvanced();
+    void exportAdvanced(HttpServletResponse response, PeriodRange period);
 }
