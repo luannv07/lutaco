@@ -65,7 +65,7 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
 
         if (user.getUserPlan() == UserPlan.PREMIUM) {
-            log.info("User {} đã là premium rùiii", SecurityUtils.getCurrentUsername());
+            log.info("Order#{} | User {} đã là premium rùiii", payOS.getId(), user.getUsername());
             return;
         }
 
