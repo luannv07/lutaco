@@ -40,6 +40,9 @@ public class UserAuditLog {
     @Column(name = "execution_time_ms")
     Long executionTimeMs;
 
+    @Column(name = "param_content")
+    String paramContent;
+
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
     LocalDateTime createdDate;

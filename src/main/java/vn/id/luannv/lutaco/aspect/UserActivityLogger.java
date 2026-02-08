@@ -65,6 +65,7 @@ public class UserActivityLogger {
                                             + "." + joinPoint.getSignature().getName()
                             )
                             .executionTimeMs(executionTime)
+                            .paramContent(request.getQueryString())
                             .build()
             );
         }

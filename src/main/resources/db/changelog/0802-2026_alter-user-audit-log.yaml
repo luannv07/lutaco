@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 70ff79c4-4e89-4d0e-b05c-e854ef11d522
+      author: luannv
+      changes:
+        - addColumn:
+            tableName: user_audit_logs
+            columns:
+              - column:
+                  name: param_content
+                  type: varchar(255)

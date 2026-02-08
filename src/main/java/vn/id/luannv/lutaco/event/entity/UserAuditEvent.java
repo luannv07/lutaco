@@ -15,4 +15,5 @@ public class UserAuditEvent {
     String requestUri;
     String methodName;
     Long executionTimeMs;
+    String paramContent;
 }

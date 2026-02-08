@@ -39,11 +39,11 @@ public class DashboardController {
             description = "Provides a summary of key metrics for the dashboard."
     )
     @GetMapping("/summary")
-    public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "LAST_1_MONTH", required = false) String range) {
-        PeriodRange period = PeriodRange.from(range);
+    public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "LAST_1_MONTH", required = false) String period) {
+        PeriodRange periodRange = PeriodRange.from(period);
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        dashboardService.handleSummary(period),
+                        dashboardService.handleSummary(periodRange),
                         MessageKeyConst.Success.SENT
                 )
         );
@@ -78,9 +78,9 @@ public class DashboardController {
     @PreAuthorize("@securityPermission.isPremiumUser()")
     public void exportAdvanced(
             HttpServletResponse response,
-            @RequestParam(defaultValue = "LAST_1_MONTH") String range
+            @RequestParam(defaultValue = "LAST_1_MONTH") String period
     ) {
-        PeriodRange period = PeriodRange.from(range);
+        PeriodRange periodRange = PeriodRange.from(period);
 
         response.setContentType(
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -90,6 +90,6 @@ public class DashboardController {
                 "attachment; filename=advanced-report.xlsx"
         );
 
-        dashboardService.exportAdvanced(response, period);
+        dashboardService.exportAdvanced(response, periodRange);
     }
 }

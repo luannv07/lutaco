@@ -30,6 +30,7 @@ public class UserAuditEventListener {
                 .requestUri(event.getRequestUri())
                 .methodName(event.getMethodName())
                 .executionTimeMs(event.getExecutionTimeMs())
+                .paramContent(event.getParamContent())
                 .build();
 
         repository.save(auditLog);

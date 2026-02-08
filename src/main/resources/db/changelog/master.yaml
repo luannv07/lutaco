@@ -35,3 +35,5 @@ databaseChangeLog:
       file: db/changelog/0402-2026_alter-remove-fk-user-transaction.yaml
   - include:
       file: db/changelog/0702-2026_alter-transaction-table.yaml
+  - include:
+      file: db/changelog/0802-2026_alter-user-audit-log.yaml
