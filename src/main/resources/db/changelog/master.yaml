@@ -37,3 +37,5 @@ databaseChangeLog:
       file: db/changelog/0702-2026_alter-transaction-table.yaml
   - include:
       file: db/changelog/0802-2026_alter-user-audit-log.yaml
+  - include:
+      file: db/changelog/0902-2026_create-recurring-transaction-table.yaml

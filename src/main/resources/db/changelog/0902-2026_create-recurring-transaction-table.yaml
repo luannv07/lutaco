@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 90a162f6-5843-43be-aa7a-6ffc1f7561d4
+      author: luannv
+      changes:
+        - createTable:
+            tableName: recurring_transactions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+
+              - column:
+                  name: transaction_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: start_date
+                  type: date
+                  constraints:
+                    nullable: false
+                  remarks: ngày bắt đầu thời gian chạy định kì
+
+              - column:
+                  name: next_date
+                  type: date
+                  remarks: thời điểm chạy đầu tiên sau khi được khởi tạo
+
+              - column:
+                  name: frequent_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+
+              - column:
+                  name: created_date
+                  type: datetime
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+
+              - column:
+                  name: updated_date
+                  type: datetime
+
+        - addForeignKeyConstraint:
+            baseTableName: recurring_transactions
+            baseColumnNames: transaction_id
+            referencedTableName: transactions
+            referencedColumnNames: id
+            constraintName: fk_recurring_transactions_transaction
+            onDelete: cascade
