@@ -19,6 +19,7 @@ import vn.id.luannv.lutaco.dto.request.TransactionRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.service.TransactionService;
+import vn.id.luannv.lutaco.util.SecurityUtils;
 
 @Slf4j
 @RestController
@@ -90,7 +91,7 @@ public class TransactionController {
             @RequestBody TransactionRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(transactionService.create(request), MessageKeyConst.Success.CREATED));
+                .body(BaseResponse.success(transactionService.customCreate(request, SecurityUtils.getCurrentId()), MessageKeyConst.Success.CREATED));
     }
 
     @PutMapping("/{id}")

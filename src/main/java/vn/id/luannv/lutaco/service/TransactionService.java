@@ -9,4 +9,5 @@ public interface TransactionService extends
     void deleteByIdAndWalletId(String transactionId, String walletId);
 
     void restoreTransaction(String id, String walletId);
+    TransactionResponse customCreate(TransactionRequest request, String userId);
 }

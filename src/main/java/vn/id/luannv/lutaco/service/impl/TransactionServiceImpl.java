@@ -41,20 +41,24 @@ public class TransactionServiceImpl implements TransactionService {
     WalletRepository walletRepository;
 
     @Override
-    @Transactional
     public TransactionResponse create(TransactionRequest request) {
-        log.info("TransactionServiceImpl create: {}", request);
+        return null;
+    }
+
+    @Override
+    public TransactionResponse customCreate(TransactionRequest request, String userId) {
+        log.info("TransactionServiceImpl customCreate: {}", request);
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
-        Wallet wallet = walletRepository.findByUser_IdAndId(SecurityUtils.getCurrentId(), request.getWalletId())
+        Wallet wallet = walletRepository.findByUser_IdAndId(userId, request.getWalletId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         Transaction transaction = transactionMapper.toEntity(request);
 
         transaction.setCategory(category);
-        transaction.setUserId(SecurityUtils.getCurrentId());
+        transaction.setUserId(userId);
         transaction.setWallet(wallet);
         applyBalance(wallet.getId(), transaction.getAmount(), category.getCategoryType());
 
