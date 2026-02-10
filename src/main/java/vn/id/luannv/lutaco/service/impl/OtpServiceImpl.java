@@ -20,6 +20,7 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.OtpRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.AsyncEmailService;
+import vn.id.luannv.lutaco.service.EmailTemplateService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.RandomUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
@@ -122,20 +123,9 @@ public class OtpServiceImpl implements OtpService {
         }
 
 
-        String subject = "LUTACO | Mã OTP | " + otpType.name()
-                + " | #" + UUID.randomUUID().toString()
-                .toUpperCase(Locale.ROOT)
-                .replace("-", "");
+        EmailTemplateService.EmailFields fields = EmailTemplateService.getOtpTemplate(email, otpType, newCode, newExpiry);
 
-        String body = """
-                <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;background-color:#f5f5f5;margin:0;padding:10px}.container{max-width:500px;background:#fff;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}.header{background:linear-gradient(135deg,#667eea 0,#764ba2 100%);padding:15px 12px;text-align:center}.header h1{margin:0;color:#fff;font-size:22px;font-weight:600}.content{padding:16 12px}.greeting{font-size:16px;color:#333;margin-bottom:20px;line-height:1.4}.otp-box{background:#f8f9fa;border:2px solid #e9ecef;border-radius:8px;padding:24px;text-align:center;margin:24px 0}.otp-label{font-size:13px;color:#6c757d;margin-bottom:12px;font-weight:500}.otp-code{font-size:36px;font-weight:700;color:#667eea;letter-spacing:8px;font-family:'Courier New',monospace}.expiry{background:#fff3cd;border-left:3px solid #ffc107;padding:12px 16px;margin:10px 0;border-radius:4px;font-size:14px;color:#856404}.footer{background:#f8f9fa;padding:10px 24px;text-align:center;border-top:1px solid #e9ecef}.footer p{margin:4px 0;font-size:13px;color:#6c757d}.brand{font-weight:600;color:#667eea}</style></head><body><div class="container"><div class="header"><h1>Xác thực tài khoản</h1></div><div class="content"><p class="greeting">Vui lòng sử dụng mã dưới đây để hoàn tất xác minh:</p><div class="otp-box"><div class="otp-label">MÃ XÁC THỰC</div><div class="otp-code">""" + newCode + """
-                </div></div><div class="expiry">⏱️ Mã này sẽ hết hạn vào lúc <strong>""" + newExpiry.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + """
-                </strong></div><div class="footer"><p class="brand">LUTACO</p><p>© 2026 Lutaco | Luận & Tuân</p><p style="color:#adb5bd;font-size:12px">Email được gửi vào thời gian: \s""" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + """
-
-                </p></div></div></body></html>
-                """;
-
-        emailService.sendEmail(user.getEmail(), subject, body);
+        emailService.sendEmail(user.getEmail(), fields.subject(), fields.body());
     }
 
 
