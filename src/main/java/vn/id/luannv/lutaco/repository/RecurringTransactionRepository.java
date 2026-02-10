@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.dto.request.RecurringTransactionFilterRequest;
 import vn.id.luannv.lutaco.entity.RecurringTransaction;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,4 +33,6 @@ public interface RecurringTransactionRepository extends JpaRepository<RecurringT
         and rt.id = :id
     """)
     Optional<RecurringTransaction> findByUserIdAndId(@Param("userId") String userId, @Param("id") Long id);
+
+    List<RecurringTransaction> findAllByNextDateBefore(LocalDate date);
 }

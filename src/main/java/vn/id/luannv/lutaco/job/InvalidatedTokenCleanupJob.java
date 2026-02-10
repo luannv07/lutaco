@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 
 @Component
@@ -16,7 +17,7 @@ import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 public class InvalidatedTokenCleanupJob {
     InvalidatedTokenService invalidatedTokenService;
 
-    @Scheduled(fixedDelay = 30 * 60 * 1000)
+    @Scheduled(cron = "0 15 */1 * * ?") // mỗi giờ, phút 15
     @Async
     public void cleanupExpiredTokens() {
         log.info("⏰ Start cleaning expired invalidated tokens");

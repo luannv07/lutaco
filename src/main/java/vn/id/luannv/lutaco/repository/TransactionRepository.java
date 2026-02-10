@@ -7,11 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import vn.id.luannv.lutaco.dto.CategoryExpenseProjection;
+import vn.id.luannv.lutaco.dto.projection.CategoryExpenseProjection;
+import vn.id.luannv.lutaco.dto.projection.RecurringTransactionProjection;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.entity.Transaction;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
+import vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -90,12 +92,35 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     select t.category.categoryType from Transaction t
     where t.id = :id
 """)
-    Object findCategoryTypeById(String id);
+    Object findCategoryTypeById(@Param("id") String id);
 
     @Query("""
     select t.wallet from Transaction t
     where t.id = :id and t.deletedAt is null
 """)
     Optional<Wallet> findWalletWithTransactionId(@Param("id") String id);
+
+    @Query(value = """
+    select new vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent$RecurringUserFields(
+        t.id,
+        t.note,
+        t.wallet.id,
+        t.wallet.walletName,
+        u.email,
+        u.fullName,
+        t.amount,
+        t.userId
+    )
+    from Transaction t
+    join User u on u.id = t.userId
+    where t.id = :transactionId and t.deletedAt is null
+""")
+    Optional<RecurringTransactionEvent.RecurringUserFields> getRecurringUserFieldsByTransactionId(@Param("transactionId") String transactionId);
+
+    @Query("""
+    select t.category.id categoryId, t.wallet.id walletId, t.category.categoryType categoryType from Transaction t
+    where t.id = :id and t.deletedAt is null
+""")
+    RecurringTransactionProjection findLinkingFieldsById(@Param("id") String id);
 }
 

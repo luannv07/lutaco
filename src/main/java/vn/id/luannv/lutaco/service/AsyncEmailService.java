@@ -32,10 +32,10 @@ public class AsyncEmailService {
             helper.setText(body, true); // true = HTML
 
             Long beforeSend = System.currentTimeMillis();
-            log.info("✉️ Sending OTP verification email to {}", to);
+            log.info("✉️ Sending email to {}", to);
             mailSender.send(mimeMessage);
             Long afterSend = System.currentTimeMillis();
-            log.info("📩 Sent OTP verification email to {}, time execute: {}ms", to, afterSend - beforeSend);
+            log.info("📩 Sent email to {}, time execute: {}ms", to, afterSend - beforeSend);
 
         } catch (Exception e) {
             log.error("Send email failed to {}", to, e);

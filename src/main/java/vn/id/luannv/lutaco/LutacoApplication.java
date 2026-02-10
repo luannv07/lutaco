@@ -15,13 +15,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class LutacoApplication {
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         SpringApplication.run(LutacoApplication.class, args);
-//        String dataToSign = "amount=5000&cancelUrl=https://www.facebook.com/&description=hello123&orderCode=1&returnUrl=https://www.facebook.com/luanlnv";
-//
-//        String checksumKey = "ac0d59c211741f93552b8511fdff4af7aa5a33034df877b8899d2c3b16954ed9";
-//
-//        String signature = PayOSSignature.hmacSha256(dataToSign, checksumKey);
-//        log.info(signature);
+        log.info("✅ Build successfully! Time execute: {}s", (System.currentTimeMillis() - start * 1.0) / 1000);
     }
 
 }

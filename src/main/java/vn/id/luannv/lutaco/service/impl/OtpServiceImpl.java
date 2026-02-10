@@ -122,7 +122,7 @@ public class OtpServiceImpl implements OtpService {
         }
 
 
-        String subject = "Mã OTP | " + otpType.name()
+        String subject = "LUTACO | Mã OTP | " + otpType.name()
                 + " | #" + UUID.randomUUID().toString()
                 .toUpperCase(Locale.ROOT)
                 .replace("-", "");

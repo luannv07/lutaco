@@ -9,12 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.id.luannv.lutaco.dto.projection.RecurringTransactionProjection;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.TransactionRequest;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.Transaction;
-import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -27,7 +27,7 @@ import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,6 +46,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse customCreate(TransactionRequest request, String userId) {
         log.info("TransactionServiceImpl customCreate: {}", request);
 
@@ -62,9 +63,34 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setWallet(wallet);
         applyBalance(wallet.getId(), transaction.getAmount(), category.getCategoryType());
 
-        return transactionMapper.toResponse(
-                transactionRepository.save(transaction)
-        );
+        return transactionMapper.toResponse(transactionRepository.save(transaction));
+    }
+
+    @Override
+    @Transactional
+    public void autoCreateTransactionWithCronJob(String transactionId, String userId) {
+
+        Transaction currentTransaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
+        RecurringTransactionProjection projection = transactionRepository.findLinkingFieldsById(currentTransaction.getId());
+        Category category = categoryRepository.getReferenceById(projection.getCategoryId());
+        Wallet wallet = walletRepository.getReferenceById(projection.getWalletId());
+        log.info("{}", category);
+        Transaction entity = Transaction.builder()
+                .userId(userId)
+                .category(category)
+                .wallet(wallet)
+                .amount(currentTransaction.getAmount())
+                .transactionDate(currentTransaction.getTransactionDate())
+                .note(currentTransaction.getNote())
+                .deletedAt(null)
+                .build();
+
+        CategoryType categoryType = CategoryType.from(projection.getCategoryType());
+        applyBalance(projection.getWalletId(), currentTransaction.getAmount(), categoryType);
+
+        transactionMapper.toResponse(transactionRepository.save(entity));
     }
 
     private void applyBalance(String walletId, Long amount, CategoryType type) {

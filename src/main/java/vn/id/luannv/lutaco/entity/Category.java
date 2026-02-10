@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 )
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@ToString
 public class Category extends BaseEntity {
     @Id
     @Column(name = "id", nullable = false)

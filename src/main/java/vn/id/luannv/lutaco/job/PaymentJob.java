@@ -30,9 +30,8 @@ public class PaymentJob {
     @Value("${payment.expiration-time}")
     long expirationTime;
 
-    @Scheduled(fixedDelay = 30 * 60 * 1000)
+    @Scheduled(cron = "0 */30 * * * ?") // mỗi 30 phút, phút 0 và 30
     @Transactional
-    @Async
     public void reconcilePendingPayments() {
 
         log.info("⏰ Start reconcile pending payment");
