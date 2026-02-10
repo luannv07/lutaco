@@ -21,6 +21,8 @@ import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -92,6 +94,20 @@ public class TransactionController {
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(transactionService.customCreate(request, SecurityUtils.getCurrentId()), MessageKeyConst.Success.CREATED));
+    }
+
+    @PostMapping("/bulk")
+    @Operation(
+            summary = "Tạo nhiều giao dịch cùng lúc",
+            description = "Tạo nhiều giao dịch cho người dùng hiện tại trong một lần gọi API"
+    )
+    public ResponseEntity<BaseResponse<List<TransactionResponse>>> createBulk(
+            @Valid
+            @Parameter(description = "Danh sách thông tin giao dịch cần tạo")
+            @RequestBody List<TransactionRequest> requests
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(BaseResponse.success(transactionService.createBulk(requests, SecurityUtils.getCurrentId()), MessageKeyConst.Success.CREATED));
     }
 
     @PutMapping("/{id}")

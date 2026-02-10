@@ -27,7 +27,11 @@ import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -64,6 +68,33 @@ public class TransactionServiceImpl implements TransactionService {
         applyBalance(wallet.getId(), transaction.getAmount(), category.getCategoryType());
 
         return transactionMapper.toResponse(transactionRepository.save(transaction));
+    }
+
+    @Override
+    @Transactional
+    public List<TransactionResponse> createBulk(List<TransactionRequest> requests, String userId) {
+        log.info("TransactionServiceImpl createBulk: {} requests for user {}", requests.size(), userId);
+
+        List<Transaction> transactionsToSave = new ArrayList<>();
+        for (TransactionRequest request : requests) {
+            Category category = categoryRepository.getReferenceById(request.getCategoryId());
+
+            Wallet wallet = walletRepository.getReferenceById(request.getWalletId());
+
+            Transaction transaction = transactionMapper.toEntity(request);
+            transaction.setCategory(category);
+            transaction.setUserId(userId);
+            transaction.setWallet(wallet);
+
+            applyBalance(wallet.getId(), transaction.getAmount(), category.getCategoryType());
+            transactionsToSave.add(transaction);
+        }
+
+        List<Transaction> savedTransactions = transactionRepository.saveAll(transactionsToSave);
+
+        return savedTransactions.stream()
+                .map(transactionMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
