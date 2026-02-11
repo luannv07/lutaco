@@ -39,10 +39,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<BaseResponse<Void>> handleBusinessException(BusinessException ex) {
         log.warn("Business error: {} - Params: {}", ex.getErrorCode(), ex.getParams());
-        String message = localizationUtils.getLocalizedMessage(ex.getErrorCode().getMessage(), ex.getParams());
+        Map<String, Object> params = new HashMap<>();
+        if (ex.getParams() != null) {
+            ex.getParams().forEach((key, valueObj) -> {
+                if (valueObj instanceof String)
+                    params.put(key, localizationUtils.getLocalizedMessage(((String) valueObj).toLowerCase()));
+            });
+        }
+        String message = localizationUtils.getLocalizedMessage(ex.getErrorCode().getMessage(), params);
+
         return ResponseEntity
                 .status(ex.getErrorCode().getHttpStatus())
-                .body(BaseResponse.error(ex.getErrorCode(), message, ex.getParams()));
+                .body(BaseResponse.error(ex.getErrorCode(), message, params));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

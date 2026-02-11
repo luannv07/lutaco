@@ -52,7 +52,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         return recurringTransactionMapper.toResponse(state.recurringTransaction());
     }
 
-    @Override
     @Transactional
     public void createWithCronJob(RecurringTransactionRequest request) {
         log.info("RecurringTransactionServiceImpl createWithCronJob: {}", request);
@@ -64,11 +63,12 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     @Transactional
     public void processOne(RecurringTransaction rt) {
         log.info("processOne {}", rt);
-        createWithCronJob(RecurringTransactionRequest.builder()
-                .transactionId(rt.getTransaction().getId())
-                .frequentType(rt.getFrequentType().name())
-                .startDate(LocalDate.now())
-                .build());
+        RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
+                .getRecurringUserFieldsByTransactionId(rt.getTransaction().getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
+        InternalState state = new InternalState(rt, recurringUserFields);
+        publishEvent(state, RecurringTransactionEvent.RecurringTransactionState.FREQUENCY);
 
         rt.setNextDate(rt.getFrequentType().calculateNextDate(LocalDate.now()));
         recurringTransactionRepository.save(rt);
