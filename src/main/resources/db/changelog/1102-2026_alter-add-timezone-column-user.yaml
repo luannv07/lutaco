@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 68f3a324-ff08-4243-8446-d861a306b35e
+      author: luannv
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: timezone
+                  type: varchar(50)
+                  defaultValue: Asia/Ho_Chi_Minh
+                  constraints:
+                    nullable: false

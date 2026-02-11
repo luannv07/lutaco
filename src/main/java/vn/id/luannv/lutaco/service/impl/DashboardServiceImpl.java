@@ -6,8 +6,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xddf.usermodel.chart.*;
@@ -18,7 +16,6 @@ import vn.id.luannv.lutaco.dto.PeriodWindow;
 import vn.id.luannv.lutaco.dto.response.CategoryExpenseResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.dto.response.WalletSummaryResponse;
-import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -30,13 +27,12 @@ import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.DashboardService;
 import vn.id.luannv.lutaco.util.CustomizeNumberUtils;
-import vn.id.luannv.lutaco.util.DateTimeUtils;
+import vn.id.luannv.lutaco.util.TimeUtils;
 import vn.id.luannv.lutaco.util.PeriodWindowFactory;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -277,9 +273,9 @@ public class DashboardServiceImpl implements DashboardService {
                 styles.getCenterBold()
         );
 
-        String from = DateTimeUtils.format(ctx.window().getFrom(), "dd/MM/yyyy");
-        String to = DateTimeUtils.format(ctx.window().getTo(), "dd/MM/yyyy");
-        String exportedAt = DateTimeUtils.format(ctx.exportedAt(), "dd/MM/yyyy HH:mm:ss");
+        String from = TimeUtils.format(ctx.window().getFrom(), "dd/MM/yyyy");
+        String to = TimeUtils.format(ctx.window().getTo(), "dd/MM/yyyy");
+        String exportedAt = TimeUtils.format(ctx.exportedAt(), "dd/MM/yyyy HH:mm:ss");
 
         /* ===== Metadata ===== */
         rowIdx = createMetaRow(sheet, rowIdx, "Author:", ctx.author(), styles.getBold());
@@ -417,8 +413,8 @@ public class DashboardServiceImpl implements DashboardService {
         return transactionRepository
                 .getCategoryPercentageOfTotal(SecurityUtils.getCurrentId(),
                         CategoryType.EXPENSE.name(),
-                        DateTimeUtils.convertSafeDate(from, false),
-                        DateTimeUtils.convertSafeDate(to, true))
+                        TimeUtils.convertSafeDate(from, false),
+                        TimeUtils.convertSafeDate(to, true))
                 .stream()
                 .map(cep ->
                         CategoryExpenseResponse.builder()
@@ -448,13 +444,13 @@ public class DashboardServiceImpl implements DashboardService {
         Long totalIncome = transactionRepository
                 .sumAmountByUser(username,
                         CategoryType.INCOME,
-                        DateTimeUtils.convertSafeDate(null, false),
-                        DateTimeUtils.convertSafeDate(null, true));
+                        TimeUtils.convertSafeDate(null, false),
+                        TimeUtils.convertSafeDate(null, true));
         Long totalExpense = transactionRepository
                 .sumAmountByUser(username,
                         CategoryType.EXPENSE,
-                        DateTimeUtils.convertSafeDate(null, false),
-                        DateTimeUtils.convertSafeDate(null, true));
+                        TimeUtils.convertSafeDate(null, false),
+                        TimeUtils.convertSafeDate(null, true));
         Long balance = Optional
                 .of(wallets.stream().mapToLong(WalletSummaryResponse::getBalance).sum())
                 .orElse(0L);

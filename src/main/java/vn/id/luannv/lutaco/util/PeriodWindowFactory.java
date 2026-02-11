@@ -5,7 +5,7 @@ import vn.id.luannv.lutaco.enumerate.PeriodRange;
 
 import java.time.LocalDateTime;
 
-import static vn.id.luannv.lutaco.util.DateTimeUtils.SAFE_MIN_DATE;
+import static vn.id.luannv.lutaco.util.TimeUtils.SAFE_MIN_DATE;
 
 public class PeriodWindowFactory {
 
