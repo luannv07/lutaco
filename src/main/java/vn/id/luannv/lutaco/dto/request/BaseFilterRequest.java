@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Range;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -21,7 +22,7 @@ public class BaseFilterRequest {
             example = "1",
             minimum = "1"
     )
-    @Min(value = 1, message = "{pagination.page.invalid}")
+    @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
     Integer page = 1;
 
     @Schema(
@@ -30,7 +31,6 @@ public class BaseFilterRequest {
             minimum = "1",
             maximum = "100"
     )
-    @Min(value = 1, message = "{pagination.size.invalid}")
-    @Max(value = 100, message = "{pagination.size.invalid}")
+    @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
     Integer size = 10;
 }

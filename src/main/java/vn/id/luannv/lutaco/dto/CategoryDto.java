@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Length;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.time.LocalDateTime;
@@ -23,24 +24,28 @@ public class CategoryDto {
             description = "ID Danh mục",
             example = "7a65ebc9-6b23-415d-922b-9722cd94b0ec"
     )
+    @Length(max = 255, message = "{validation.field.too_long}")
     String id;
 
     @Schema(
             description = "Tên danh mục",
             example = "Ăn uống"
     )
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryName;
 
     @Schema(
             description = "ID danh mục cha (null nếu là danh mục gốc)",
             example = "123"
     )
+    @Length(max = 255, message = "{validation.field.too_long}")
     String parentId;
 
     @Schema(
             description = "Loại danh mục",
             example = "EXPENSE"
     )
+    @Length(max = 255, message = "{validation.field.too_long}")
     CategoryType categoryType;
 
     @Schema(

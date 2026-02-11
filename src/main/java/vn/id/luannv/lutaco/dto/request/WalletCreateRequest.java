@@ -3,50 +3,42 @@ package vn.id.luannv.lutaco.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.WalletStatus;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "WalletCreateRequest",
-        description = "Request dùng để tạo mới ví (wallet) cho người dùng"
+        description = "Request model for creating a new wallet."
 )
 public class WalletCreateRequest {
 
-    @NotBlank(message = "{input.required}")
-    @Size(max = 100, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Tên ví",
-            example = "Chi tiêu cá nhân",
-            maxLength = 100,
+            description = "The name of the wallet.",
+            example = "Personal Savings",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     String walletName;
 
-    @NotNull(message = "{input.required}")
+    @NotNull(message = "{validation.required}")
+    @PositiveOrZero(message = "{validation.field.positive_or_zero}")
     @Schema(
-            description = "Số dư ban đầu của ví",
-            example = "10000000",
+            description = "The initial balance of the wallet.",
+            example = "1000000",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    Long initialBalance;
+    Long balance;
 
-    @Size(max = 255, message = "{input.tooLong}")
+    @Size(max = 500, message = "{validation.field.too_long}")
     @Schema(
-            description = "Mô tả thêm cho ví",
-            example = "Ví dùng cho chi tiêu sinh hoạt hàng tháng",
-            maxLength = 255
+            description = "A description for the wallet.",
+            example = "Wallet for daily expenses and savings."
     )
     String description;
-
-    @Schema(
-            description = "Trạng thái của ví",
-            example = "ACTIVE",
-            allowableValues = {"ACTIVE", "INACTIVE"}
-    )
-    WalletStatus status;
 }

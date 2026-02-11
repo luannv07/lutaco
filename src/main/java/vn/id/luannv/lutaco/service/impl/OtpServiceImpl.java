@@ -132,20 +132,20 @@ public class OtpServiceImpl implements OtpService {
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void verifyOtp(VerifyOtpRequest request) {
-
+        OtpType otpType = OtpType.of(request.getOtpType());
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
 
         if (!user.getUsername().equalsIgnoreCase(SecurityUtils.getCurrentUsername()))
             throw new BusinessException(ErrorCode.FORBIDDEN);
 
-        Otp otp = otpRepository.findSnapshot(user.getId(), request.getOtpType())
+        Otp otp = otpRepository.findSnapshot(user.getId(), otpType)
                 .orElseThrow(() -> new BusinessException(ErrorCode.OTP_SEND_FAILED));
         final int attempt = otp.getMaxAttempt();
 
-        otpRepository.verifyOtpAtomic(request.getCode(), user.getId(), request.getOtpType().name());
+        otpRepository.verifyOtpAtomic(request.getCode(), user.getId(), otpType.name());
 
-        Otp afterQuery = otpRepository.findSnapshot(user.getId(), request.getOtpType())
+        Otp afterQuery = otpRepository.findSnapshot(user.getId(), otpType)
                 .orElseThrow(() -> new BusinessException(ErrorCode.OTP_SEND_FAILED));
 
         log.info("attempt and after query attempt: {} {}", attempt, afterQuery.getMaxAttempt());

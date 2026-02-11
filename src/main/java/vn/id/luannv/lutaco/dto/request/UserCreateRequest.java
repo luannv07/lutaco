@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "UserCreateRequest",
-        description = "Request dùng để đăng ký hoặc tạo mới người dùng trong hệ thống"
+        description = "Request model for creating a new user account."
 )
 @Builder
 public class UserCreateRequest {
@@ -21,8 +21,8 @@ public class UserCreateRequest {
     @NotBlank(message = "{validation.required}")
     @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
-            description = "Tên đăng nhập của người dùng",
-            example = "{{testAccount}}",
+            description = "The user's desired username.",
+            example = "newuser",
             minLength = 6,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
@@ -32,8 +32,8 @@ public class UserCreateRequest {
     @NotBlank(message = "{validation.required}")
     @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
-            description = "Mật khẩu đăng nhập (tối thiểu 6 ký tự)",
-            example = "{{testAccount}}",
+            description = "The user's password (at least 6 characters).",
+            example = "strongpassword123",
             minLength = 6,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
@@ -43,8 +43,8 @@ public class UserCreateRequest {
     @NotBlank(message = "{validation.required}")
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
-            description = "Họ và tên đầy đủ của người dùng",
-            example = "Nguyễn Văn Luận",
+            description = "The user's full name.",
+            example = "John Doe",
             minLength = 2,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
@@ -53,8 +53,8 @@ public class UserCreateRequest {
 
     @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Địa chỉ hiện tại của người dùng",
-            example = "Hà Nội",
+            description = "The user's address.",
+            example = "123 Main St, Anytown, USA",
             maxLength = 255
     )
     String address;
@@ -63,8 +63,8 @@ public class UserCreateRequest {
     @Email(message = "{validation.invalid.email}")
     @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Email của người dùng (dùng để xác thực và nhận OTP)",
-            example = "vanluandvlp@gmail.com",
+            description = "The user's email address (used for verification and notifications).",
+            example = "john.doe@example.com",
             format = "email",
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
@@ -73,7 +73,7 @@ public class UserCreateRequest {
 
     @NotBlank(message = "{validation.required}")
     @Schema(
-            description = "Giới tính người dùng",
+            description = "The user's gender.",
             example = "MALE",
             allowableValues = {"MALE", "FEMALE", "OTHER"},
             requiredMode = Schema.RequiredMode.REQUIRED

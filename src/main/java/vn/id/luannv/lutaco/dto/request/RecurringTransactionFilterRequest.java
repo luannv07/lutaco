@@ -4,11 +4,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.FrequentType;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RecurringTransactionFilterRequest extends BaseFilterRequest {
-    FrequentType frequentType;
+    @Length(max = 255, message = "{validation.field.too_long}")
+    String frequentType;
 }

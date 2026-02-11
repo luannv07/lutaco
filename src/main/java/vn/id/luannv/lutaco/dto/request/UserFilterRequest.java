@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Range;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -17,14 +18,15 @@ import lombok.experimental.FieldDefaults;
 )
 public class UserFilterRequest extends BaseFilterRequest {
 
-    @Size(max = 50, message = "Username không được vượt quá 100 ký tự")
     @Schema(
             description = "Tên đăng nhập (tìm gần đúng, không phân biệt hoa thường)",
             example = "luannv"
     )
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String username;
 
-    @Size(max = 255, message = "Địa chỉ không được vượt quá 255 ký tự")
+
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
             description = "Địa chỉ người dùng (tìm gần đúng)",
             example = "Hà Nội"
@@ -35,9 +37,10 @@ public class UserFilterRequest extends BaseFilterRequest {
             description = "Trạng thái người dùng",
             example = "ACTIVE"
     )
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String userStatus;
 
-    @Min(value = 1, message = "RoleId phải lớn hơn 0")
+    @Range(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
             description = "ID vai trò (role) của người dùng",
             example = "1",
@@ -49,5 +52,6 @@ public class UserFilterRequest extends BaseFilterRequest {
             description = "Gói người dùng (FREE / PREMIUM)",
             example = "FREE"
     )
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String userPlan;
 }
