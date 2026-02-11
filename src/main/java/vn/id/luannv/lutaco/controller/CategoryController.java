@@ -36,7 +36,7 @@ public class CategoryController {
             description = "Lấy danh sách danh mục của người dùng hiện tại, hỗ trợ lọc và phân trang"
     )
     public ResponseEntity<BaseResponse<List<CategoryDto>>> search(
-            @ModelAttribute CategoryFilterRequest request
+            @Valid  @ModelAttribute CategoryFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(

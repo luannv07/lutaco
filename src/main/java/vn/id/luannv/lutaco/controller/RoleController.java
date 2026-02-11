@@ -3,6 +3,7 @@ package vn.id.luannv.lutaco.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,7 +37,7 @@ public class RoleController {
     )
     public ResponseEntity<BaseResponse<Page<Role>>> getAllRoles(
             @Parameter(description = "Điều kiện lọc và phân trang")
-            @ModelAttribute RoleFilterRequest request
+            @Valid @ModelAttribute RoleFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(

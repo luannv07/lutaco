@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -46,7 +47,7 @@ public class PayOSWebhookController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = PayOsWebhookRequest.class))
             )
-            @RequestBody PayOsWebhookRequest request
+            @Valid  @RequestBody PayOsWebhookRequest request
     ) {
         log.info("handleWebhook received request={}", request);
         try {
@@ -73,7 +74,7 @@ public class PayOSWebhookController {
                     example = "{ \"webhookUrl\": \"https://example.com/webhook/payos\" }",
                     required = true
             )
-            @RequestBody Map<String, Object> confirm
+            @Valid @RequestBody Map<String, Object> confirm
     ) {
         log.info("handleConfirmWebhook send request={}", confirm);
         payOsClient.confirmHookUrl(confirm);

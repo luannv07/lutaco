@@ -14,7 +14,8 @@ public class SecurityConstants {
             "/webjars/**",
             "/webhook/payos",
             "/api/v1/public/**",
-            "/public/**"
+            "/public/**",
+            "/error"
     );
 
     public static final List<String> PUBLIC_URLS_SHOULD_NOT_AUTH = List.of(

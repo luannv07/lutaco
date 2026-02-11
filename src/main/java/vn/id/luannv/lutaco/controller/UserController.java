@@ -39,7 +39,7 @@ public class UserController {
     )
     public ResponseEntity<BaseResponse<Page<UserResponse>>> getUsers(
             @Parameter(description = "Điều kiện lọc và phân trang người dùng")
-            @ModelAttribute UserFilterRequest request
+            @Valid  @ModelAttribute UserFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -115,7 +115,7 @@ public class UserController {
     public ResponseEntity<BaseResponse<Void>> updateUserStatus(
             @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
             @PathVariable String id,
-            @RequestBody UserStatusSetRequest request
+            @Valid  @RequestBody UserStatusSetRequest request
     ) {
         userService.updateStatus(id, request);
         return ResponseEntity.ok(
@@ -134,7 +134,7 @@ public class UserController {
     public ResponseEntity<BaseResponse<Void>> updatePassword(
             @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
             @PathVariable String id,
-            @RequestBody UpdatePasswordRequest request
+            @Valid  @RequestBody UpdatePasswordRequest request
     ) {
         userService.updatePassword(id, request);
         return ResponseEntity.ok(

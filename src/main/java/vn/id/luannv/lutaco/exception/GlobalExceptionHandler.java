@@ -12,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
@@ -70,7 +72,24 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseResponse.error(ErrorCode.PERSISTENCE_STATE_ERROR, message, null));
     }
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<BaseResponse<?>> handleBindException(
+            BindException ex) {
 
+        String message = ex.getAllErrors()
+                .get(0)
+                .getDefaultMessage();
+
+        return ResponseEntity.badRequest()
+                .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, message, null));
+    }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<BaseResponse<?>> handleTypeMismatch(
+            MethodArgumentTypeMismatchException ex) {
+
+        return ResponseEntity.badRequest()
+                .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, ex.getMessage(), null));
+    }
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<BaseResponse<Void>> handleNoResourceFoundException(NoResourceFoundException ex) {
         log.warn("No resource found: {}", ex.getMessage());

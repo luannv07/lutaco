@@ -89,7 +89,7 @@ public class AuthController {
             summary = "Làm mới access token",
             description = "Cấp access token mới dựa trên token hiện tại còn hiệu lực"
     )
-    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken( @Valid @RequestBody RefreshTokenRequest refreshToken) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         authService.refreshToken(refreshToken.getRefreshToken()),
