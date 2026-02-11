@@ -6,42 +6,42 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "UpdatePasswordRequest",
-        description = "Request dùng để cập nhật mật khẩu người dùng"
+        description = "Request model for updating a user's password."
 )
 public class UpdatePasswordRequest {
 
-    @NotBlank(message = "{input.required}")
+    @NotBlank(message = "{validation.required}")
     @Schema(
-            description = "Mật khẩu hiện tại",
+            description = "The user's current password.",
             example = "oldPassword123",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @Length(max = 255, message = "{validation.field.too_long}")
     String oldPassword;
 
-    @NotBlank(message = "{input.required}")
-    @Size(min = 6, max = 255, message = "{input.invalid}")
+    @NotBlank(message = "{validation.required}")
+    @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
-            description = "Mật khẩu mới",
-            example = "newPassword123",
+            description = "The new password (at least 6 characters).",
+            example = "newStrongPassword456",
             minLength = 6,
             maxLength = 255,
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     String newPassword;
 
-    @NotBlank(message = "{input.required}")
-    @Size(min = 6, max = 255, message = "{input.invalid}")
+    @NotBlank(message = "{validation.required}")
     @Schema(
-            description = "Xác nhận lại mật khẩu mới (phải trùng với mật khẩu mới)",
-            example = "newPassword123",
-            minLength = 6,
-            maxLength = 255,
+            description = "Confirmation of the new password.",
+            example = "newStrongPassword456",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    String confirmNewPassword;
+    @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
+    String confirmPassword;
 }

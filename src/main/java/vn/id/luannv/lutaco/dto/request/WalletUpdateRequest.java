@@ -1,7 +1,6 @@
 package vn.id.luannv.lutaco.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -11,25 +10,22 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "WalletUpdateRequest",
-        description = "Request dùng để cập nhật thông tin ví (wallet)"
+        description = "Request model for updating an existing wallet."
 )
 public class WalletUpdateRequest {
 
-    @NotBlank(message = "{input.required}")
-    @Size(max = 100, message = "{input.tooLong}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Tên ví",
-            example = "Chi tiêu cá nhân",
-            maxLength = 100,
-            requiredMode = Schema.RequiredMode.REQUIRED
+            description = "The new name for the wallet.",
+            example = "My Updated Savings",
+            maxLength = 255
     )
     String walletName;
 
-    @Size(max = 255, message = "{input.tooLong}")
+    @Size(max = 500, message = "{validation.field.too_long}")
     @Schema(
-            description = "Mô tả thêm cho ví",
-            example = "Ví dùng cho chi tiêu sinh hoạt hàng tháng",
-            maxLength = 255
+            description = "The new description for the wallet.",
+            example = "Updated description for daily expenses and savings."
     )
     String description;
 }

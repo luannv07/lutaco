@@ -37,7 +37,7 @@ public class VerifyOtpRequest {
             allowableValues = {"REGISTER", "FORGOT_PASSWORD"},
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    OtpType otpType;
+    String otpType;
 
     @NotBlank(message = "{input.required}")
     @Size(min = 6, max = 6, message = "{input.invalid}")

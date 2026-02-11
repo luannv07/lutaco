@@ -20,6 +20,6 @@ public class RoleFilterRequest extends BaseFilterRequest {
             description = "Tên role cần tìm kiếm (tìm kiếm gần đúng, không phân biệt hoa thường)",
             example = "ADMIN"
     )
-    @Length(max = 255, message = "{input.invalid}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String name;
 }

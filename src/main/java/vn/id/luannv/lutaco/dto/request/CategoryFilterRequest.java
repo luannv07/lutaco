@@ -18,13 +18,13 @@ public class CategoryFilterRequest {
             description = "Tên danh mục cần tìm kiếm (tìm gần đúng)",
             example = "Ăn uống"
     )
-    @Length(max = 255, message = "{input.invalid}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryName;
 
     @Schema(
             description = "Loại danh mục (EXPENSE | INCOME)",
             example = "EXPENSE"
     )
-    @Length(max = 255, message = "{input.invalid}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryType;
 }

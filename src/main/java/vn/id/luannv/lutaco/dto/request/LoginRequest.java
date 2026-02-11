@@ -1,34 +1,35 @@
 package vn.id.luannv.lutaco.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Length;
-import vn.id.luannv.lutaco.annotation.bind.AuditUsername;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "LoginRequest",
-        description = "Request dùng để xác thực người dùng khi đăng nhập hệ thống"
+        description = "Request model for user authentication."
 )
 public class LoginRequest {
 
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Tên đăng nhập của người dùng (username hoặc email tuỳ cấu hình hệ thống)",
-            example = "{{account_test}}",
+            description = "The user's username or email address.",
+            example = "luannv",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @Length(max = 255, message = "{input.invalid}")
-    @AuditUsername
     String username;
 
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Mật khẩu đăng nhập tương ứng với username",
-            example = "{{account_test}}",
+            description = "The user's password.",
+            example = "luannv",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @Length(max = 255, message = "{input.invalid}")
     String password;
 }

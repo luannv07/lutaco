@@ -46,7 +46,7 @@ public class TransactionController {
     )
     public ResponseEntity<BaseResponse<Page<TransactionResponse>>> search(
             @Parameter(description = "Điều kiện lọc và phân trang giao dịch")
-            @ModelAttribute TransactionFilterRequest request
+            @Valid @ModelAttribute TransactionFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(

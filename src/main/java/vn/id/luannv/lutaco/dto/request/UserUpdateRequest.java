@@ -10,33 +10,32 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
         name = "UserUpdateRequest",
-        description = "Request dùng để cập nhật thông tin cơ bản của người dùng"
+        description = "Request model for updating a user's profile information."
 )
 public class UserUpdateRequest {
 
-    @Size(min = 2, max = 255, message = "{input.invalid}")
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
-            description = "Họ và tên đầy đủ của người dùng",
-            example = "Nguyễn Văn Luận",
+            description = "The user's full name.",
+            example = "Johnathan Doe",
             minLength = 2,
-            maxLength = 255,
-            requiredMode = Schema.RequiredMode.REQUIRED
+            maxLength = 255
     )
     String fullName;
 
-    @Size(max = 255, message = "{input.tooLong}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
-            description = "Địa chỉ hiện tại của người dùng",
-            example = "Hà Nội",
+            description = "The user's address.",
+            example = "456 Oak Ave, Anytown, USA",
             maxLength = 255
     )
     String address;
 
     @Schema(
-            description = "Giới tính của người dùng",
+            description = "The user's gender.",
             example = "MALE",
-            allowableValues = {"MALE", "FEMALE", "OTHER"},
-            requiredMode = Schema.RequiredMode.REQUIRED
+            allowableValues = {"MALE", "FEMALE", "OTHER"}
     )
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String gender;
 }

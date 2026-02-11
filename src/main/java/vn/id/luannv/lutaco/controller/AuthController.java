@@ -20,6 +20,7 @@ import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
+import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.OtpService;
@@ -113,7 +114,8 @@ public class AuthController {
     public ResponseEntity<BaseResponse<Void>> resendOtp(
             @Valid @RequestBody SendOtpRequest request
     ) {
-        otpService.sendOtp(request.getEmail(), request.getOtpType());
+        OtpType otpType = OtpType.of(request.getOtpType());
+        otpService.sendOtp(request.getEmail(), otpType);
         return ResponseEntity.ok(
                 BaseResponse.success(
                         localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)

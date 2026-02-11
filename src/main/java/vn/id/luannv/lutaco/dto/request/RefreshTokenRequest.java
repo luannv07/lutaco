@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -16,5 +17,6 @@ public class RefreshTokenRequest {
             description = "token code",
             example = "{{refreshToken}}"
     )
+    @Length(max = 1000, message = "{validation.field.too_long}")
     String refreshToken;
 }

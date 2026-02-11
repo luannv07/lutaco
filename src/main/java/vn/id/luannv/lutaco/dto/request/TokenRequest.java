@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.Length;
 public class TokenRequest {
 
     @NotBlank(message = "{input.required}")
-    @Length(max = 255, message = "{input.invalid}")
+    @Length(max = 1000, message = "{validation.field.too_long}")
     @Schema(
             description = "JWT token cần xử lý",
             example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
