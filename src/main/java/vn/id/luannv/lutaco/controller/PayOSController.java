@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.PayOSResponse;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
@@ -40,7 +39,7 @@ public class PayOSController {
                 .body(
                         BaseResponse.success(
                                 payOsService.createPayment(PaymentType.UPGRADE_PREMIUM),
-                                MessageKeyConst.Success.CREATED
+                                "Tạo thanh toán thành công."
                         )
                 );
     }
@@ -63,7 +62,7 @@ public class PayOSController {
                 .body(
                         BaseResponse.success(
                                 payOsService.getDetailPayment(id),
-                                MessageKeyConst.Success.CREATED
+                                "Lấy chi tiết thanh toán thành công."
                         )
                 );
     }

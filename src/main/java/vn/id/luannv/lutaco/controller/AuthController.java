@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
@@ -25,7 +22,6 @@ import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.JwtUtils;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.Date;
 
@@ -39,7 +35,6 @@ public class AuthController {
     AuthService authService;
     JwtService jwtService;
     OtpService otpService;
-    LocalizationUtils localizationUtils;
 
     @PostMapping("/login")
     @Operation(
@@ -52,7 +47,7 @@ public class AuthController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         authService.login(request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Đăng nhập thành công."
                 )
         );
     }
@@ -68,7 +63,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         authService.register(request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                        "Tạo tài khoản thành công."
                 ));
     }
 
@@ -85,9 +80,7 @@ public class AuthController {
         authService.logout(jti, expiryTime);
 
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SUCCESS)
-                )
+                BaseResponse.success("Đăng xuất thành công.")
         );
     }
 
@@ -100,7 +93,7 @@ public class AuthController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         authService.refreshToken(refreshToken.getRefreshToken()),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SUCCESS)
+                        "Làm mới token thành công."
                 )
         );
     }
@@ -117,9 +110,7 @@ public class AuthController {
         OtpType otpType = OtpType.of(request.getOtpType());
         otpService.sendOtp(request.getEmail(), otpType);
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
-                )
+                BaseResponse.success("Gửi OTP thành công.")
         );
     }
 
@@ -134,9 +125,7 @@ public class AuthController {
     ) {
         otpService.verifyOtp(request);
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SUCCESS)
-                )
+                BaseResponse.success("Xác thực OTP thành công.")
         );
     }
 }

@@ -9,16 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.service.UserService;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 @Slf4j
 @RestController
@@ -33,7 +30,6 @@ import vn.id.luannv.lutaco.util.LocalizationUtils;
 public class UserController {
 
     UserService userService;
-    LocalizationUtils localizationUtils;
 
     @GetMapping
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
@@ -48,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         userService.search(request, request.getPage(), request.getSize()),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy danh sách người dùng thành công."
                 ));
     }
 
@@ -67,7 +63,7 @@ public class UserController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         userService.getDetail(id),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy chi tiết người dùng thành công."
                 ));
     }
 
@@ -87,7 +83,7 @@ public class UserController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         userService.updateUser(id, request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
+                        "Cập nhật thông tin người dùng thành công."
                 ));
     }
 
@@ -104,9 +100,8 @@ public class UserController {
     ) {
         userService.updateUserRole(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
-                ));
+                BaseResponse.success("Cập nhật quyền người dùng thành công.")
+        );
     }
 
     @PatchMapping("/{id}/status")
@@ -124,9 +119,8 @@ public class UserController {
     ) {
         userService.updateStatus(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
-                ));
+                BaseResponse.success("Cập nhật trạng thái người dùng thành công.")
+        );
     }
 
     @PatchMapping("/{id}/password")
@@ -144,8 +138,7 @@ public class UserController {
     ) {
         userService.updatePassword(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
-                ));
+                BaseResponse.success("Cập nhật mật khẩu thành công.")
+        );
     }
 }

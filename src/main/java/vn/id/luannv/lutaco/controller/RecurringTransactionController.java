@@ -13,13 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.RecurringTransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.RecurringTransactionRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.RecurringTransactionResponse;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 @Slf4j
 @RestController
@@ -34,7 +32,6 @@ import vn.id.luannv.lutaco.util.LocalizationUtils;
 public class RecurringTransactionController {
 
     RecurringTransactionService recurringTransactionService;
-    LocalizationUtils localizationUtils;
 
     @GetMapping
     @Operation(
@@ -52,7 +49,7 @@ public class RecurringTransactionController {
                                 request.getPage(),
                                 request.getSize()
                         ),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy danh sách giao dịch định kỳ thành công."
                 )
         );
     }
@@ -70,7 +67,7 @@ public class RecurringTransactionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         recurringTransactionService.create(request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                        "Tạo giao dịch định kỳ thành công."
                 ));
     }
 
@@ -90,7 +87,7 @@ public class RecurringTransactionController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         recurringTransactionService.getDetail(id),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy chi tiết giao dịch định kỳ thành công."
                 )
         );
     }
@@ -113,7 +110,7 @@ public class RecurringTransactionController {
     ) {
         recurringTransactionService.update(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
+                BaseResponse.success("Cập nhật giao dịch định kỳ thành công.")
         );
     }
 
@@ -132,7 +129,7 @@ public class RecurringTransactionController {
     ) {
         recurringTransactionService.deleteById(id);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.DELETED))
+                BaseResponse.success("Xóa giao dịch định kỳ thành công.")
         );
     }
 }

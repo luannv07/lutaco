@@ -13,13 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.TransactionRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.service.TransactionService;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
@@ -37,7 +35,6 @@ import java.util.List;
 public class TransactionController {
 
     TransactionService transactionService;
-    LocalizationUtils localizationUtils;
 
     @GetMapping
     @Operation(
@@ -55,7 +52,7 @@ public class TransactionController {
                                 request.getPage(),
                                 request.getSize()
                         ),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy danh sách giao dịch thành công."
                 )
         );
     }
@@ -76,7 +73,7 @@ public class TransactionController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         transactionService.getDetail(id),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy chi tiết giao dịch thành công."
                 )
         );
     }
@@ -94,7 +91,7 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         transactionService.customCreate(request, SecurityUtils.getCurrentId()),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                        "Tạo giao dịch thành công."
                 ));
     }
 
@@ -111,7 +108,7 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         transactionService.createBulk(requests, SecurityUtils.getCurrentId()),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                        "Tạo hàng loạt giao dịch thành công."
                 ));
     }
 
@@ -133,7 +130,7 @@ public class TransactionController {
     ) {
         transactionService.update(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
+                BaseResponse.success("Cập nhật giao dịch thành công.")
         );
     }
 
@@ -158,7 +155,7 @@ public class TransactionController {
     ) {
         transactionService.deleteByIdAndWalletId(id, walletId);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
+                BaseResponse.success("Xóa giao dịch thành công.")
         );
     }
 
@@ -184,7 +181,7 @@ public class TransactionController {
     ) {
         transactionService.restoreTransaction(id, walletId);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
+                BaseResponse.success("Phục hồi giao dịch thành công.")
         );
     }
 }

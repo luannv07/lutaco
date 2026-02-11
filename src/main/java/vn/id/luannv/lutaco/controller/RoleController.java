@@ -10,12 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.RoleFilterRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.service.RoleService;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 @RestController
 @RequestMapping("/api/v1/roles")
@@ -29,7 +27,6 @@ import vn.id.luannv.lutaco.util.LocalizationUtils;
 public class RoleController {
 
     RoleService roleService;
-    LocalizationUtils localizationUtils;
 
     @GetMapping
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
@@ -48,7 +45,7 @@ public class RoleController {
                                 request.getPage(),
                                 request.getSize()
                         ),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy danh sách vai trò thành công."
                 )
         );
     }
@@ -70,7 +67,7 @@ public class RoleController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         roleService.getDetail(id),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy chi tiết vai trò thành công."
                 )
         );
     }

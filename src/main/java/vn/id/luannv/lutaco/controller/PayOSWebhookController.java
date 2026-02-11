@@ -14,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.PayOsWebhookRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.service.PayOsClient;
@@ -57,7 +56,7 @@ public class PayOSWebhookController {
         }
         return ResponseEntity.ok()
                 .body(
-                        BaseResponse.success(null, MessageKeyConst.Success.SUCCESS)
+                        BaseResponse.success("Xử lý webhook thành công.")
                 );
     }
 
@@ -80,7 +79,7 @@ public class PayOSWebhookController {
         payOsClient.confirmHookUrl(confirm);
         return ResponseEntity.ok()
                 .body(
-                        BaseResponse.success(null, MessageKeyConst.Success.SUCCESS)
+                        BaseResponse.success("Xác nhận webhook thành công.")
                 );
     }
 }

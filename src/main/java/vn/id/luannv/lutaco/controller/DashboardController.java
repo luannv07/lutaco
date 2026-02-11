@@ -6,20 +6,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.service.DashboardService;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/dashboard")
@@ -44,7 +40,7 @@ public class DashboardController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         dashboardService.handleSummary(periodRange),
-                        MessageKeyConst.Success.SENT
+                        "Lấy dữ liệu dashboard thành công."
                 )
         );
     }

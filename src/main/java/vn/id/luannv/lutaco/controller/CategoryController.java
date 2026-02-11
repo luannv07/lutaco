@@ -10,12 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.CategoryDto;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.service.CategoryService;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.List;
 
@@ -31,7 +29,6 @@ import java.util.List;
 public class CategoryController {
 
     CategoryService categoryService;
-    LocalizationUtils localizationUtils;
 
     @GetMapping
     @Operation(
@@ -44,7 +41,7 @@ public class CategoryController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         categoryService.searchNoPag(request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy danh sách danh mục thành công."
                 )
         );
     }
@@ -59,7 +56,7 @@ public class CategoryController {
     ) {
         categoryService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)));
+                .body(BaseResponse.success("Tạo danh mục thành công."));
     }
 
     @PutMapping("/{categoryName}")
@@ -73,7 +70,7 @@ public class CategoryController {
     ) {
         categoryService.update(categoryName, request);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
+                BaseResponse.success("Cập nhật danh mục thành công.")
         );
     }
 
@@ -87,7 +84,7 @@ public class CategoryController {
     ) {
         categoryService.deleteById(categoryName);
         return ResponseEntity.ok(
-                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
+                BaseResponse.success("Vô hiệu hoá danh mục thành công.")
         );
     }
 }

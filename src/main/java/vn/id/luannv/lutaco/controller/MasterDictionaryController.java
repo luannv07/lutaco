@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.service.MasterDictionaryService;
@@ -55,7 +54,7 @@ public class MasterDictionaryController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         service.getByCategory(category),
-                        MessageKeyConst.Success.SENT
+                        "Lấy danh sách thành công."
                 ));
     }
 
@@ -79,7 +78,7 @@ public class MasterDictionaryController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         service.getByCategoryAndCode(category, code),
-                        MessageKeyConst.Success.SENT
+                        "Lấy dữ liệu thành công."
                 ));
     }
 
@@ -106,7 +105,7 @@ public class MasterDictionaryController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         service.create(dto),
-                        MessageKeyConst.Success.CREATED
+                        "Tạo mới thành công."
                 ));
     }
 
@@ -136,7 +135,7 @@ public class MasterDictionaryController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.success(
                         service.update(id, dto),
-                        MessageKeyConst.Success.UPDATED
+                        "Cập nhật thành công."
                 ));
     }
 }

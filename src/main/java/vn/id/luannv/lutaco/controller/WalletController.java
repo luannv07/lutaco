@@ -12,13 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.constant.MessageKeyConst;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.service.WalletService;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.List;
 
@@ -35,7 +33,6 @@ import java.util.List;
 public class WalletController {
 
     WalletService walletService;
-    LocalizationUtils localizationUtils;
 
     @PostMapping
     @Operation(
@@ -48,7 +45,7 @@ public class WalletController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         walletService.create(request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                        "Tạo ví thành công."
                 ));
     }
 
@@ -69,7 +66,7 @@ public class WalletController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         walletService.update(walletName, request),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
+                        "Cập nhật ví thành công."
                 ));
     }
 
@@ -88,9 +85,8 @@ public class WalletController {
     ) {
         walletService.deleteByUser(walletName);
         return ResponseEntity.ok(
-                BaseResponse.success(
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.DELETED)
-                ));
+                BaseResponse.success("Xóa ví thành công.")
+        );
     }
 
     @GetMapping("/{walletName}")
@@ -109,7 +105,7 @@ public class WalletController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         walletService.getDetail(walletName),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy chi tiết ví thành công."
                 ));
     }
 
@@ -122,7 +118,7 @@ public class WalletController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         walletService.getMyWallets(),
-                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
+                        "Lấy danh sách ví thành công."
                 ));
     }
 }
