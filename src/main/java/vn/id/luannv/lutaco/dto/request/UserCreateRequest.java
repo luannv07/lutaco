@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.annotation.bind.AuditUsername;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -19,8 +18,8 @@ import vn.id.luannv.lutaco.annotation.bind.AuditUsername;
 @Builder
 public class UserCreateRequest {
 
-    @NotBlank(message = "{input.required}")
-    @Size(min = 6, max = 255, message = "{input.invalid}")
+    @NotBlank(message = "{validation.required}")
+    @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
             description = "Tên đăng nhập của người dùng",
             example = "{{testAccount}}",
@@ -30,8 +29,8 @@ public class UserCreateRequest {
     )
     String username;
 
-    @NotBlank(message = "{input.required}")
-    @Size(min = 6, max = 255, message = "{input.invalid}")
+    @NotBlank(message = "{validation.required}")
+    @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
             description = "Mật khẩu đăng nhập (tối thiểu 6 ký tự)",
             example = "{{testAccount}}",
@@ -41,8 +40,8 @@ public class UserCreateRequest {
     )
     String password;
 
-    @NotBlank(message = "{input.required}")
-    @Size(min = 2, max = 255, message = "{input.invalid}")
+    @NotBlank(message = "{validation.required}")
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
             description = "Họ và tên đầy đủ của người dùng",
             example = "Nguyễn Văn Luận",
@@ -52,7 +51,7 @@ public class UserCreateRequest {
     )
     String fullName;
 
-    @Size(max = 255, message = "{input.tooLong}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
             description = "Địa chỉ hiện tại của người dùng",
             example = "Hà Nội",
@@ -60,9 +59,9 @@ public class UserCreateRequest {
     )
     String address;
 
-    @NotBlank(message = "{input.required}")
-    @Email(message = "{input.invalid}")
-    @Size(max = 255, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Email(message = "{validation.invalid.email}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
             description = "Email của người dùng (dùng để xác thực và nhận OTP)",
             example = "vanluandvlp@gmail.com",
@@ -72,7 +71,7 @@ public class UserCreateRequest {
     )
     String email;
 
-    @NotBlank(message = "{input.required}")
+    @NotBlank(message = "{validation.required}")
     @Schema(
             description = "Giới tính người dùng",
             example = "MALE",

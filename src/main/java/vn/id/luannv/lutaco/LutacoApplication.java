@@ -15,9 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class LutacoApplication {
 
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
         SpringApplication.run(LutacoApplication.class, args);
-        log.info("✅ Build successfully! Time execute: {}s", (System.currentTimeMillis() - start * 1.0) / 1000);
     }
 
 }

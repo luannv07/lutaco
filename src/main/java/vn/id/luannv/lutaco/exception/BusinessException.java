@@ -2,35 +2,36 @@ package vn.id.luannv.lutaco.exception;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Map;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
-@Setter
-
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
     ErrorCode errorCode;
     Map<String, Object> params;
 
     /**
-     * Constructor tuỳ biến với message mặc định là ErrorCode.messageKey()
-     * @param errorCode Mã lỗi (ErrorCode.name())
-     * @param params Cặp field : value lỗi
+     * Constructs a new business exception with the specified error code.
+     *
+     * @param errorCode the error code
+     */
+    public BusinessException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
+        this.params = null;
+    }
+
+    /**
+     * Constructs a new business exception with the specified error code and parameters.
+     *
+     * @param errorCode the error code
+     * @param params    the parameters related to the error
      */
     public BusinessException(ErrorCode errorCode, Map<String, Object> params) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
         this.params = params;
-    }
-
-    /**
-     * Constructor chỉ có ErrorCode
-     * @param errorCode Mã lỗi (ErrorCode.name())
-     */
-    public BusinessException(ErrorCode errorCode) {
-        this(errorCode, null);
     }
 }

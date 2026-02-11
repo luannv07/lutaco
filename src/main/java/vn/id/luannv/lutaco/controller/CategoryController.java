@@ -6,8 +6,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +15,7 @@ import vn.id.luannv.lutaco.dto.CategoryDto;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.service.CategoryService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.List;
 
@@ -29,12 +28,10 @@ import java.util.List;
         description = "API quản lý danh mục của người dùng, chỉ thao tác trên dữ liệu cá nhân"
 )
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
-/**
- * Toàn bộ các API bên dưới chỉ thao tác với dữ liệu danh mục của chính người dùng hiện tại
- */
 public class CategoryController {
 
     CategoryService categoryService;
+    LocalizationUtils localizationUtils;
 
     @GetMapping
     @Operation(
@@ -47,7 +44,7 @@ public class CategoryController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         categoryService.searchNoPag(request),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -62,7 +59,7 @@ public class CategoryController {
     ) {
         categoryService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(null, MessageKeyConst.Success.CREATED));
+                .body(BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)));
     }
 
     @PutMapping("/{categoryName}")
@@ -76,7 +73,7 @@ public class CategoryController {
     ) {
         categoryService.update(categoryName, request);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
         );
     }
 
@@ -90,7 +87,7 @@ public class CategoryController {
     ) {
         categoryService.deleteById(categoryName);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
         );
     }
 }

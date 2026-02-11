@@ -18,6 +18,7 @@ import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.service.UserService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 @Slf4j
 @RestController
@@ -32,6 +33,7 @@ import vn.id.luannv.lutaco.service.UserService;
 public class UserController {
 
     UserService userService;
+    LocalizationUtils localizationUtils;
 
     @GetMapping
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
@@ -43,10 +45,10 @@ public class UserController {
             @Parameter(description = "Điều kiện lọc và phân trang người dùng")
             @ModelAttribute UserFilterRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
+        return ResponseEntity.ok(
+                BaseResponse.success(
                         userService.search(request, request.getPage(), request.getSize()),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 ));
     }
 
@@ -62,10 +64,10 @@ public class UserController {
             @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
             @PathVariable String id
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
+        return ResponseEntity.ok(
+                BaseResponse.success(
                         userService.getDetail(id),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 ));
     }
 
@@ -82,10 +84,10 @@ public class UserController {
             @PathVariable String id,
             @Valid @RequestBody UserUpdateRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
+        return ResponseEntity.ok(
+                BaseResponse.success(
                         userService.updateUser(id, request),
-                        MessageKeyConst.Success.UPDATED
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
                 ));
     }
 
@@ -101,10 +103,9 @@ public class UserController {
             @Valid @RequestBody UserRoleRequest request
     ) {
         userService.updateUserRole(id, request);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.UPDATED
+        return ResponseEntity.ok(
+                BaseResponse.success(
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
                 ));
     }
 
@@ -122,10 +123,9 @@ public class UserController {
             @RequestBody UserStatusSetRequest request
     ) {
         userService.updateStatus(id, request);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.DELETED
+        return ResponseEntity.ok(
+                BaseResponse.success(
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
                 ));
     }
 
@@ -143,10 +143,9 @@ public class UserController {
             @RequestBody UpdatePasswordRequest request
     ) {
         userService.updatePassword(id, request);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.UPDATED
+        return ResponseEntity.ok(
+                BaseResponse.success(
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
                 ));
     }
 }

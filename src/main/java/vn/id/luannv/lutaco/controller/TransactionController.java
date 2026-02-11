@@ -19,6 +19,7 @@ import vn.id.luannv.lutaco.dto.request.TransactionRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.service.TransactionService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
@@ -33,12 +34,10 @@ import java.util.List;
         description = "API quản lý giao dịch tài chính của người dùng"
 )
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
-/**
- * Toàn bộ các API bên dưới chỉ thao tác với dữ liệu giao dịch của chính người dùng hiện tại
- */
 public class TransactionController {
 
     TransactionService transactionService;
+    LocalizationUtils localizationUtils;
 
     @GetMapping
     @Operation(
@@ -56,7 +55,7 @@ public class TransactionController {
                                 request.getPage(),
                                 request.getSize()
                         ),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -77,7 +76,7 @@ public class TransactionController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         transactionService.getDetail(id),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -93,7 +92,10 @@ public class TransactionController {
             @RequestBody TransactionRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(transactionService.customCreate(request, SecurityUtils.getCurrentId()), MessageKeyConst.Success.CREATED));
+                .body(BaseResponse.success(
+                        transactionService.customCreate(request, SecurityUtils.getCurrentId()),
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                ));
     }
 
     @PostMapping("/bulk")
@@ -107,7 +109,10 @@ public class TransactionController {
             @RequestBody List<TransactionRequest> requests
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(transactionService.createBulk(requests, SecurityUtils.getCurrentId()), MessageKeyConst.Success.CREATED));
+                .body(BaseResponse.success(
+                        transactionService.createBulk(requests, SecurityUtils.getCurrentId()),
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                ));
     }
 
     @PutMapping("/{id}")
@@ -128,7 +133,7 @@ public class TransactionController {
     ) {
         transactionService.update(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
         );
     }
 
@@ -153,7 +158,7 @@ public class TransactionController {
     ) {
         transactionService.deleteByIdAndWalletId(id, walletId);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
         );
     }
 
@@ -179,7 +184,7 @@ public class TransactionController {
     ) {
         transactionService.restoreTransaction(id, walletId);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
         );
     }
 }

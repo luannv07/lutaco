@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,7 @@ import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.JwtUtils;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.Date;
 
@@ -35,6 +38,7 @@ public class AuthController {
     AuthService authService;
     JwtService jwtService;
     OtpService otpService;
+    LocalizationUtils localizationUtils;
 
     @PostMapping("/login")
     @Operation(
@@ -44,10 +48,10 @@ public class AuthController {
     public ResponseEntity<BaseResponse<AuthenticateResponse>> login(
             @Valid @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(
+        return ResponseEntity.ok(
                 BaseResponse.success(
                         authService.login(request),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -60,10 +64,10 @@ public class AuthController {
     public ResponseEntity<BaseResponse<AuthenticateResponse>> create(
             @Valid @RequestBody UserCreateRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         authService.register(request),
-                        MessageKeyConst.Success.CREATED
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
                 ));
     }
 
@@ -75,16 +79,13 @@ public class AuthController {
     )
     public ResponseEntity<BaseResponse<Void>> logout(HttpServletRequest req) {
         String token = JwtUtils.resolveToken(req);
-
         String jti = jwtService.getJtiFromToken(token);
         Date expiryTime = jwtService.getExpiryTimeFromToken(token);
-
         authService.logout(jti, expiryTime);
 
-        return ResponseEntity.status(HttpStatus.OK).body(
+        return ResponseEntity.ok(
                 BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.SUCCESS
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SUCCESS)
                 )
         );
     }
@@ -95,10 +96,10 @@ public class AuthController {
             description = "Cấp access token mới dựa trên token hiện tại còn hiệu lực"
     )
     public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
-        return ResponseEntity.status(HttpStatus.OK).body(
+        return ResponseEntity.ok(
                 BaseResponse.success(
                         authService.refreshToken(refreshToken.getRefreshToken()),
-                        MessageKeyConst.Success.SUCCESS
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SUCCESS)
                 )
         );
     }
@@ -113,10 +114,9 @@ public class AuthController {
             @Valid @RequestBody SendOtpRequest request
     ) {
         otpService.sendOtp(request.getEmail(), request.getOtpType());
-        return ResponseEntity.status(HttpStatus.OK).body(
+        return ResponseEntity.ok(
                 BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -127,14 +127,13 @@ public class AuthController {
             summary = "Xác thực OTP",
             description = "Xác thực mã OTP người dùng đã nhận để hoàn tất bước xác minh tài khoản"
     )
-    public ResponseEntity<BaseResponse<Void>> resendOtp(
+    public ResponseEntity<BaseResponse<Void>> verifyOtp(
             @Valid @RequestBody VerifyOtpRequest request
     ) {
         otpService.verifyOtp(request);
-        return ResponseEntity.status(HttpStatus.OK).body(
+        return ResponseEntity.ok(
                 BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.SUCCESS
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SUCCESS)
                 )
         );
     }
