@@ -11,12 +11,14 @@ import vn.id.luannv.lutaco.entity.Wallet;
 public interface WalletMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "currentBalance", source = "initialBalance")
+    @Mapping(target = "currentBalance", source = "balance")
+    @Mapping(target = "initialBalance", source = "balance")
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
+    @Mapping(target = "status", ignore = true)
     Wallet toEntity(WalletCreateRequest request);
 
     @Mapping(target = "id", ignore = true)

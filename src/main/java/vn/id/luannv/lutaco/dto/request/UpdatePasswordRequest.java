@@ -43,5 +43,5 @@ public class UpdatePasswordRequest {
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
-    String confirmPassword;
+    String confirmNewPassword;
 }
