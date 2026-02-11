@@ -19,6 +19,7 @@ import vn.id.luannv.lutaco.dto.request.RecurringTransactionRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.RecurringTransactionResponse;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 @Slf4j
 @RestController
@@ -33,6 +34,7 @@ import vn.id.luannv.lutaco.service.RecurringTransactionService;
 public class RecurringTransactionController {
 
     RecurringTransactionService recurringTransactionService;
+    LocalizationUtils localizationUtils;
 
     @GetMapping
     @Operation(
@@ -50,7 +52,7 @@ public class RecurringTransactionController {
                                 request.getPage(),
                                 request.getSize()
                         ),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -66,7 +68,10 @@ public class RecurringTransactionController {
             @RequestBody RecurringTransactionRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(BaseResponse.success(recurringTransactionService.create(request), MessageKeyConst.Success.CREATED));
+                .body(BaseResponse.success(
+                        recurringTransactionService.create(request),
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
+                ));
     }
 
     @GetMapping("/{id}")
@@ -85,7 +90,7 @@ public class RecurringTransactionController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         recurringTransactionService.getDetail(id),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -108,7 +113,7 @@ public class RecurringTransactionController {
     ) {
         recurringTransactionService.update(id, request);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.UPDATED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED))
         );
     }
 
@@ -127,7 +132,7 @@ public class RecurringTransactionController {
     ) {
         recurringTransactionService.deleteById(id);
         return ResponseEntity.ok(
-                BaseResponse.success(null, MessageKeyConst.Success.DELETED)
+                BaseResponse.success(localizationUtils.getLocalizedMessage(MessageKeyConst.Success.DELETED))
         );
     }
 }

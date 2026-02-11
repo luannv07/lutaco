@@ -15,6 +15,7 @@ import vn.id.luannv.lutaco.dto.request.RoleFilterRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.service.RoleService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 @RestController
 @RequestMapping("/api/v1/roles")
@@ -28,6 +29,7 @@ import vn.id.luannv.lutaco.service.RoleService;
 public class RoleController {
 
     RoleService roleService;
+    LocalizationUtils localizationUtils;
 
     @GetMapping
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
@@ -46,7 +48,7 @@ public class RoleController {
                                 request.getPage(),
                                 request.getSize()
                         ),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }
@@ -68,7 +70,7 @@ public class RoleController {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         roleService.getDetail(id),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 )
         );
     }

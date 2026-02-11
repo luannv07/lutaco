@@ -13,7 +13,8 @@ public class SecurityConstants {
             "/swagger-resources/**",
             "/webjars/**",
             "/webhook/payos",
-            "/api/v1/public/**"
+            "/api/v1/public/**",
+            "/public/**"
     );
 
     public static final List<String> PUBLIC_URLS_SHOULD_NOT_AUTH = List.of(

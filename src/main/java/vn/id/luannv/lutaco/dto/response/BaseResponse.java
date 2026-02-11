@@ -7,6 +7,13 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+/**
+ * Represents a standardized API response wrapper.
+ * This class is used to provide a consistent structure for all API responses,
+ * indicating success or failure and including relevant data, error codes, and messages.
+ *
+ * @param <T> the type of the data payload included in the response.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,41 +21,59 @@ import java.util.Map;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse<T> {
-    Boolean success;
-    ErrorCode errorCode;
-    Map<String, Object> params;
-    String messageKey;
-    T data;
+
+    private Boolean success;
+    private String errorCode;
+    private String messageKey;
+    private String message;
+    private Map<String, Object> params;
+    private T data;
     @Builder.Default
-    LocalDateTime timestamp = LocalDateTime.now();
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     /**
-     * Trả về một success body
-     * @param data Dữ liệu (nếu có)
-     * @param messageKey Message dạng key để Frontend áp đa ngôn ngữ
-     * @return BaseResponse<T> Trả về với data T
-     * @param <T> Dữ liệu chỉ định
+     * Creates a standardized success response with a data payload.
+     *
+     * @param data    The data payload to be returned.
+     * @param message The resolved, human-readable success message.
+     * @param <T>     The type of the data payload.
+     * @return A {@code BaseResponse} instance representing a successful outcome.
      */
-    public static <T> BaseResponse<T> success(T data, String messageKey) {
-        return  BaseResponse.<T>builder()
+    public static <T> BaseResponse<T> success(T data, String message) {
+        return BaseResponse.<T>builder()
                 .success(true)
+                .message(message)
                 .data(data)
-                .messageKey(messageKey)
                 .build();
     }
 
     /**
-     * Trả về một error body
-     * @param params Các cặp dạng field : value lỗi
-     * @param errorCode Mã lỗi (tên Enum ErrorCode)
-     * @return BaseResponse Chuẩn class trả về
-     * @param <Void> Không có data, mặc định Void
+     * Creates a standardized success response without a data payload.
+     *
+     * @param message The resolved, human-readable success message.
+     * @return A {@code BaseResponse} instance representing a successful outcome.
      */
-    public static <Void> BaseResponse<Void> error(Map<String, Object> params, ErrorCode errorCode) {
+    public static BaseResponse<Void> success(String message) {
         return BaseResponse.<Void>builder()
+                .success(true)
+                .message(message)
+                .build();
+    }
+
+    /**
+     * Creates a standardized error response.
+     *
+     * @param errorCode The error code enum that represents the error.
+     * @param message   The resolved, human-readable error message.
+     * @param params    A map of additional parameters related to the error (e.g., validation details).
+     * @return A {@code BaseResponse} instance representing a failed outcome.
+     */
+    public static <T> BaseResponse<T> error(ErrorCode errorCode, String message, Map<String, Object> params) {
+        return BaseResponse.<T>builder()
                 .success(false)
+                .errorCode(errorCode.name())
                 .messageKey(errorCode.getMessage())
-                .errorCode(errorCode)
+                .message(message)
                 .params(params)
                 .build();
     }

@@ -18,6 +18,7 @@ import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.service.WalletService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ import java.util.List;
 public class WalletController {
 
     WalletService walletService;
+    LocalizationUtils localizationUtils;
 
     @PostMapping
     @Operation(
@@ -46,7 +48,7 @@ public class WalletController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         walletService.create(request),
-                        MessageKeyConst.Success.CREATED
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.CREATED)
                 ));
     }
 
@@ -64,10 +66,10 @@ public class WalletController {
             @PathVariable String walletName,
             @Valid @RequestBody WalletUpdateRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
+        return ResponseEntity.ok(
+                BaseResponse.success(
                         walletService.update(walletName, request),
-                        MessageKeyConst.Success.UPDATED
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.UPDATED)
                 ));
     }
 
@@ -85,11 +87,9 @@ public class WalletController {
             @PathVariable String walletName
     ) {
         walletService.deleteByUser(walletName);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
-                        null,
-                        MessageKeyConst.Success.DELETED
+        return ResponseEntity.ok(
+                BaseResponse.success(
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.DELETED)
                 ));
     }
 
@@ -106,10 +106,10 @@ public class WalletController {
             )
             @PathVariable String walletName
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
+        return ResponseEntity.ok(
+                BaseResponse.success(
                         walletService.getDetail(walletName),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 ));
     }
 
@@ -119,10 +119,10 @@ public class WalletController {
             description = "Lấy toàn bộ wallet của user đang đăng nhập"
     )
     public ResponseEntity<BaseResponse<List<Wallet>>> getMyWallets() {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.success(
+        return ResponseEntity.ok(
+                BaseResponse.success(
                         walletService.getMyWallets(),
-                        MessageKeyConst.Success.SENT
+                        localizationUtils.getLocalizedMessage(MessageKeyConst.Success.SENT)
                 ));
     }
 }

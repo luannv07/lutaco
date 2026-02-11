@@ -14,6 +14,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.exception.ErrorCode;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     ObjectMapper objectMapper;
+    LocalizationUtils localizationUtils;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
@@ -33,8 +35,9 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         objectMapper.writeValue(response.getOutputStream(), BaseResponse.error(
-                Map.of(),
-                ErrorCode.FORBIDDEN
+                ErrorCode.FORBIDDEN,
+                localizationUtils.getLocalizedMessage(ErrorCode.FORBIDDEN.getMessage()),
+                Map.of()
         ));
     }
 }
