@@ -7,6 +7,7 @@ import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.enumerate.FrequentType;
 import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -55,7 +56,7 @@ public class EmailTemplateService {
     }
 
     private static String buildFooter(String email, LocalDateTime timestamp) {
-        return "<p><span class=\"brand\">LUTACO</span> • © 2099</p><p>Email này được gửi tự động đến " + email + "</p><p>Thời gian: " + timestamp.format(DateTimeFormatter.ofPattern("HH:mm 'ngày' dd/MM/yyyy")) + "</p>";
+        return "<p><span class=\"brand\">LUTACO</span> • © 2099</p><p>Email này được gửi tự động đến " + email + "</p><p>Thời gian: " + TimeUtils.formatToUserZone(timestamp, TimeUtils.DEFAULT_TIMEZONE, "HH:mm, dd/MM/yyyy") + "</p>";
     }
 
     public static EmailFields getRecurringInitializationTemplate(RecurringTransactionEvent.RecurringInitialization recurring) {
@@ -112,7 +113,7 @@ public class EmailTemplateService {
 
         String content = "<p class=\"greeting\" style=\"text-align:center;\">Vui lòng sử dụng mã dưới đây để hoàn tất xác thực.</p>"
                 + "<div class=\"otp-code\">" + newCode + "</div>"
-                + "<p class=\"paragraph\" style=\"text-align:center; margin-top: 20px;\">Mã sẽ hết hạn lúc " + newExpiry.format(DateTimeFormatter.ofPattern("HH:mm, dd/MM/yyyy")) + ".</p>"
+                + "<p class=\"paragraph\" style=\"text-align:center; margin-top: 20px;\">Mã sẽ hết hạn lúc " + TimeUtils.formatToUserZone(newExpiry, TimeUtils.DEFAULT_TIMEZONE, "HH:mm, dd/MM/yyyy") + ".</p>"
                 + "<p class=\"paragraph\" style=\"text-align:center; font-size: 13px; color: #9ca3af;\">Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email.</p>";
 
         String footer = buildFooter(email, LocalDateTime.now());

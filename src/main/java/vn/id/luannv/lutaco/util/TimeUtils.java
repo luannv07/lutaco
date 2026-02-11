@@ -15,7 +15,7 @@ public class TimeUtils {
     // Mặc định nếu không tìm thấy timezone của user thì dùng cái này (Client chủ yếu ở VN)
     public static final String DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh";
 
-    public static String format(LocalDateTime dateTime, String pattern) {
+    private static String format(LocalDateTime dateTime, String pattern) {
         if (dateTime == null)
             return null;
         if (pattern == null)

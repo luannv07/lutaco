@@ -27,9 +27,9 @@ import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.DashboardService;
 import vn.id.luannv.lutaco.util.CustomizeNumberUtils;
-import vn.id.luannv.lutaco.util.TimeUtils;
 import vn.id.luannv.lutaco.util.PeriodWindowFactory;
 import vn.id.luannv.lutaco.util.SecurityUtils;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -273,9 +273,9 @@ public class DashboardServiceImpl implements DashboardService {
                 styles.getCenterBold()
         );
 
-        String from = TimeUtils.format(ctx.window().getFrom(), "dd/MM/yyyy");
-        String to = TimeUtils.format(ctx.window().getTo(), "dd/MM/yyyy");
-        String exportedAt = TimeUtils.format(ctx.exportedAt(), "dd/MM/yyyy HH:mm:ss");
+        String from = TimeUtils.formatToUserZone(ctx.window().getFrom(), TimeUtils.DEFAULT_TIMEZONE, "dd/MM/yyyy");
+        String to = TimeUtils.formatToUserZone(ctx.window().getTo(), TimeUtils.DEFAULT_TIMEZONE, "dd/MM/yyyy");
+        String exportedAt = TimeUtils.formatToUserZone(ctx.exportedAt(), TimeUtils.DEFAULT_TIMEZONE, "dd/MM/yyyy HH:mm:ss");
 
         /* ===== Metadata ===== */
         rowIdx = createMetaRow(sheet, rowIdx, "Author:", ctx.author(), styles.getBold());

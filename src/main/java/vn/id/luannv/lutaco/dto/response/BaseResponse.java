@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 /**
@@ -29,7 +29,7 @@ public class BaseResponse<T> {
     private Map<String, Object> params;
     private T data;
     @Builder.Default
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private ZonedDateTime timestamp = ZonedDateTime.now();
 
     /**
      * Creates a standardized success response with a data payload.
