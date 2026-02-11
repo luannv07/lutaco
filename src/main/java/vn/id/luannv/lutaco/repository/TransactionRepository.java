@@ -109,7 +109,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
         u.email,
         u.fullName,
         t.amount,
-        t.userId
+        t.userId,
+        t.category.categoryName,
+        t.category.categoryType
     )
     from Transaction t
     join User u on u.id = t.userId
@@ -123,4 +125,3 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 """)
     RecurringTransactionProjection findLinkingFieldsById(@Param("id") String id);
 }
-

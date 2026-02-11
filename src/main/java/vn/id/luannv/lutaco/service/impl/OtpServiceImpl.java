@@ -27,9 +27,6 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -149,7 +146,7 @@ public class OtpServiceImpl implements OtpService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.OTP_SEND_FAILED));
 
         log.info("attempt and after query attempt: {} {}", attempt, afterQuery.getMaxAttempt());
-        if (attempt == afterQuery.getMaxAttempt() && afterQuery.getMaxAttempt() != 0) {
+        if (attempt == afterQuery.getMaxAttempt() && afterQuery.getMaxAttempt() != 0 && afterQuery.getVerifiedAt() != null) {
             user.setUserStatus(UserStatus.ACTIVE);
             userRepository.save(user);
             return;
