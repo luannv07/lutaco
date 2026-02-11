@@ -37,7 +37,6 @@ public class TransactionFilterRequest extends BaseFilterRequest {
             description = "Thời gian kết thúc (lọc đến ngày)",
             example = "2024-01-31T23:59:59"
     )
-    @FutureOrPresent(message = "{validation.field.future_or_present}")
     LocalDateTime toDate;
 
     @Schema(

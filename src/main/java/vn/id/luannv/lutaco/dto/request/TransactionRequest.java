@@ -41,7 +41,6 @@ public class TransactionRequest {
             example = "2024-01-15T10:30:00",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @FutureOrPresent(message = "{validation.field.future_or_present}")
     LocalDateTime transactionDate;
 
     @NotBlank(message = "{validation.required}")
