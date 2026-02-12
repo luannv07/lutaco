@@ -38,7 +38,7 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
         long count = walletRepository.countByUser_Id(userId);
         if (count >= user.getUserPlan().getMaxWallets()) {
-            throw new BusinessException(ErrorCode.WALLET_LIMIT_EXCEEDED);
+            throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
         }
 
         Wallet wallet = walletMapper.toEntity(request);
@@ -56,7 +56,7 @@ public class WalletServiceImpl implements WalletService {
 
         long count = walletRepository.countByUser_Id(userId);
         if (count >= user.getUserPlan().getMaxWallets()) {
-            throw new BusinessException(ErrorCode.WALLET_LIMIT_EXCEEDED);
+            throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
         }
 
         Wallet wallet = new Wallet();
@@ -108,18 +108,16 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<Wallet> getMyWallets() {
-        List<Wallet> wallets = walletRepository.findByUser_Id(
+        return walletRepository.findByUser_Id(
                 SecurityUtils.getCurrentId()
         );
-        return wallets;
     }
 
     private Wallet getMywalletOrThrow(String walletName) {
-        Wallet wallet = walletRepository
+        return walletRepository
                 .findByUser_IdAndWalletName(
                         SecurityUtils.getCurrentId(), walletName
                 )
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
-        return wallet;
     }
 }

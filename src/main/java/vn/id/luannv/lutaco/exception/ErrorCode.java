@@ -57,7 +57,7 @@ public enum ErrorCode {
     // ================= BUSINESS RULE =====================
     // =====================================================
     OPERATION_NOT_ALLOWED("business.operation.not.allowed", HttpStatus.BAD_REQUEST),
-    WALLET_LIMIT_EXCEEDED("business.wallet.limit.exceeded", HttpStatus.BAD_REQUEST),
+    OPERATION_LIMIT_EXCEEDED("error.plan.limit.exceeded", HttpStatus.BAD_REQUEST),
 
     // =====================================================
     // ================= PASSWORD DOMAIN ===================
