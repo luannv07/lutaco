@@ -1,4 +1,4 @@
-package vn.id.luannv.lutaco.dto;
+package vn.id.luannv.lutaco.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,10 +16,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BudgetDTO {
+public class BudgetResponse {
     Long id;
     String name;
-    String categoryId;
     String categoryName;
     String username;
     Long targetAmount;

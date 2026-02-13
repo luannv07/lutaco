@@ -73,7 +73,12 @@ public class JwtService {
             SignedJWT signedJWT = SignedJWT.parse(token);
 
             JWSVerifier verifier = new MACVerifier(secretKey);
-            if (!signedJWT.verify(verifier)) {
+            try {
+                if (!signedJWT.verify(verifier)) {
+                    throw new BusinessException(ErrorCode.UNAUTHORIZED);
+                }
+            } catch (Exception e) {
+                log.info("JWT verification failed: {}", e.getMessage());
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);
             }
 

@@ -2,7 +2,9 @@ package vn.id.luannv.lutaco.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.dto.BudgetDTO;
+import vn.id.luannv.lutaco.dto.request.CreateBudgetRequest;
+import vn.id.luannv.lutaco.dto.request.UpdateBudgetRequest;
+import vn.id.luannv.lutaco.dto.response.BudgetResponse;
 import vn.id.luannv.lutaco.entity.Budget;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.User;
@@ -31,7 +33,7 @@ public class BudgetServiceImpl implements BudgetService {
     private final BudgetMapper budgetMapper;
 
     @Override
-    public BudgetDTO createBudget(BudgetDTO budgetDTO) {
+    public BudgetResponse createBudget(CreateBudgetRequest request) {
         String currentUserId = SecurityUtils.getCurrentId();
         long currentBudgetCount = budgetRepository.countByUserIdAndDeletedAtIsNull(currentUserId);
 
@@ -41,27 +43,28 @@ public class BudgetServiceImpl implements BudgetService {
 
         User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
-        Category category = categoryRepository.findById(budgetDTO.getCategoryId())
+        Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
-        Budget budget = budgetMapper.toEntity(budgetDTO);
+        Budget budget = budgetMapper.toBudget(request);
         budget.setUser(user);
         budget.setCategory(category);
         budget.setActualAmount(0L);
         budget.setPercentage(0.0f);
         budget.setStatus(BudgetStatus.IN_PROGRESS);
+        budget.setPeriod(Period.from(request.getPeriod()));
 
-        if (budgetDTO.getStartDate() == null) {
+        if (request.getStartDate() == null) {
             budget.setStartDate(LocalDateTime.now());
         }
         calculateEndDate(budget);
 
         Budget savedBudget = budgetRepository.save(budget);
-        return budgetMapper.toDTO(savedBudget);
+        return budgetMapper.toBudgetResponse(savedBudget);
     }
 
     @Override
-    public BudgetDTO updateBudget(Long id, BudgetDTO budgetDTO) {
+    public BudgetResponse updateBudget(Long id, UpdateBudgetRequest request) {
         Budget budget = budgetRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
@@ -69,13 +72,14 @@ public class BudgetServiceImpl implements BudgetService {
             throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
         }
 
-        budgetMapper.updateFromDTO(budgetDTO, budget);
+        budgetMapper.updateBudgetFromRequest(request, budget);
+        budget.setPeriod(Period.from(request.getPeriod()));
 
         calculateEndDate(budget);
         updatePercentage(budget);
 
         Budget updatedBudget = budgetRepository.save(budget);
-        return budgetMapper.toDTO(updatedBudget);
+        return budgetMapper.toBudgetResponse(updatedBudget);
     }
 
     @Override
@@ -87,13 +91,13 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<BudgetDTO> getBudgetsByCurrentUser() {
+    public List<BudgetResponse> getBudgetsByCurrentUser() {
         String currentUserId = SecurityUtils.getCurrentId();
         List<Budget> budgets = budgetRepository.findByUserIdAndDeletedAtIsNull(currentUserId);
         return budgets.stream()
                 .map(budget -> {
                     updatePercentage(budget);
-                    return budgetMapper.toDTO(budget);
+                    return budgetMapper.toBudgetResponse(budget);
                 })
                 .collect(Collectors.toList());
     }

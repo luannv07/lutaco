@@ -1,15 +1,17 @@
 package vn.id.luannv.lutaco.service;
 
-import vn.id.luannv.lutaco.dto.BudgetDTO;
+import vn.id.luannv.lutaco.dto.request.CreateBudgetRequest;
+import vn.id.luannv.lutaco.dto.request.UpdateBudgetRequest;
+import vn.id.luannv.lutaco.dto.response.BudgetResponse;
 
 import java.util.List;
 
 public interface BudgetService {
-    BudgetDTO createBudget(BudgetDTO budgetDTO);
+    BudgetResponse createBudget(CreateBudgetRequest request);
 
-    BudgetDTO updateBudget(Long id, BudgetDTO budgetDTO);
+    BudgetResponse updateBudget(Long id, UpdateBudgetRequest request);
 
     void deleteBudget(Long id);
 
-    List<BudgetDTO> getBudgetsByCurrentUser();
+    List<BudgetResponse> getBudgetsByCurrentUser();
 }
