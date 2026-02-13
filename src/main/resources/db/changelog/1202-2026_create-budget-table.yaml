@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1202-2026_create-budget-table
+      id: b0abd6db-15d4-4861-a928-80db38bf52b6
       author: luannv
       changes:
         - createTable:
