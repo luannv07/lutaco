@@ -1,0 +1,103 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1202-2026_create-budget-table
+      author: luannv
+      changes:
+        - createTable:
+            tableName: budgets
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: VARCHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: VARCHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_amount
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_amount
+                  type: BIGINT
+                  defaultValue: "0"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: percentage
+                  type: FLOAT
+                  defaultValue: "0.0"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_at
+                  type: datetime
+              - column:
+                  name: period
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+                  defaultValue: "IN_PROGRESS"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: VARCHAR(255)
+              - column:
+                  name: created_date
+                  type: datetime
+              - column:
+                  name: updated_by
+                  type: VARCHAR(255)
+              - column:
+                  name: updated_date
+                  type: datetime
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: budgets
+            constraintName: fk_budget_category
+            referencedColumnNames: id
+            referencedTableName: categories
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: budgets
+            constraintName: fk_budget_user
+            referencedColumnNames: id
+            referencedTableName: users
+        - createIndex:
+            indexName: idx_budget_user_category_period
+            tableName: budgets
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: category_id

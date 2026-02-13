@@ -41,3 +41,5 @@ databaseChangeLog:
       file: db/changelog/0902-2026_create-recurring-transaction-table.yaml
   - include:
       file: db/changelog/1102-2026_alter-add-timezone-column-user.yaml
+  - include:
+      file: db/changelog/1202-2026_create-budget-table.yaml
