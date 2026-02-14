@@ -19,6 +19,7 @@ import vn.id.luannv.lutaco.entity.Transaction;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.event.entity.TransactionCreatedEvent;
+import vn.id.luannv.lutaco.event.entity.TransactionDeletedEvent;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.TransactionMapper;
@@ -223,7 +224,10 @@ public class TransactionServiceImpl implements TransactionService {
         CategoryType reverse = reverseCategory(EnumUtils.from(CategoryType.class, cateTypeObj));
 
         applyBalance(walletId, transaction.getAmount(), reverse);
-        transactionRepository.save(transaction);
+        Transaction savedTransaction = transactionRepository.save(transaction);
+
+        // Publish the deletion event
+        eventPublisher.publishEvent(new TransactionDeletedEvent(this, savedTransaction));
     }
     private CategoryType reverseCategory(CategoryType categoryType) {
         return categoryType == CategoryType.EXPENSE
@@ -244,7 +248,10 @@ public class TransactionServiceImpl implements TransactionService {
             throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
 
         transaction.setDeletedAt(null);
-        transactionRepository.save(transaction);
+        Transaction savedTransaction = transactionRepository.save(transaction);
         applyBalance(walletId, transaction.getAmount(), EnumUtils.from(CategoryType.class, cateTypeObj));
+
+        // When restoring, it's like creating a new transaction again, so we publish a creation event
+        eventPublisher.publishEvent(new TransactionCreatedEvent(this, savedTransaction));
     }
 }

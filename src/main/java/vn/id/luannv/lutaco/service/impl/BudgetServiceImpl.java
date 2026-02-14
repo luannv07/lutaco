@@ -83,6 +83,15 @@ public class BudgetServiceImpl implements BudgetService {
         return budgetMapper.toDto(savedBudget);
     }
 
+    @Override
+    public Boolean preventDangerEmail(Long id) {
+        Budget budget = budgetRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id)));
+        budget.setStatus(BudgetStatus.UNKNOWN);
+        budgetRepository.save(budget);
+        return true;
+    }
+
     private LocalDate calculateEndDate(LocalDate startDate, Period period) {
         if (startDate == null || period == null) {
             return null;
@@ -167,6 +176,8 @@ public class BudgetServiceImpl implements BudgetService {
             return BudgetStatus.DANGER;
         if (percentage > BudgetStatus.WARNING.getPercentage())
             return BudgetStatus.WARNING;
-        return BudgetStatus.NORMAL;
+        if (percentage > BudgetStatus.UNKNOWN.getPercentage())
+            return BudgetStatus.NORMAL;
+        return BudgetStatus.UNKNOWN;
     }
 }

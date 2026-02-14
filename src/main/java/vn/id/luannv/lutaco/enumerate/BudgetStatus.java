@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 public enum BudgetStatus {
     NORMAL,
     WARNING,
-    DANGER;
+    DANGER,
+    UNKNOWN; // tu choi gui mail
 
     int percentage;
 
@@ -32,6 +33,7 @@ public enum BudgetStatus {
             NORMAL.percentage = normal;
             WARNING.percentage = warning;
             DANGER.percentage = danger;
+            UNKNOWN.percentage = -1;
         }
     }
 }

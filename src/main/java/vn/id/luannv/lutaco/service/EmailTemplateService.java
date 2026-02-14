@@ -2,16 +2,22 @@ package vn.id.luannv.lutaco.service;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import vn.id.luannv.lutaco.entity.Budget;
+import vn.id.luannv.lutaco.entity.User;
+import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.enumerate.FrequentType;
 import vn.id.luannv.lutaco.enumerate.OtpType;
+import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent;
 import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailTemplateService {
@@ -57,6 +63,46 @@ public class EmailTemplateService {
 
     private static String buildFooter(String email, LocalDateTime timestamp) {
         return "<p><span class=\"brand\">LUTACO</span> • © 2099</p><p>Email này được gửi tự động đến " + email + "</p><p>Thời gian: " + TimeUtils.formatToUserZone(timestamp, TimeUtils.DEFAULT_TIMEZONE, "HH:mm, dd/MM/yyyy") + "</p>";
+    }
+
+    public static EmailFields sendAttentionBudget(Budget budget) {
+        float percentage = budget.getPercentage();
+        BudgetStatus status = budget.getStatus();
+
+        String title;
+        String subject;
+        String greeting;
+        String paragraph;
+        float threshold = status.getPercentage();
+
+        if (status == BudgetStatus.DANGER) {
+            title = "Ngân Sách Vượt Ngưỡng Nguy Hiểm";
+            subject = String.format("LUTACO | Cảnh báo: Ngân sách '%s' đã vượt ngưỡng nguy hiểm!", budget.getName());
+            greeting = "Cảnh báo khẩn cấp,";
+            paragraph = String.format(
+                "Ngân sách <b>%s</b> của bạn đã đạt <b>%.2f%%</b>, vượt qua ngưỡng nguy hiểm (%.0f%%). " +
+                "Vui lòng xem xét lại các khoản chi tiêu của mình ngay lập tức.",
+                budget.getName(), percentage, threshold
+            );
+        } else { // WARNING
+            title = "Ngân Sách Sắp Đạt Giới Hạn";
+            subject = String.format("LUTACO | Cảnh báo: Ngân sách '%s' sắp đạt giới hạn", budget.getName());
+            greeting = "Lưu ý quan trọng,";
+            paragraph = String.format(
+                "Ngân sách <b>%s</b> của bạn đã đạt <b>%.2f%%</b>, vượt qua ngưỡng cảnh báo (%.0f%%). " +
+                "Hãy chú ý hơn đến các khoản chi tiêu của mình nhé.",
+                budget.getName(), percentage, threshold
+            );
+        }
+
+        String content = "<p class=\"greeting\">" + greeting + " <span style=\"color:#1d4ed8 !important;\">" + budget.getUser().getFullName() + "</span></p>"
+                + "<p class=\"paragraph\">" + paragraph + "</p>";
+
+        String footer = buildFooter(budget.getUser().getEmail(), LocalDateTime.now());
+        String body = buildEmailLayout(title, content, footer);
+        log.info("{}",LocalDateTime.now());
+
+        return new EmailFields(budget.getUser().getEmail(), subject, body);
     }
 
     public static EmailFields getRecurringInitializationTemplate(RecurringTransactionEvent.RecurringInitialization recurring) {

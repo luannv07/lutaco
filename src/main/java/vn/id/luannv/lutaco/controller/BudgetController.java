@@ -39,6 +39,16 @@ public class BudgetController {
                 ));
     }
 
+    @PatchMapping("/{id}")
+    @Operation(summary = "Tạo ngân sách mới")
+    public ResponseEntity<BaseResponse<Boolean>> preventDangerEmail(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(BaseResponse.success(
+                        budgetService.preventDangerEmail(id),
+                        "Ko nhận email cảnh báo cho Budget thành công."
+                ));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết ngân sách")
     public ResponseEntity<BaseResponse<BudgetResponse>> getDetail(@PathVariable Long id) {
