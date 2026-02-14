@@ -57,7 +57,7 @@ public enum ErrorCode {
     // ================= BUSINESS RULE =====================
     // =====================================================
     OPERATION_NOT_ALLOWED("business.operation.not.allowed", HttpStatus.BAD_REQUEST),
-    WALLET_LIMIT_EXCEEDED("business.wallet.limit.exceeded", HttpStatus.BAD_REQUEST),
+    OPERATION_LIMIT_EXCEEDED("error.plan.limit.exceeded", HttpStatus.BAD_REQUEST),
 
     // =====================================================
     // ================= PASSWORD DOMAIN ===================
@@ -99,7 +99,7 @@ public enum ErrorCode {
     // =====================================================
     // ===================== JOB / SCHEDULER ================
     // =====================================================
-    JOB_INTERRUPTED("job.interrupted", HttpStatus.BAD_REQUEST);
+    JOB_INTERRUPTED("job.interrupted", HttpStatus.BAD_REQUEST), PLAN_NOT_CONFIGURED("error.plan.not.configured", HttpStatus.BAD_REQUEST);
 
     // =====================================================
     // ===================== FIELDS =========================

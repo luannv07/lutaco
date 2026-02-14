@@ -20,8 +20,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE budgets SET deleted_at = CURRENT_DATE WHERE id = ?")
-@Where(clause = "deleted_at IS NULL")
 @FieldDefaults(level =  AccessLevel.PRIVATE)
 public class Budget {
 
@@ -55,7 +53,4 @@ public class Budget {
 
     @Column(name = "end_date")
     LocalDate endDate;
-
-    @Column(name = "deleted_at")
-    LocalDate deletedAt;
 }

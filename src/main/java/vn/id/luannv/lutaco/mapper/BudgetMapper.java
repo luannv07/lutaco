@@ -15,7 +15,6 @@ public interface BudgetMapper {
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "actualAmount", ignore = true)
     @Mapping(target = "endDate", ignore = true)
-    @Mapping(target = "deletedAt", ignore = true)
     Budget toEntity(BudgetRequest request);
 
     @Mapping(source = "user.id", target = "userId")
@@ -30,6 +29,5 @@ public interface BudgetMapper {
     @Mapping(target = "actualAmount", ignore = true)
     @Mapping(target = "endDate", ignore = true)
     @Mapping(target = "startDate", ignore = true)
-    @Mapping(target = "deletedAt", ignore = true)
     void update(@MappingTarget Budget budget, BudgetRequest request);
 }

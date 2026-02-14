@@ -58,10 +58,6 @@ databaseChangeLog:
                   name: end_date
                   type: date
 
-              - column:
-                  name: deleted_at
-                  type: date
-
         - addForeignKeyConstraint:
             baseTableName: budgets
             baseColumnNames: user_id
@@ -83,14 +79,12 @@ databaseChangeLog:
         # index chính cho query user/category + ignore deleted
         - createIndex:
             tableName: budgets
-            indexName: idx_budgets_user_category_deleted
+            indexName: idx_budgets_user_category
             columns:
               - column:
                   name: user_id
               - column:
                   name: category_id
-              - column:
-                  name: deleted_at
 
         # giữ index category để query độc lập
         - createIndex:
@@ -104,4 +98,4 @@ databaseChangeLog:
         - addUniqueConstraint:
             tableName: budgets
             columnNames: user_id, category_id
-            constraintName: uk_budget_user_category_deleted
+            constraintName: uk_budget_user_category
