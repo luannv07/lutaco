@@ -21,6 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE budgets SET deleted_at = CURRENT_DATE WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 @FieldDefaults(level =  AccessLevel.PRIVATE)
 public class Budget {
 

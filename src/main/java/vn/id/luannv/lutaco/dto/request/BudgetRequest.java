@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BudgetRequest {
-    String userId;
     String categoryId;
     String name;
     Long targetAmount;
