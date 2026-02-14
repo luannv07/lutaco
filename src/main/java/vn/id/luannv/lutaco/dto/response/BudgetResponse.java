@@ -2,6 +2,7 @@ package vn.id.luannv.lutaco.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -24,4 +25,5 @@ public class BudgetResponse {
     LocalDate endDate;
     Float percentage;
     Long actualAmount;
+    BudgetStatus status;
 }

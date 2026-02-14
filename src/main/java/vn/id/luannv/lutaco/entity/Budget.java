@@ -6,21 +6,22 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.Period;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "budgets",
-       uniqueConstraints = {
-           @UniqueConstraint(name = "uk_budget_user_category_deleted", columnNames = {"user_id", "category_id"})
-       }
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_budget_user_category_deleted", columnNames = {"user_id", "category_id"})
+        }
 )
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level =  AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Budget {
 
     @Id
@@ -56,4 +57,8 @@ public class Budget {
 
     @Column(name = "percentage")
     Float percentage;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    BudgetStatus status;
 }

@@ -16,6 +16,7 @@ public interface BudgetMapper {
     @Mapping(target = "actualAmount", ignore = true)
     @Mapping(target = "endDate", ignore = true)
     @Mapping(target = "percentage", ignore = true)
+    @Mapping(target = "status", ignore = true)
     Budget toEntity(BudgetRequest request);
 
     @Mapping(source = "user.id", target = "userId")
@@ -30,6 +31,7 @@ public interface BudgetMapper {
     @Mapping(target = "actualAmount", ignore = true)
     @Mapping(target = "endDate", ignore = true)
     @Mapping(target = "startDate", ignore = true)
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "percentage", ignore = true)
     void update(@MappingTarget Budget budget, BudgetRequest request);
 }

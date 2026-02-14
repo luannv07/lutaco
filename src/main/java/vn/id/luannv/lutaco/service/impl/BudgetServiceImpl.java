@@ -16,6 +16,7 @@ import vn.id.luannv.lutaco.dto.response.BudgetResponse;
 import vn.id.luannv.lutaco.entity.Budget;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.User;
+import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.Period;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
@@ -24,6 +25,7 @@ import vn.id.luannv.lutaco.repository.BudgetRepository;
 import vn.id.luannv.lutaco.repository.CategoryRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.BudgetService;
+import vn.id.luannv.lutaco.util.CustomizeNumberUtils;
 import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
@@ -70,6 +72,7 @@ public class BudgetServiceImpl implements BudgetService {
         budget.setCategory(category);
         budget.setActualAmount(0L); // Initialize actual amount
         budget.setPercentage(0F);
+        budget.setStatus(BudgetStatus.NORMAL);
 
         Period period = EnumUtils.from(Period.class, request.getPeriod());
         budget.setPeriod(period);
@@ -141,7 +144,9 @@ public class BudgetServiceImpl implements BudgetService {
 
         // Recalculate endDate if period or startDate changes
         existingBudget.setEndDate(calculateEndDate(startDate, period));
-
+        float percentage = CustomizeNumberUtils.percentage(existingBudget.getActualAmount(), existingBudget.getTargetAmount());
+        existingBudget.setPercentage(percentage);
+        existingBudget.setStatus(updateStatus(percentage));
 
         Budget updatedBudget = budgetRepository.save(existingBudget);
         log.info("Budget with id {} updated successfully", updatedBudget.getId());
@@ -155,5 +160,13 @@ public class BudgetServiceImpl implements BudgetService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id)));
         budgetRepository.delete(budget);
         log.info("Budget with id {} deleted successfully", id);
+    }
+
+    private BudgetStatus updateStatus(float percentage) {
+        if (percentage > BudgetStatus.DANGER.getPercentage())
+            return BudgetStatus.DANGER;
+        if (percentage > BudgetStatus.WARNING.getPercentage())
+            return BudgetStatus.WARNING;
+        return BudgetStatus.NORMAL;
     }
 }

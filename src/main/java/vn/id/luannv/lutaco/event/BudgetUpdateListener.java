@@ -8,6 +8,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import vn.id.luannv.lutaco.entity.Budget;
 import vn.id.luannv.lutaco.entity.Transaction;
+import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.event.entity.TransactionCreatedEvent;
 import vn.id.luannv.lutaco.repository.BudgetRepository;
 
@@ -47,10 +48,18 @@ public class BudgetUpdateListener {
         if (budget.getTargetAmount() > 0) {
             float percentage = ((float) newActualAmount / budget.getTargetAmount()) * 100;
             budget.setPercentage(percentage);
+            budget.setStatus(updateStatus(percentage));
         }
 
         budgetRepository.save(budget);
         log.info("Successfully updated budget {} with new actual amount {} and percentage {}",
                 budget.getId(), newActualAmount, budget.getPercentage());
+    }
+    private BudgetStatus updateStatus(float percentage) {
+        if (percentage > BudgetStatus.DANGER.getPercentage())
+            return BudgetStatus.DANGER;
+        if (percentage > BudgetStatus.WARNING.getPercentage())
+            return BudgetStatus.WARNING;
+        return BudgetStatus.NORMAL;
     }
 }

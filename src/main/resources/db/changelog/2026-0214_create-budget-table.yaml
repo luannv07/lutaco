@@ -65,6 +65,11 @@ databaseChangeLog:
                   name: end_date
                   type: date
 
+              - column:
+                  name: status
+                  type: varchar(50)
+                  defaultValue: NORMAL
+
         - addForeignKeyConstraint:
             baseTableName: budgets
             baseColumnNames: user_id
