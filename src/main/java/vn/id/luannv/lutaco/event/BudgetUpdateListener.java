@@ -1,0 +1,56 @@
+package vn.id.luannv.lutaco.event;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
+import vn.id.luannv.lutaco.entity.Budget;
+import vn.id.luannv.lutaco.entity.Transaction;
+import vn.id.luannv.lutaco.event.entity.TransactionCreatedEvent;
+import vn.id.luannv.lutaco.repository.BudgetRepository;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class BudgetUpdateListener {
+
+    private final BudgetRepository budgetRepository;
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void handleTransactionCreatedEvent(TransactionCreatedEvent event) {
+        Transaction transaction = event.getTransaction();
+        log.info("Handling transaction created event for transaction id: {}", transaction.getId());
+
+        String userId = transaction.getUserId();
+        String categoryId = transaction.getCategory().getId();
+        LocalDate transactionDate = transaction.getTransactionDate().toLocalDate();
+
+        Optional<Budget> budgetOpt = budgetRepository.findActiveBudget(userId, categoryId, transactionDate);
+
+        if (budgetOpt.isEmpty()) {
+            log.warn("No active budget found for user {} and category {} on date {}", userId, categoryId, transactionDate);
+            return;
+        }
+
+        Budget budget = budgetOpt.get();
+        long currentActualAmount = budget.getActualAmount();
+        long transactionAmount = transaction.getAmount();
+
+        long newActualAmount = currentActualAmount + transactionAmount;
+        budget.setActualAmount(newActualAmount);
+
+        if (budget.getTargetAmount() > 0) {
+            float percentage = ((float) newActualAmount / budget.getTargetAmount()) * 100;
+            budget.setPercentage(percentage);
+        }
+
+        budgetRepository.save(budget);
+        log.info("Successfully updated budget {} with new actual amount {} and percentage {}",
+                budget.getId(), newActualAmount, budget.getPercentage());
+    }
+}

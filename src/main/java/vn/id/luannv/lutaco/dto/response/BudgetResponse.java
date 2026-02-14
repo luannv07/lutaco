@@ -21,4 +21,7 @@ public class BudgetResponse {
     Long targetAmount;
     String period;
     LocalDate startDate;
+    LocalDate endDate;
+    Float percentage;
+    Long actualAmount;
 }

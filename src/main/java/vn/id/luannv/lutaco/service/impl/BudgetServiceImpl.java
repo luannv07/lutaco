@@ -59,17 +59,17 @@ public class BudgetServiceImpl implements BudgetService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("categoryId", request.getCategoryId())));
 
-        budgetRepository.existedByUserAndCategory(user, category)
-                .ifPresent(b -> {
-                    throw new BusinessException(
-                            ErrorCode.DUPLICATE_RESOURCE,
-                            Map.of("categoryId", request.getCategoryId())
-                    );
-                });
+        if (budgetRepository.existsByUserAndCategory(user, category))
+            throw new BusinessException(
+                    ErrorCode.DUPLICATE_RESOURCE,
+                    Map.of("categoryId", request.getCategoryId())
+            );
+
         Budget budget = budgetMapper.toEntity(request);
         budget.setUser(user);
         budget.setCategory(category);
         budget.setActualAmount(0L); // Initialize actual amount
+        budget.setPercentage(0F);
 
         Period period = EnumUtils.from(Period.class, request.getPeriod());
         budget.setPeriod(period);

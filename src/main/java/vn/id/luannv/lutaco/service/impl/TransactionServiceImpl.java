@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.Transaction;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
+import vn.id.luannv.lutaco.event.entity.TransactionCreatedEvent;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.TransactionMapper;
@@ -30,8 +32,6 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,6 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
     TransactionMapper transactionMapper;
     CategoryRepository categoryRepository;
     WalletRepository walletRepository;
+    ApplicationEventPublisher eventPublisher;
 
     @Override
     public TransactionResponse create(TransactionRequest request) {
@@ -68,7 +69,10 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setWallet(wallet);
         applyBalance(wallet.getId(), transaction.getAmount(), category.getCategoryType());
 
-        return transactionMapper.toResponse(transactionRepository.save(transaction));
+        Transaction savedTransaction = transactionRepository.save(transaction);
+        eventPublisher.publishEvent(new TransactionCreatedEvent(this, savedTransaction));
+
+        return transactionMapper.toResponse(savedTransaction);
     }
 
     @Override
@@ -92,6 +96,8 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         List<Transaction> savedTransactions = transactionRepository.saveAll(transactionsToSave);
+
+        savedTransactions.forEach(t -> eventPublisher.publishEvent(new TransactionCreatedEvent(this, t)));
 
         return savedTransactions.stream()
                 .map(transactionMapper::toResponse)
@@ -122,7 +128,8 @@ public class TransactionServiceImpl implements TransactionService {
         CategoryType categoryType = EnumUtils.from(CategoryType.class, projection.getCategoryType());
         applyBalance(projection.getWalletId(), currentTransaction.getAmount(), categoryType);
 
-        transactionMapper.toResponse(transactionRepository.save(entity));
+        Transaction savedTransaction = transactionRepository.save(entity);
+        eventPublisher.publishEvent(new TransactionCreatedEvent(this, savedTransaction));
     }
 
     private void applyBalance(String walletId, Long amount, CategoryType type) {
@@ -173,7 +180,7 @@ public class TransactionServiceImpl implements TransactionService {
             Object cateTypeObj = transactionRepository.findCategoryTypeById(id);
             CategoryType currentCategoryType = EnumUtils.from(CategoryType.class, cateTypeObj);
 
-            if (currentCategoryType == null || category.getCategoryType() == null)
+            if (category.getCategoryType() == null)
                 throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
 
             Wallet wallet = transactionRepository.findWalletWithTransactionId(id)
