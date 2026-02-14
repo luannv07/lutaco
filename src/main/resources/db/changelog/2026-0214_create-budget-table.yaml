@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: f65638ec-a5ae-4e3e-a8f4-30a88e44dbcd
+      author: luannv
+      changes:
+        - createTable:
+            tableName: budgets
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_id
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: target_amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: actual_amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: period
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: start_date
+                  type: date
+
+              - column:
+                  name: end_date
+                  type: date
+
+              - column:
+                  name: deleted_at
+                  type: date
+
+        - addForeignKeyConstraint:
+            baseTableName: budgets
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+            constraintName: fk_budgets_user
+
+        - addForeignKeyConstraint:
+            baseTableName: budgets
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: cascade
+            onUpdate: cascade
+            constraintName: fk_budgets_category
+
+        # index chính cho query user/category + ignore deleted
+        - createIndex:
+            tableName: budgets
+            indexName: idx_budgets_user_category_deleted
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: category_id
+              - column:
+                  name: deleted_at
+
+        # giữ index category để query độc lập
+        - createIndex:
+            tableName: budgets
+            indexName: idx_budgets_category_id
+            columns:
+              - column:
+                  name: category_id
+
+        # unique logic
+        - addUniqueConstraint:
+            tableName: budgets
+            columnNames: user_id, category_id
+            constraintName: uk_budget_user_category_deleted
