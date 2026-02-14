@@ -53,4 +53,7 @@ public class Budget {
 
     @Column(name = "end_date")
     LocalDate endDate;
+
+    @Column(name = "percentage")
+    Float percentage;
 }

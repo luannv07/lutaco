@@ -45,6 +45,13 @@ databaseChangeLog:
                     nullable: false
 
               - column:
+                  name: percentage
+                  type: float
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+              - column:
                   name: period
                   type: varchar(50)
                   constraints:
