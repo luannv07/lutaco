@@ -33,15 +33,4 @@ public enum FrequentType {
     };
 
     public abstract LocalDate calculateNextDate(LocalDate date);
-
-    public static FrequentType from(String value) {
-        try {
-            return FrequentType.valueOf(value.toUpperCase());
-        } catch (Exception e) {
-            throw new BusinessException(
-                    ErrorCode.INVALID_PARAMS,
-                    Map.of("frequentType", value)
-            );
-        }
-    }
 }

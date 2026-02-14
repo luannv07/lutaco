@@ -24,6 +24,7 @@ import vn.id.luannv.lutaco.repository.CategoryRepository;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.TransactionService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDateTime;
@@ -118,7 +119,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .deletedAt(null)
                 .build();
 
-        CategoryType categoryType = CategoryType.from(projection.getCategoryType());
+        CategoryType categoryType = EnumUtils.from(CategoryType.class, projection.getCategoryType());
         applyBalance(projection.getWalletId(), currentTransaction.getAmount(), categoryType);
 
         transactionMapper.toResponse(transactionRepository.save(entity));
@@ -170,7 +171,7 @@ public class TransactionServiceImpl implements TransactionService {
                     .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
             // lấy category hiện tại
             Object cateTypeObj = transactionRepository.findCategoryTypeById(id);
-            CategoryType currentCategoryType = CategoryType.from(cateTypeObj);
+            CategoryType currentCategoryType = EnumUtils.from(CategoryType.class, cateTypeObj);
 
             if (currentCategoryType == null || category.getCategoryType() == null)
                 throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
@@ -212,7 +213,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (cateTypeObj == null)
             throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
 
-        CategoryType reverse = reverseCategory(CategoryType.from(cateTypeObj));
+        CategoryType reverse = reverseCategory(EnumUtils.from(CategoryType.class, cateTypeObj));
 
         applyBalance(walletId, transaction.getAmount(), reverse);
         transactionRepository.save(transaction);
@@ -237,6 +238,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         transaction.setDeletedAt(null);
         transactionRepository.save(transaction);
-        applyBalance(walletId, transaction.getAmount(), CategoryType.from(cateTypeObj));
+        applyBalance(walletId, transaction.getAmount(), EnumUtils.from(CategoryType.class, cateTypeObj));
     }
 }

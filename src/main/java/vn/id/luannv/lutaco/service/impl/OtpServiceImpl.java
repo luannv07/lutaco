@@ -22,6 +22,7 @@ import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.EmailTemplateService;
 import vn.id.luannv.lutaco.service.OtpService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.RandomUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
@@ -129,7 +130,7 @@ public class OtpServiceImpl implements OtpService {
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void verifyOtp(VerifyOtpRequest request) {
-        OtpType otpType = OtpType.of(request.getOtpType());
+        OtpType otpType = EnumUtils.from(OtpType.class, request.getOtpType());
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
 

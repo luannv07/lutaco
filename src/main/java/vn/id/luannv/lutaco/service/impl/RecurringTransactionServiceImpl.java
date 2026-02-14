@@ -23,6 +23,7 @@ import vn.id.luannv.lutaco.mapper.RecurringTransactionMapper;
 import vn.id.luannv.lutaco.repository.RecurringTransactionRepository;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
@@ -82,7 +83,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         Transaction transaction = transactionRepository.getReferenceById(request.getTransactionId());
         RecurringTransaction recurringTransaction = recurringTransactionMapper.toEntity(request);
         recurringTransaction.setTransaction(transaction);
-        FrequentType frequentType = FrequentType.from(request.getFrequentType());
+        FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
         recurringTransaction.setFrequentType(frequentType);
         recurringTransaction.setNextDate(frequentType.calculateNextDate(request.getStartDate()));
 
@@ -141,7 +142,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
         recurringTransactionMapper.updateEntity(recurringTransaction, request);
-        FrequentType frequentType = FrequentType.from(request.getFrequentType());
+        FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
         recurringTransaction.setFrequentType(frequentType);
         recurringTransaction.setNextDate(frequentType.calculateNextDate(recurringTransaction.getStartDate()));
 

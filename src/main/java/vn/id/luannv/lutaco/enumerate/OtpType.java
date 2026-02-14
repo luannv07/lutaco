@@ -10,13 +10,5 @@ import java.util.Map;
 public enum OtpType {
     LOGIN,
     REGISTER,
-    FORGOT_PASSWORD;
-    public static OtpType of(String otpType) {
-        try {
-            return OtpType.valueOf(otpType);
-        } catch (Exception e) {
-            log.info("OtpType: {} is not valid enum", otpType);
-            throw new BusinessException(ErrorCode.ENUM_NOT_FOUND, Map.of("otpType", otpType));
-        }
-    }
+    FORGOT_PASSWORD
 }

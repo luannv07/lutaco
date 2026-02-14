@@ -21,6 +21,7 @@ import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.OtpService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.JwtUtils;
 
 import java.util.Date;
@@ -107,7 +108,7 @@ public class AuthController {
     public ResponseEntity<BaseResponse<Void>> resendOtp(
             @Valid @RequestBody SendOtpRequest request
     ) {
-        OtpType otpType = OtpType.of(request.getOtpType());
+        OtpType otpType = EnumUtils.from(OtpType.class, request.getOtpType());
         otpService.sendOtp(request.getEmail(), otpType);
         return ResponseEntity.ok(
                 BaseResponse.success("Gửi OTP thành công.")

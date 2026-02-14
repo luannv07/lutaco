@@ -16,6 +16,7 @@ import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.service.DashboardService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 
 @RestController
 @RequestMapping("/api/v1/dashboard")
@@ -36,7 +37,7 @@ public class DashboardController {
     )
     @GetMapping("/summary")
     public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "LAST_1_MONTH", required = false) String period) {
-        PeriodRange periodRange = PeriodRange.from(period);
+        PeriodRange periodRange = EnumUtils.from(PeriodRange.class, period);
         return ResponseEntity.ok(
                 BaseResponse.success(
                         dashboardService.handleSummary(periodRange),
@@ -76,7 +77,7 @@ public class DashboardController {
             HttpServletResponse response,
             @RequestParam(defaultValue = "LAST_1_MONTH") String period
     ) {
-        PeriodRange periodRange = PeriodRange.from(period);
+        PeriodRange periodRange = EnumUtils.from(PeriodRange.class, period);
 
         response.setContentType(
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

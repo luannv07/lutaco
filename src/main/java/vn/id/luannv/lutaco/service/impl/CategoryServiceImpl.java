@@ -21,6 +21,7 @@ import vn.id.luannv.lutaco.mapper.CategoryMapper;
 import vn.id.luannv.lutaco.repository.CategoryOverrideRepository;
 import vn.id.luannv.lutaco.repository.CategoryRepository;
 import vn.id.luannv.lutaco.service.CategoryService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
@@ -83,7 +84,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
-        CategoryType categoryType = CategoryType.from(request.getCategoryType());
+        CategoryType categoryType = EnumUtils.from(CategoryType.class, request.getCategoryType());
 
         List<Category> categoryPage = categoryRepository
                 .advancedSearch(request.getCategoryName(), categoryType, SecurityUtils.getCurrentId());
