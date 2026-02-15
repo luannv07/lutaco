@@ -48,19 +48,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String authorizationHeader = request.getHeader("Authorization");
 
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                log.info("Authorization header not found: {}", request.getRequestURI());
+                log.debug("Authorization header not found or does not start with 'Bearer ' for request URI: {}", request.getRequestURI());
                 filterChain.doFilter(request, response);
                 return;
             }
 
             String token = authorizationHeader.substring(7);
-            if (jwtService.isValidToken(token))
+            if (!jwtService.isValidToken(token)) {
+                log.warn("Invalid or expired JWT token for request URI: {}", request.getRequestURI());
                 throw new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
+            }
 
             String username = jwtService.getUsernameFromToken(token);
             String role = jwtService.getRoleFromToken(token);
             User entity = userRepository
-                    .findByUsername(username).orElseThrow(() -> new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage())));
+                    .findByUsername(username).orElseThrow(() -> {
+                        log.warn("User not found for username extracted from token: {}", username);
+                        return new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
+                    });
 
             CustomUserDetails customUserDetails = CustomUserDetails.builder()
                     .username(username)
@@ -75,10 +80,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     customUserDetails.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("Successfully authenticated user: {} for request URI: {}", username, request.getRequestURI());
 
             filterChain.doFilter(request, response);
         } catch (AuthenticationException ae) {
             SecurityContextHolder.clearContext();
+            log.error("Authentication failed during JWT filter for request URI: {}. Error: {}", request.getRequestURI(), ae.getMessage());
             jwtAuthenticationEntryPoint.commence(request, response, ae);
         }
     }

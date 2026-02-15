@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.RecurringTransactionResponse;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/recurring-transactions")
 @RequiredArgsConstructor

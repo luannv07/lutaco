@@ -55,11 +55,12 @@ public class PayOSWebhookController {
             )
             @Valid  @RequestBody PayOsWebhookRequest request
     ) {
-        log.info("handleWebhook received request={}", request);
+        log.info("Received PayOS webhook request: {}", request);
         try {
             payOsWebhookService.handle(request);
+            log.info("Successfully processed PayOS webhook for order code: {}", request.getData().getOrderCode());
         } catch (Exception e) {
-            log.error("handleWebhook exception={}", e.getMessage());
+            log.error("Error processing PayOS webhook for order code {}: {}", request.getData().getOrderCode(), e.getMessage(), e);
         }
         return ResponseEntity.ok()
                 .body(
@@ -88,8 +89,9 @@ public class PayOSWebhookController {
             )
             @Valid @RequestBody Map<String, Object> confirm
     ) {
-        log.info("handleConfirmWebhook send request={}", confirm);
+        log.info("Attempting to confirm PayOS webhook URL with request: {}", confirm);
         payOsClient.confirmHookUrl(confirm);
+        log.info("Successfully confirmed PayOS webhook URL.");
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success("Xác nhận webhook thành công.")

@@ -30,7 +30,10 @@ import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -46,26 +49,38 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public BudgetResponse create(BudgetRequest request) {
         String userId = SecurityUtils.getCurrentId();
+        log.info("Attempting to create budget for user ID: {}", userId);
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("username", userId)));
+                .orElseThrow(() -> {
+                    log.warn("User with ID {} not found during budget creation.", userId);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("username", userId));
+                });
 
         if (Objects.isNull(user.getUserPlan())) {
+            log.warn("User ID {} has no user plan configured, cannot create budget.", userId);
             throw new BusinessException(ErrorCode.PLAN_NOT_CONFIGURED);
         }
 
         long countByUser = budgetRepository.countByUser(user);
         if (countByUser >= user.getUserPlan().getMaxBudgetsCount()) {
+            log.warn("User ID {} has reached maximum budget limit ({}). Cannot create new budget.", userId, user.getUserPlan().getMaxBudgetsCount());
             throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED, Map.of("limitCount", user.getUserPlan().getMaxBudgetsCount()));
         }
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("categoryId", request.getCategoryId())));
+                .orElseThrow(() -> {
+                    log.warn("Category with ID {} not found for budget creation.", request.getCategoryId());
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("categoryId", request.getCategoryId()));
+                });
 
-        if (budgetRepository.existsByUserAndCategory(user, category))
+        if (budgetRepository.existsByUserAndCategory(user, category)) {
+            log.warn("Budget already exists for user ID {} and category ID {}.", userId, request.getCategoryId());
             throw new BusinessException(
                     ErrorCode.DUPLICATE_RESOURCE,
                     Map.of("categoryId", request.getCategoryId())
             );
+        }
 
         Budget budget = budgetMapper.toEntity(request);
         budget.setUser(user);
@@ -79,40 +94,54 @@ public class BudgetServiceImpl implements BudgetService {
         budget.setEndDate(calculateEndDate(request.getStartDate(), period));
 
         Budget savedBudget = budgetRepository.save(budget);
-        log.info("Budget with id {} created successfully", savedBudget.getId());
+        log.info("Budget with ID {} created successfully for user ID {} and category ID {}.", savedBudget.getId(), userId, category.getId());
         return budgetMapper.toDto(savedBudget);
     }
 
     @Override
     public Boolean preventDangerEmail(Long id) {
+        log.info("Attempting to prevent danger email for budget ID: {}", id);
         Budget budget = budgetRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id)));
+                .orElseThrow(() -> {
+                    log.warn("Budget with ID {} not found for preventing danger email.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
+                });
         budget.setStatus(BudgetStatus.UNKNOWN);
         budgetRepository.save(budget);
+        log.info("Budget ID {} status updated to UNKNOWN to prevent danger emails.", id);
         return true;
     }
 
     private LocalDate calculateEndDate(LocalDate startDate, Period period) {
         if (startDate == null || period == null) {
+            log.debug("Start date or period is null, cannot calculate end date.");
             return null;
         }
-        return switch (period) {
+        LocalDate endDate = switch (period) {
             case DAY -> startDate;
             case WEEK -> startDate.plusWeeks(1).minusDays(1);
             case MONTH -> startDate.plusMonths(1).minusDays(1);
             case YEAR -> startDate.plusYears(1).minusDays(1);
         };
+        log.debug("Calculated end date for start date {} and period {}: {}", startDate, period, endDate);
+        return endDate;
     }
 
     @Override
     public BudgetResponse getDetail(Long id) {
+        log.info("Fetching details for budget ID: {}", id);
         Budget budget = budgetRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id)));
+                .orElseThrow(() -> {
+                    log.warn("Budget with ID {} not found for detail retrieval.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
+                });
+        log.info("Successfully retrieved details for budget ID {}.", id);
         return budgetMapper.toDto(budget);
     }
 
     @Override
     public Page<BudgetResponse> search(BudgetFilterRequest request, Integer page, Integer size) {
+        log.info("Searching budgets with filter: {}, page: {}, size: {}.", request, page, size);
         Specification<Budget> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -128,14 +157,20 @@ public class BudgetServiceImpl implements BudgetService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        return budgetRepository.findAll(spec, PageRequest.of(page, size))
+        Page<BudgetResponse> result = budgetRepository.findAll(spec, PageRequest.of(page, size))
                 .map(budgetMapper::toDto);
+        log.info("Found {} budgets matching the search criteria.", result.getTotalElements());
+        return result;
     }
 
     @Override
     public BudgetResponse update(Long id, BudgetRequest request) {
+        log.info("Updating budget with ID: {} with request: {}", id, request);
         Budget existingBudget = budgetRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id)));
+                .orElseThrow(() -> {
+                    log.warn("Budget with ID {} not found for update.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
+                });
 
         budgetMapper.update(existingBudget, request);
 
@@ -143,12 +178,14 @@ public class BudgetServiceImpl implements BudgetService {
         if (request.getPeriod() != null) {
             period = EnumUtils.from(Period.class, request.getPeriod());
             existingBudget.setPeriod(period);
+            log.debug("Budget ID {} period updated to {}.", id, period);
         }
 
         LocalDate startDate = existingBudget.getStartDate();
         if (request.getStartDate() != null) {
             startDate = request.getStartDate();
             existingBudget.setStartDate(startDate);
+            log.debug("Budget ID {} start date updated to {}.", id, startDate);
         }
 
         // Recalculate endDate if period or startDate changes
@@ -158,26 +195,36 @@ public class BudgetServiceImpl implements BudgetService {
         existingBudget.setStatus(updateStatus(percentage));
 
         Budget updatedBudget = budgetRepository.save(existingBudget);
-        log.info("Budget with id {} updated successfully", updatedBudget.getId());
+        log.info("Budget with ID {} updated successfully.", updatedBudget.getId());
         return budgetMapper.toDto(updatedBudget);
     }
 
     @Override
     public void deleteById(Long id) {
-        log.info("delete budget with id {}", id);
+        log.info("Attempting to delete budget with ID: {}", id);
         Budget budget = budgetRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id)));
+                .orElseThrow(() -> {
+                    log.warn("Budget with ID {} not found for deletion.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
+                });
         budgetRepository.delete(budget);
-        log.info("Budget with id {} deleted successfully", id);
+        log.info("Budget with ID {} deleted successfully.", id);
     }
 
     private BudgetStatus updateStatus(float percentage) {
-        if (percentage > BudgetStatus.DANGER.getPercentage())
+        if (percentage > BudgetStatus.DANGER.getPercentage()) {
+            log.debug("Budget status set to DANGER (percentage: {}).", percentage);
             return BudgetStatus.DANGER;
-        if (percentage > BudgetStatus.WARNING.getPercentage())
+        }
+        if (percentage > BudgetStatus.WARNING.getPercentage()) {
+            log.debug("Budget status set to WARNING (percentage: {}).", percentage);
             return BudgetStatus.WARNING;
-        if (percentage > BudgetStatus.UNKNOWN.getPercentage())
+        }
+        if (percentage > BudgetStatus.UNKNOWN.getPercentage()) {
+            log.debug("Budget status set to NORMAL (percentage: {}).", percentage);
             return BudgetStatus.NORMAL;
+        }
+        log.debug("Budget status set to UNKNOWN (percentage: {}).", percentage);
         return BudgetStatus.UNKNOWN;
     }
 }

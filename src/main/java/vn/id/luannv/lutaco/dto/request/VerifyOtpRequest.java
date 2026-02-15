@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.OtpType;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

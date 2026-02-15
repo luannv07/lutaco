@@ -2,8 +2,6 @@ package vn.id.luannv.lutaco.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -17,7 +15,6 @@ import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.EmailTemplateService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component
@@ -31,7 +28,7 @@ public class BudgetUpdateListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleTransactionCreatedEvent(TransactionCreatedEvent event) {
         Transaction transaction = event.getTransaction();
-        log.info("Handling transaction created event for transaction id: {}", transaction.getId());
+        log.info("Processing TransactionCreatedEvent for transaction ID: {}", transaction.getId());
 
         String userId = transaction.getUserId();
         String categoryId = transaction.getCategory().getId();
@@ -40,7 +37,7 @@ public class BudgetUpdateListener {
         Optional<Budget> budgetOpt = budgetRepository.findActiveBudget(userId, categoryId, transactionDate);
 
         if (budgetOpt.isEmpty()) {
-            log.warn("No active budget found for user {} and category {} on date {}", userId, categoryId, transactionDate);
+            log.warn("No active budget found for user {} and category {} on date {}. Skipping budget update for transaction ID: {}", userId, categoryId, transactionDate, transaction.getId());
             return;
         }
 
@@ -59,23 +56,23 @@ public class BudgetUpdateListener {
 
         if (budget.getStatus() == BudgetStatus.DANGER || budget.getStatus() == BudgetStatus.WARNING) {
             EmailTemplateService.EmailFields fields = EmailTemplateService.sendAttentionBudget(budget);
-            log.info("Before sending email at {}", LocalDateTime.now());
             emailService.sendEmail(
                     fields.to(),
                     fields.subject(),
                     fields.body()
             );
+            log.info("Sent budget alert email for budget ID: {} (status: {})", budget.getId(), budget.getStatus());
         }
 
         budgetRepository.save(budget);
-        log.info("Successfully updated budget {} with new actual amount {} and percentage {}",
+        log.info("Budget ID: {} successfully updated. New actual amount: {}, New percentage: {}",
                 budget.getId(), newActualAmount, budget.getPercentage());
     }
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleTransactionDeletedEvent(TransactionDeletedEvent event) {
-        log.info("Listener received TransactionDeletedEvent for transaction id: {}", event.getTransaction().getId());
-
         Transaction transaction = event.getTransaction();
+        log.info("Processing TransactionDeletedEvent for transaction ID: {}", transaction.getId());
+
         String userId = transaction.getUserId();
         String categoryId = transaction.getCategory().getId();
         LocalDate transactionDate = transaction.getTransactionDate().toLocalDate();
@@ -83,7 +80,7 @@ public class BudgetUpdateListener {
         Optional<Budget> budgetOpt = budgetRepository.findActiveBudget(userId, categoryId, transactionDate);
 
         if (budgetOpt.isEmpty()) {
-            log.warn("No active budget found for user {} and category {} on date {}. Skipping budget update.", userId, categoryId, transactionDate);
+            log.warn("No active budget found for user {} and category {} on date {}. Skipping budget update after transaction deletion for transaction ID: {}", userId, categoryId, transactionDate, transaction.getId());
             return;
         }
 
@@ -100,9 +97,10 @@ public class BudgetUpdateListener {
             newPercentage = ((float) newActualAmount / budget.getTargetAmount()) * 100;
         }
         budget.setPercentage(newPercentage);
+        budget.setStatus(updateStatus(newPercentage)); // Update status after deletion
 
         budgetRepository.save(budget);
-        log.info("Successfully updated budget {} after transaction deletion. New actual amount: {}, New percentage: {}",
+        log.info("Budget ID: {} successfully updated after transaction deletion. New actual amount: {}, New percentage: {}",
                 budget.getId(), newActualAmount, newPercentage);
     }
     private BudgetStatus updateStatus(float percentage) {

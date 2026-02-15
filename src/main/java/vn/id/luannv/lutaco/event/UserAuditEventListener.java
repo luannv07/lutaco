@@ -35,8 +35,7 @@ public class UserAuditEventListener {
 
         repository.save(auditLog);
 
-        log.info(
-                "[AUDIT-SAVED] user={}, method={}, time={}ms",
+        log.info("User audit log saved for user: {}, method: {}, execution time: {}ms",
                 event.getUsername(),
                 event.getMethodName(),
                 event.getExecutionTimeMs()

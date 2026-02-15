@@ -5,7 +5,6 @@ import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data

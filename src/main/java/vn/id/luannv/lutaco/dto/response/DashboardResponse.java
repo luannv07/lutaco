@@ -1,7 +1,5 @@
 package vn.id.luannv.lutaco.dto.response;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.dto.InsightDto;

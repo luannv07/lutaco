@@ -18,7 +18,6 @@ import vn.id.luannv.lutaco.service.UserAuditService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,55 +30,60 @@ public class UserAuditServiceImpl implements UserAuditService {
 
     @Override
     public Page<UserAuditLog> viewUserAuditLogs(UserAuditFilterRequest filter) {
+        log.info("Fetching user audit logs with filter: {}", filter);
         Pageable pageable = PageRequest.of(
                 filter.getPage(),
                 filter.getSize(),
                 Sort.by(Sort.Direction.DESC, "createdDate")
         );
-        return userAuditRepository.findAll(createSpecification(filter), pageable);
+        Page<UserAuditLog> result = userAuditRepository.findAll(createSpecification(filter), pageable);
+        log.info("Found {} user audit logs matching the criteria.", result.getTotalElements());
+        return result;
     }
 
     @Transactional
     @Override
     public void deleteUserAuditLogs(UserAuditFilterRequest filter) {
+        log.info("Attempting to delete user audit logs with filter: {}", filter);
         List<UserAuditLog> logs = userAuditRepository.findAll(createSpecification(filter));
-        log.info("Deleting user audit logs by filter, size={}", logs.size());
 
         if (logs.isEmpty()) {
+            log.info("No user audit logs found to delete with the given filter.");
             return;
         }
 
         userAuditRepository.deleteAll(logs);
+        log.info("Successfully deleted {} user audit logs matching the filter.", logs.size());
     }
 
     @Transactional
     @Override
     public Long manualCleanup(LocalDate startDate, LocalDate endDate) {
+        log.info("Starting manual cleanup of user audit logs from {} to {}.", startDate, endDate);
         long count = 0;
         if (startDate == null && endDate == null) {
             count = userAuditRepository.count();
             userAuditRepository.deleteAll();
+            log.info("Cleaned up all {} user audit logs.", count);
             return count;
         }
 
         LocalDateTime start = startDate == null ? LocalDateTime.now() : startDate.atStartOfDay();
-        LocalDateTime end = startDate == null ? LocalDateTime.now() : endDate.plusDays(1).atStartOfDay(); // inclusive end date
+        LocalDateTime end = endDate == null ? LocalDateTime.now() : endDate.plusDays(1).atStartOfDay(); // inclusive end date
 
         List<UserAuditLog> logs = userAuditRepository.findAll(
                 (root, query, cb) -> cb.between(root.get("createdDate"), start, end)
         );
 
-        log.info(
-                "Manual cleanup user audit logs from {} to {}, size={}",
-                startDate, endDate, logs.size()
-        );
         count = logs.size();
 
         if (logs.isEmpty()) {
+            log.info("No user audit logs found for manual cleanup between {} and {}.", startDate, endDate);
             return count;
         }
 
         userAuditRepository.deleteAll(logs);
+        log.info("Successfully cleaned up {} user audit logs between {} and {}.", count, startDate, endDate);
         return count;
     }
 

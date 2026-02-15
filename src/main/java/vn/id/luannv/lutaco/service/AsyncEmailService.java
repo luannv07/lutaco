@@ -10,8 +10,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -21,7 +19,7 @@ public class AsyncEmailService {
 
     @Async
     public void sendEmail(String to, String subject, String body) {
-        log.info("Sending email to {} at {}", to, LocalDateTime.now());
+        log.info("Attempting to send email to '{}' with subject '{}'.", to, subject);
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(
@@ -34,14 +32,13 @@ public class AsyncEmailService {
             helper.setSubject(subject);
             helper.setText(body, true); // true = HTML
 
-            Long beforeSend = System.currentTimeMillis();
-            log.info("✉️ Sending email to {}", to);
+            long startTime = System.currentTimeMillis();
             mailSender.send(mimeMessage);
-            Long afterSend = System.currentTimeMillis();
-            log.info("📩 Sent email to {}, time execute: {}ms", to, afterSend - beforeSend);
+            long endTime = System.currentTimeMillis();
+            log.info("Successfully sent email to '{}'. Time taken: {}ms.", to, (endTime - startTime));
 
         } catch (Exception e) {
-            log.error("Send email failed to {}", to, e);
+            log.error("Failed to send email to '{}' with subject '{}'. Error: {}", to, subject, e.getMessage(), e);
         }
     }
 }

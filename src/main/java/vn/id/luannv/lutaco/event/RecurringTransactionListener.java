@@ -4,20 +4,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-import vn.id.luannv.lutaco.enumerate.FrequentType;
 import vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent;
 import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.EmailTemplateService;
 import vn.id.luannv.lutaco.service.TransactionService;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Component
@@ -35,7 +28,7 @@ public class RecurringTransactionListener {
     public void sendRecurringTransactionInitializationEmail(
             RecurringTransactionEvent.RecurringInitialization recurring) {
         try {
-            log.info("Processing RecurringInitialization event for transaction: {}",
+            log.info("Processing recurring transaction initialization event for transaction ID: {}",
                     recurring.getRecurringUserFields().getTransactionId());
 
             EmailTemplateService.EmailFields fields = EmailTemplateService.getRecurringInitializationTemplate(recurring);
@@ -46,10 +39,10 @@ public class RecurringTransactionListener {
                     fields.body()
             );
 
-            log.info("Successfully sent RecurringInitialization email to: {}", fields.to());
+            log.info("Successfully sent recurring transaction initialization email to: {}", fields.to());
 
         } catch (Exception e) {
-            log.error("Error sending RecurringInitialization email", e);
+            log.error("Error sending recurring transaction initialization email for transaction ID: {}", recurring.getRecurringUserFields().getTransactionId(), e);
         }
     }
 
@@ -63,7 +56,7 @@ public class RecurringTransactionListener {
         transactionService
                 .autoCreateTransactionWithCronJob(recurring.getRecurringUserFields().getTransactionId(), recurring.getRecurringUserFields().getUserId());
         try {
-            log.info("Processing RecurringFrequency event for transaction: {}",
+            log.info("Processing recurring transaction frequency event for transaction ID: {}",
                     recurring.getRecurringUserFields().getTransactionId());
 
             EmailTemplateService.EmailFields fields = EmailTemplateService.getRecurringFrequencyTemplate(recurring);
@@ -75,10 +68,10 @@ public class RecurringTransactionListener {
                     fields.body()
             );
 
-            log.info("Successfully sent RecurringFrequency email to: {}", fields.to());
+            log.info("Successfully sent recurring transaction frequency email to: {}", fields.to());
 
         } catch (Exception e) {
-            log.error("Error sending RecurringFrequency email", e);
+            log.error("Error sending recurring transaction frequency email for transaction ID: {}", recurring.getRecurringUserFields().getTransactionId(), e);
         }
     }
 

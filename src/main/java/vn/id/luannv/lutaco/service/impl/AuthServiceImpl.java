@@ -29,7 +29,6 @@ import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
-import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.service.RefreshTokenService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
@@ -52,48 +51,65 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthenticateResponse login(LoginRequest request) {
-        log.info("AuthServiceImpl login: {}", request.toString());
+        log.info("Attempting to log in user: {}", request.getUsername());
 
-        User entity = userRepository.findByUsername(request.getUsername()).orElseThrow(() ->
-                new BusinessException(ErrorCode.LOGIN_FAILED));
-        // ko match encoded password | banned | disabled
-        if (!passwordEncoder.matches(request.getPassword(), entity.getPassword())
-                || entity.getUserStatus().equals(UserStatus.DISABLED_BY_USER)
-                || entity.getUserStatus().equals(UserStatus.BANNED) )
+        User entity = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> {
+            log.warn("Login failed for user {}: User not found.", request.getUsername());
+            return new BusinessException(ErrorCode.LOGIN_FAILED);
+        });
 
+        if (!passwordEncoder.matches(request.getPassword(), entity.getPassword())) {
+            log.warn("Login failed for user {}: Invalid credentials.", request.getUsername());
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
-        if (refreshTokenService.findByTokenWithUser(request.getUsername()) != null)
-            refreshTokenService.deleteRefreshToken(request.getUsername());
+        }
 
-        return AuthenticateResponse.builder()
+        if (entity.getUserStatus().equals(UserStatus.DISABLED_BY_USER) || entity.getUserStatus().equals(UserStatus.BANNED)) {
+            log.warn("Login failed for user {}: Account is {}.", request.getUsername(), entity.getUserStatus());
+            throw new BusinessException(ErrorCode.LOGIN_FAILED);
+        }
+
+        if (refreshTokenService.findByTokenWithUser(request.getUsername()) != null) {
+            log.debug("Existing refresh token found for user {}, deleting it.", request.getUsername());
+            refreshTokenService.deleteRefreshToken(request.getUsername());
+        }
+
+        AuthenticateResponse response = AuthenticateResponse.builder()
                 .accessToken(jwtAuthenticateService.generateToken(entity))
                 .refreshToken(refreshTokenService.createRefreshToken(request.getUsername()).getToken())
                 .authenticated(true)
                 .build();
+        log.info("User {} logged in successfully.", request.getUsername());
+        return response;
     }
 
     @Override
     @Transactional
     public AuthenticateResponse register(UserCreateRequest request) {
-        log.info("AuthServiceImpl create: {}", request.toString());
+        log.info("Attempting to register new user with username: {} and email: {}", request.getUsername(), request.getEmail());
 
-        if (userRepository.existsByEmail(request.getEmail()))
+        if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("User registration failed: Email {} already exists.", request.getEmail());
             throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("email", ErrorCode.FIELD_EXISTED.getMessage()));
+        }
 
-        if (userRepository.existsByUsername(request.getUsername()))
+        if (userRepository.existsByUsername(request.getUsername())) {
+            log.warn("User registration failed: Username {} already exists.", request.getUsername());
             throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("username", ErrorCode.FIELD_EXISTED.getMessage()));
+        }
 
         UserGender userGender = UserGender.OTHER;
-
         try {
             userGender = UserGender.valueOf(request.getGender());
         } catch (IllegalArgumentException e) {
-            log.info("invalid gender: {}", e.getMessage());
+            log.warn("Invalid gender '{}' provided during registration for user {}. Defaulting to OTHER.", request.getGender(), request.getUsername());
         }
 
         User entity = userMapper.toEntity(request);
         Role role = roleRepository.findByName(UserType.USER.name())
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> {
+                    log.error("Role '{}' not found in the system during user registration.", UserType.USER.name());
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
+                });
 
         entity.setUsername(request.getUsername().toLowerCase());
         entity.setRole(role);
@@ -102,6 +118,7 @@ public class AuthServiceImpl implements AuthService {
         entity.setGender(userGender);
         entity.setUserStatus(UserStatus.PENDING_VERIFICATION);
         entity = userRepository.save(entity);
+        log.info("New user {} (ID: {}) registered successfully with status PENDING_VERIFICATION.", entity.getUsername(), entity.getId());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.setAuthenticated(true);
@@ -113,6 +130,8 @@ public class AuthServiceImpl implements AuthService {
                     entity.getId()
                 )
         );
+        log.debug("UserRegisteredEvent published for user ID: {}", entity.getId());
+
         return AuthenticateResponse.builder()
                 .authenticated(true)
                 .accessToken(jwtAuthenticateService.generateToken(entity))
@@ -123,27 +142,39 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(String jti, Date expiryTime) {
+        log.info("User {} logging out. Invalidating token JTI: {}", SecurityUtils.getCurrentUsername(), jti);
         invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
         refreshTokenService.deleteRefreshToken(SecurityUtils.getCurrentUsername());
+        log.info("User {} successfully logged out.", SecurityUtils.getCurrentUsername());
     }
 
     @Override
     public AuthenticateResponse refreshToken(String refreshToken) {
+        log.info("Attempting to refresh token.");
         RefreshToken entity = refreshTokenService.findByToken(refreshToken);
         String username = refreshTokenService.getUsernameByToken(refreshToken);
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENUM_NOT_FOUND));
+                .orElseThrow(() -> {
+                    log.warn("Refresh token failed: User {} not found.", username);
+                    return new BusinessException(ErrorCode.ENUM_NOT_FOUND);
+                });
 
-        if (refreshTokenService.findByTokenWithUser(username) != null)
+        if (refreshTokenService.findByTokenWithUser(username) != null) {
+            log.debug("Existing refresh token found for user {}, deleting it before issuing new one.", username);
             refreshTokenService.deleteRefreshToken(username);
+        }
 
-        if (entity.getExpiryTime().after(new Date()))
+        if (entity.getExpiryTime().after(new Date())) {
+            log.debug("Invalidating old refresh token for user {}.", username);
             invalidatedTokenService.addInvalidatedToken(entity.getToken(), entity.getExpiryTime());
+        }
 
-        return AuthenticateResponse.builder()
+        AuthenticateResponse response = AuthenticateResponse.builder()
                 .refreshToken(refreshTokenService.createRefreshToken(username).getToken())
                 .authenticated(true)
                 .accessToken(jwtAuthenticateService.generateToken(user))
                 .build();
+        log.info("Token refreshed successfully for user {}.", username);
+        return response;
     }
 }

@@ -42,7 +42,6 @@ public class JwtService {
     String roleClaim;
 
     public String generateToken(User user) {
-
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
@@ -61,8 +60,8 @@ public class JwtService {
         try {
             jwsObject.sign(new MACSigner(secretKey.getBytes()));
         } catch (JOSEException e) {
-            log.error("generate token: {} {}", e, e.getMessage());
-            throw new RuntimeException(e);
+            log.error("Failed to generate JWT token: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to generate JWT token", e);
         }
 
         return jwsObject.serialize();
@@ -74,18 +73,24 @@ public class JwtService {
 
             JWSVerifier verifier = new MACVerifier(secretKey);
             if (!signedJWT.verify(verifier)) {
+                log.warn("JWT token verification failed: Invalid signature.");
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);
             }
 
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
 
-            if (expirationTime == null || expirationTime.before(new Date()) || invalidatedTokenService.existByJti(jti))
+            if (expirationTime == null || expirationTime.before(new Date()) || invalidatedTokenService.existByJti(jti)) {
+                log.warn("JWT token is expired or invalidated. JTI: {}", jti);
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);
+            }
 
             return signedJWT.getJWTClaimsSet();
-        } catch (ParseException | JOSEException e) {
-            log.error("getJwtClaimsSet: {} {}", e, e.getMessage());
+        } catch (ParseException e) {
+            log.error("Failed to parse JWT token: {}", e.getMessage(), e);
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        } catch (JOSEException e) {
+            log.error("JWT verification failed due to JOSEException: {}", e.getMessage(), e);
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
     }
@@ -95,7 +100,12 @@ public class JwtService {
     }
 
     public boolean isValidToken(String token) {
-        return jwtClaimsSet(token) == null;
+        try {
+            jwtClaimsSet(token);
+            return true;
+        } catch (BusinessException e) {
+            return false;
+        }
     }
 
     public Date getExpiryTimeFromToken(String token) {
@@ -119,11 +129,10 @@ public class JwtService {
         Object val = claimsSet.getClaim(field);
 
         if (val == null) {
-            log.debug("generateFieldFromToken: {}", field);
+            log.debug("Claim '{}' not found in token for subject: {}", field, claimsSet.getSubject());
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
 
         return String.valueOf(val);
     }
-
 }

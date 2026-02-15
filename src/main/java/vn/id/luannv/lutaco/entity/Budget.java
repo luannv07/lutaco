@@ -3,9 +3,6 @@ package vn.id.luannv.lutaco.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.Period;
 

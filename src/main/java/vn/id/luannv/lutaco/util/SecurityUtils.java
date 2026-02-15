@@ -31,13 +31,16 @@ public class SecurityUtils {
     private static CustomUserDetails getCurrentPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated())
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.warn("Authentication object is null or not authenticated.");
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
+        }
 
-        if (authentication.getPrincipal() instanceof CustomUserDetails)
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
             return (CustomUserDetails) authentication.getPrincipal();
+        }
 
-        log.info("getCurrentUserMethod: {}", authentication.getPrincipal().toString());
+        log.error("Principal is not of type CustomUserDetails. Actual type: {}", authentication.getPrincipal().getClass().getName());
         throw new BusinessException(ErrorCode.UNAUTHORIZED);
     }
     public static String resolveClientIp(HttpServletRequest request) {
@@ -51,10 +54,13 @@ public class SecurityUtils {
         for (String header : headers) {
             String ip = request.getHeader(header);
             if (ip != null && !ip.isBlank() && !"unknown".equalsIgnoreCase(ip)) {
+                log.debug("Resolved client IP '{}' from header '{}'.", ip, header);
                 return ip.split(",")[0].trim();
             }
         }
 
-        return request.getRemoteAddr();
+        String remoteAddr = request.getRemoteAddr();
+        log.debug("Resolved client IP '{}' from request.getRemoteAddr().", remoteAddr);
+        return remoteAddr;
     }
 }

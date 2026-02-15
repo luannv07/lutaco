@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import vn.id.luannv.lutaco.dto.response.PayOSResponse;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
 import vn.id.luannv.lutaco.service.PayOsService;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor

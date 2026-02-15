@@ -54,13 +54,16 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     @Transactional
     public DashboardResponse handleSummary(PeriodRange range) {
-        // top
+        log.info("Generating dashboard summary for period range: {}", range);
         String currentUserId = SecurityUtils.getCurrentId();
         List<WalletSummaryResponse> wallets = getWallets(currentUserId);
+        log.debug("Retrieved {} wallets for user ID: {}", wallets.size(), currentUserId);
 
         DashboardResponse.DashboardOverview dashboardOverview = buildDashboardOverview(wallets, currentUserId);
-        // end top
+        log.debug("Dashboard overview calculated: Total Income={}, Total Expense={}, Balance={}", dashboardOverview.getTotalIncome(), dashboardOverview.getTotalExpense(), dashboardOverview.getBalance());
+
         PeriodWindow window = PeriodWindowFactory.of(range);
+        log.debug("Period window for range {}: From={}, To={}, PreviousFrom={}, PreviousTo={}", range, window.getFrom(), window.getTo(), window.getPreviousFrom(), window.getPreviousTo());
 
         Long currentIncome = Optional.ofNullable(
                 transactionRepository.sumAmountByUser(
@@ -70,6 +73,7 @@ public class DashboardServiceImpl implements DashboardService {
                         window.getTo()
                 )
         ).orElse(0L);
+        log.debug("Current period income: {}", currentIncome);
 
         Long currentExpense = Optional.ofNullable(
                 transactionRepository.sumAmountByUser(
@@ -79,6 +83,7 @@ public class DashboardServiceImpl implements DashboardService {
                         window.getTo()
                 )
         ).orElse(0L);
+        log.debug("Current period expense: {}", currentExpense);
 
         Long previousIncome = Optional.ofNullable(
                 transactionRepository.sumAmountByUser(
@@ -88,6 +93,7 @@ public class DashboardServiceImpl implements DashboardService {
                         window.getPreviousTo()
                 )
         ).orElse(0L);
+        log.debug("Previous period income: {}", previousIncome);
 
         Long previousExpense = Optional.ofNullable(
                 transactionRepository.sumAmountByUser(
@@ -97,9 +103,11 @@ public class DashboardServiceImpl implements DashboardService {
                         window.getPreviousTo()
                 )
         ).orElse(0L);
+        log.debug("Previous period expense: {}", previousExpense);
 
         List<CategoryExpenseResponse> expenseCategories =
                 genCategoryChartInfoBetweenDate(window.getFrom(), window.getTo());
+        log.debug("Generated {} expense categories for chart info.", expenseCategories.size());
 
         BigDecimal sum = expenseCategories.stream()
                 .map(c -> BigDecimal.valueOf(c.getRatioNormalized()))
@@ -114,6 +122,7 @@ public class DashboardServiceImpl implements DashboardService {
                             .add(diff)
                             .doubleValue()
             );
+            log.debug("Adjusted ratio for first expense category due to rounding differences.");
         }
         InsightContext insightContext = InsightContext.builder()
                 .currentIncome(currentIncome)
@@ -151,6 +160,7 @@ public class DashboardServiceImpl implements DashboardService {
                         .build();
 
         List<InsightDto> dto = insightService.generate(insightContext);
+        log.info("Dashboard summary generated successfully for user ID: {} and period range: {}.", currentUserId, range);
         return DashboardResponse.builder()
                 .dashboardOverview(
                         DashboardResponse.DashboardOverview.builder()
@@ -173,6 +183,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public void exportBasic(HttpServletResponse response, PeriodRange period) {
+        log.info("Exporting basic dashboard data for period: {}", period);
         PeriodWindow window = PeriodWindowFactory.of(period);
 
         ExportContainer.ExportContext ctx = new ExportContainer.ExportContext(
@@ -187,16 +198,14 @@ public class DashboardServiceImpl implements DashboardService {
                 buildDashboardOverview(getWallets(ctx.authorId()), ctx.authorId());
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-
             ExportContainer.ExcelStyles styles = createCommonStyles(workbook);
-
             XSSFSheet sheet = workbook.createSheet("Overview");
             buildOverviewSheetXSSF(sheet, styles, ctx, overview);
-
             workbook.write(response.getOutputStream());
             response.flushBuffer();
-
+            log.info("Basic dashboard data successfully exported for user ID: {} and period: {}.", ctx.authorId(), period);
         } catch (Exception e) {
+            log.error("Error exporting basic dashboard data for user ID: {} and period: {}. Error: {}", ctx.authorId(), period, e.getMessage(), e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
     }
@@ -204,6 +213,7 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     @Transactional
     public void exportAdvanced(HttpServletResponse response, PeriodRange period) {
+        log.info("Exporting advanced dashboard data for period: {}", period);
         PeriodWindow window = PeriodWindowFactory.of(period);
 
         ExportContainer.ExportContext ctx = new ExportContainer.ExportContext(
@@ -221,7 +231,6 @@ public class DashboardServiceImpl implements DashboardService {
                 genCategoryChartInfoBetweenDate(window.getFrom(), window.getTo());
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-
             ExportContainer.ExcelStyles styles = createCommonStyles(workbook);
 
             /* ===== Sheet 1: Overview (reuse basic) ===== */
@@ -231,6 +240,7 @@ public class DashboardServiceImpl implements DashboardService {
                     ctx,
                     overview
             );
+            log.debug("Overview sheet built for advanced export.");
 
             /* ===== Sheet 2: Top Expense ===== */
             buildTopExpenseSheetXSSF(
@@ -239,6 +249,7 @@ public class DashboardServiceImpl implements DashboardService {
                     styles.getMoney(),
                     categories
             );
+            log.debug("Top Expenses sheet built for advanced export with {} categories.", categories.size());
 
             /* ===== Sheet 3: Pie Chart ===== */
             if (!categories.isEmpty()) {
@@ -247,12 +258,16 @@ public class DashboardServiceImpl implements DashboardService {
                         workbook.createSheet("Expense Chart"),
                         categories
                 );
+                log.debug("Expense Pie Chart built for advanced export.");
+            } else {
+                log.debug("No expense categories to build Pie Chart for advanced export.");
             }
 
             workbook.write(response.getOutputStream());
             response.flushBuffer();
-
+            log.info("Advanced dashboard data successfully exported for user ID: {} and period: {}.", ctx.authorId(), period);
         } catch (Exception e) {
+            log.error("Error exporting advanced dashboard data for user ID: {} and period: {}. Error: {}", ctx.authorId(), period, e.getMessage(), e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
     }
@@ -263,6 +278,7 @@ public class DashboardServiceImpl implements DashboardService {
             ExportContainer.ExportContext ctx,
             DashboardResponse.DashboardOverview overview
     ) {
+        log.debug("Building overview sheet for export.");
         int rowIdx = 0;
         rowIdx = ExportContainer.createTitleRow(
                 sheet,
@@ -282,6 +298,7 @@ public class DashboardServiceImpl implements DashboardService {
         rowIdx = createMetaRow(sheet, rowIdx, "Period:", from + " - " + to, styles.getBold());
         rowIdx = createMetaRow(sheet, rowIdx, "Exported at:", exportedAt, styles.getBold());
         rowIdx = createMetaRow(sheet, rowIdx, "Currency: ", "VND", styles.getBold());
+        log.debug("Metadata rows added to overview sheet.");
 
         rowIdx++;
 
@@ -293,6 +310,7 @@ public class DashboardServiceImpl implements DashboardService {
         sheet.addMergedRegion(new CellRangeAddress(
                 title.getRowNum(), title.getRowNum(), 0, 2
         ));
+        log.debug("Overview title added to sheet.");
 
         rowIdx++;
 
@@ -306,6 +324,7 @@ public class DashboardServiceImpl implements DashboardService {
             header.createCell(i).setCellValue(headers[i]);
             header.getCell(i).setCellStyle(styles.getCenterBold());
         }
+        log.debug("Header row added to overview sheet.");
 
         /* ===== Values ===== */
         XSSFRow values = sheet.createRow(rowIdx++);
@@ -319,9 +338,11 @@ public class DashboardServiceImpl implements DashboardService {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(i, sheet.getColumnWidth(3) + 6 * 256);
         }
+        log.debug("Overview values added to sheet.");
     }
 
     private void buildTopExpenseSheetXSSF(XSSFSheet sheet, XSSFCellStyle headerStyle, XSSFCellStyle money, List<CategoryExpenseResponse> categories) {
+        log.debug("Building top expense sheet for export with {} categories.", categories.size());
         int r = 0;
 
         Row header = sheet.createRow(r++);
@@ -341,9 +362,11 @@ public class DashboardServiceImpl implements DashboardService {
         }
 
         for (int i = 0; i < 3; i++) sheet.autoSizeColumn(i);
+        log.debug("Top expense sheet built successfully.");
     }
 
     private void buildExpensePieChartXSSF(XSSFWorkbook workbook, XSSFSheet sheet, List<CategoryExpenseResponse> categories) {
+        log.debug("Building expense pie chart sheet for export with {} categories.", categories.size());
         int r = 0;
 
         // ===== Data table =====
@@ -356,6 +379,7 @@ public class DashboardServiceImpl implements DashboardService {
             row.createCell(0).setCellValue(c.getCategoryName());
             row.createCell(1).setCellValue(c.getRatioNormalized());
         }
+        log.debug("Data table for pie chart built.");
 
         // ===== Drawing & chart =====
         XSSFDrawing drawing = sheet.createDrawingPatriarch();
@@ -396,22 +420,28 @@ public class DashboardServiceImpl implements DashboardService {
         series.setTitle("Expense Ratio", null);
 
         chart.plot(pieData);
+        log.debug("Expense pie chart built successfully.");
     }
 
     private Double growthRate(long current, long previous) {
         if (previous == 0) {
             if (current == 0) return 0.0;
+            log.debug("Previous value is zero, current is non-zero. Growth rate is 100%.");
             return 100.0;
         }
-        return CustomizeNumberUtils
+        double rate = CustomizeNumberUtils
                 .formatDecimal((current * 1.0 - previous) / previous, bigDecimalScale)
                 .multiply(BigDecimal.valueOf(100))
                 .doubleValue();
+        log.debug("Calculated growth rate: {}% (current: {}, previous: {}).", rate, current, previous);
+        return rate;
     }
 
     private List<CategoryExpenseResponse> genCategoryChartInfoBetweenDate(LocalDateTime from, LocalDateTime to) {
-        return transactionRepository
-                .getCategoryPercentageOfTotal(SecurityUtils.getCurrentId(),
+        String currentUserId = SecurityUtils.getCurrentId();
+        log.debug("Generating category expense chart info for user ID: {} from {} to {}.", currentUserId, from, to);
+        List<CategoryExpenseResponse> result = transactionRepository
+                .getCategoryPercentageOfTotal(currentUserId,
                         CategoryType.EXPENSE.name(),
                         TimeUtils.convertSafeDate(from, false),
                         TimeUtils.convertSafeDate(to, true))
@@ -428,19 +458,25 @@ public class DashboardServiceImpl implements DashboardService {
                                 .build()
                 )
                 .toList();
+        log.debug("Generated {} category expense chart entries.", result.size());
+        return result;
     }
 
     private List<WalletSummaryResponse> getWallets(String userId) {
-        return walletRepository
+        log.debug("Fetching wallet summaries for user ID: {}.", userId);
+        List<WalletSummaryResponse> wallets = walletRepository
                 .findByUser_Id(userId)
                 .stream().map(wallet -> WalletSummaryResponse.builder()
                         .walletName(wallet.getWalletName())
                         .balance(wallet.getCurrentBalance())
                         .build())
                 .toList();
+        log.debug("Retrieved {} wallet summaries for user ID: {}.", wallets.size(), userId);
+        return wallets;
     }
 
     private DashboardResponse.DashboardOverview buildDashboardOverview(List<WalletSummaryResponse> wallets, String username) {
+        log.debug("Building dashboard overview for user: {}.", username);
         Long totalIncome = transactionRepository
                 .sumAmountByUser(username,
                         CategoryType.INCOME,
@@ -454,7 +490,7 @@ public class DashboardServiceImpl implements DashboardService {
         Long balance = Optional
                 .of(wallets.stream().mapToLong(WalletSummaryResponse::getBalance).sum())
                 .orElse(0L);
-
+        log.debug("Dashboard overview calculated: Total Income={}, Total Expense={}, Balance={}.", totalIncome, totalExpense, balance);
         return DashboardResponse.DashboardOverview.builder()
                 .totalIncome(totalIncome)
                 .totalExpense(totalExpense)

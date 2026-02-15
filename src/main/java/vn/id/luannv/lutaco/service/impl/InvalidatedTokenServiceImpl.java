@@ -22,21 +22,23 @@ public class InvalidatedTokenServiceImpl implements InvalidatedTokenService {
     @Override
     @Transactional
     public void deleteExpiredTokens() {
-        invalidatedTokenRepository.deleteByExpiryTimeBefore(new Date());
+        long deletedCount = invalidatedTokenRepository.deleteByExpiryTimeBefore(new Date());
+        log.info("Cleaned up {} expired invalidated tokens.", deletedCount);
     }
 
     @Override
     public boolean existByJti(String jti) {
-        log.info("existByJti {} is {}", jti, invalidatedTokenRepository.existsByJti(jti));
-        return invalidatedTokenRepository.existsByJti(jti);
+        boolean exists = invalidatedTokenRepository.existsByJti(jti);
+        log.debug("Checking if JTI '{}' exists in invalidated tokens: {}.", jti, exists);
+        return exists;
     }
 
     @Override
     public void addInvalidatedToken(String jti, Date expiryTime) {
-        log.debug("addInvalidatedToken: {} {}", jti, expiryTime);
-
+        log.debug("Adding invalidated token with JTI: '{}' and expiry time: '{}'.", jti, expiryTime);
         invalidatedTokenRepository.save(InvalidatedToken.builder()
                 .jti(jti)
                 .expiryTime(expiryTime).build());
+        log.info("Invalidated token with JTI: '{}' added successfully.", jti);
     }
 }

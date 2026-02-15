@@ -37,115 +37,147 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse create(UserCreateRequest request) {return null;}
+    public UserResponse create(UserCreateRequest request) {
+        log.warn("Attempted to create user via create method, which is not supported. Use AuthServiceImpl.register instead.");
+        return null;
+    }
 
     @Override
     public UserResponse getDetail(String id) {
-        log.info("UserServiceImpl getDetail: {}", id);
-
+        log.info("Fetching details for user with ID: {}", id);
         return userRepository.findById(id)
                 .map(userMapper::toResponse)
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())));
+                .orElseThrow(() -> {
+                    log.warn("User with ID {} not found.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
+                });
     }
 
     @Override
     public Page<UserResponse> search(UserFilterRequest request, Integer page, Integer size) {
-        log.info("UserServiceImpl search: {}", request);
-        Pageable pageable = PageRequest.of(page-1, size);
+        log.info("Searching users with filter: {}, page: {}, size: {}.", request, page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-        if (request.getUserStatus() != null && !UserStatus.isValid(request.getUserStatus()))
+        if (request.getUserStatus() != null && !UserStatus.isValid(request.getUserStatus())) {
+            log.warn("Invalid user status '{}' provided in filter. Ignoring status filter.", request.getUserStatus());
             request.setUserStatus(null);
+        }
 
-        return userRepository.findByFilters(request, pageable)
+        Page<UserResponse> result = userRepository.findByFilters(request, pageable)
                 .map(userMapper::toResponse);
+        log.info("Found {} users matching the criteria.", result.getTotalElements());
+        return result;
     }
 
     @Override
     public UserResponse update(String id, UserCreateRequest request) {
+        log.warn("Attempted to update user via update method, which is not supported. Use updateUser instead.");
         return null;
     }
 
     @Override
     public UserResponse updateUser(String id, UserUpdateRequest request) {
-        log.info("UserServiceImpl update User: {} {}", id, request);
+        log.info("Updating user with ID: {} with data: {}", id, request);
 
         User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())));
+                .orElseThrow(() -> {
+                    log.warn("User with ID {} not found for update.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
+                });
         UserGender userGender = user.getGender();
 
         try {
-            userGender = UserGender.valueOf(userGender.name());
+            userGender = UserGender.valueOf(request.getGender());
         } catch (IllegalArgumentException e) {
-            log.error("UserGender {} is not valid", userGender);
+            log.warn("Invalid gender '{}' provided for user ID {}. Keeping existing gender.", request.getGender(), id);
         }
 
         userMapper.updateUser(request, user);
         user.setGender(userGender);
         User saved = userRepository.save(user);
-
+        log.info("User with ID {} updated successfully.", id);
         return userMapper.toResponse(saved);
     }
 
     @Override
     public void updateStatus(String id, UserStatusSetRequest request) {
-        log.info("UserServiceImpl updateStatus: {} {}", id, request);
+        log.info("Updating status for user ID: {} to isActive: {}.", id, request.getIsActive());
         User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())));
-        log.info("{} {}", user.getRole().getName(), UserType.SYS_ADMIN.name());
+                .orElseThrow(() -> {
+                    log.warn("User with ID {} not found for status update.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
+                });
 
         User currentUser = userRepository
                 .findByUsername(SecurityUtils.getCurrentUsername())
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.error("Current authenticated user not found in repository.");
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
 
-        if (currentUser.getUsername().equals(SecurityUtils.getCurrentUsername()))
+        if (currentUser.getUsername().equals(SecurityUtils.getCurrentUsername())) {
             user.setUserStatus(UserStatus.DISABLED_BY_USER);
-        else if (currentUser.getRole().getName().equals(UserType.SYS_ADMIN.name())
-                || currentUser.getRole().getName().equals(UserType.ADMIN.name()))
+            log.info("User ID {} self-disabled their account.", id);
+        } else if (currentUser.getRole().getName().equals(UserType.SYS_ADMIN.name())
+                || currentUser.getRole().getName().equals(UserType.ADMIN.name())) {
             user.setUserStatus(UserStatus.BANNED);
+            log.info("Admin/SysAdmin {} banned user ID {}.", currentUser.getUsername(), id);
+        } else {
+            log.warn("Unauthorized attempt to change user status for user ID {} by user {}.", id, currentUser.getUsername());
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
 
         userRepository.save(user);
+        log.info("User ID {} status updated to {}.", id, user.getUserStatus());
     }
 
     @Override
     public void deleteById(String id) {
-
+        log.warn("Attempted to delete user by ID {}, which is not supported. Use updateStatus to disable/ban.", id);
+        throw new UnsupportedOperationException("Direct deletion of users is not supported. Use updateStatus to disable or ban.");
     }
 
     @Override
     public void updateUserRole(String id, UserRoleRequest request) {
-        log.info("UserServiceImpl updateUserRole: {}", request);
-        // need to update
+        log.info("Updating role for user ID: {} to role: {}.", id, request.getRoleName());
         User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())));
+                .orElseThrow(() -> {
+                    log.warn("User with ID {} not found for role update.", id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
+                });
         Role role = roleRepository.findByName(request.getRoleName())
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())));
+                .orElseThrow(() -> {
+                    log.warn("Role '{}' not found for role update.", request.getRoleName());
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
+                });
         user.setRole(role);
         userRepository.save(user);
+        log.info("User ID {} role updated to {}.", id, role.getName());
     }
     @Override
     public void updatePassword(String id, UpdatePasswordRequest request) {
+        log.info("Attempting to update password for user ID: {}.", id);
 
         User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(
-                                ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())
-                        )
-                );
+                .orElseThrow(() -> {
+                    log.warn("User with ID {} not found for password update.", id);
+                    return new BusinessException(
+                            ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())
+                    );
+                });
 
         User currentUser = userRepository
                 .findByUsername(SecurityUtils.getCurrentUsername())
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.error("Current authenticated user not found in repository during password update.");
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
 
         boolean isAdmin =
                 currentUser.getRole().getName().equals(UserType.ADMIN.name()) ||
@@ -154,6 +186,7 @@ public class UserServiceImpl implements UserService {
         boolean isSelf = currentUser.getId().equals(id);
 
         if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            log.warn("Password update failed for user ID {}: New password and confirmation do not match.", id);
             throw new BusinessException(ErrorCode.PASSWORD_CONFIRM_NOT_MATCH);
         }
 
@@ -162,16 +195,18 @@ public class UserServiceImpl implements UserService {
                     request.getOldPassword(),
                     user.getPassword()
             )) {
+                log.warn("Password update failed for user ID {}: Invalid old password provided.", id);
                 throw new BusinessException(ErrorCode.INVALID_OLD_PASSWORD);
             }
         }
 
         if (!isAdmin && !isSelf) {
+            log.warn("Unauthorized attempt to change password for user ID {} by user {}.", id, currentUser.getUsername());
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+        log.info("Password successfully updated for user ID {}.", id);
     }
-
 }

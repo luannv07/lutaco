@@ -5,12 +5,10 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.entity.Budget;
-import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.enumerate.FrequentType;
 import vn.id.luannv.lutaco.enumerate.OtpType;
-import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent;
 import vn.id.luannv.lutaco.util.TimeUtils;
 
@@ -100,7 +98,6 @@ public class EmailTemplateService {
 
         String footer = buildFooter(budget.getUser().getEmail(), LocalDateTime.now());
         String body = buildEmailLayout(title, content, footer);
-        log.info("{}",LocalDateTime.now());
 
         return new EmailFields(budget.getUser().getEmail(), subject, body);
     }

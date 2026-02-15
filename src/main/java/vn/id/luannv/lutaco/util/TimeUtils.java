@@ -60,7 +60,7 @@ public class TimeUtils {
         } catch (Exception e) {
             // Trường hợp user nhập timezone bậy bạ (VD: "Mars/Alien")
             // Fallback về mặc định hiển thị giờ gốc hoặc log error
-            log.info("Error converting timezone: {}", e.getMessage());
+            log.warn("Error converting timezone for UTC date '{}' to zone '{}' with pattern '{}'. Falling back to default format. Error: {}", utcDateTime, zoneId, pattern, e.getMessage());
             return format(utcDateTime, pattern);
         }
     }

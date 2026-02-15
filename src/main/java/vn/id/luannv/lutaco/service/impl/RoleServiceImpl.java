@@ -26,45 +26,48 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(Role request) {
-        log.info("RoleServiceImpl create: {}", request);
-
+        log.warn("Attempted to create a role via create method, which is not supported. Request: {}", request);
         throw new BusinessException(ErrorCode.SYSTEM_ERROR);
     }
 
     @Override
     public Role getDetail(Integer id) {
-        log.info("RoleServiceImpl getDetail: {}", id);
-
+        log.info("Fetching details for role with ID: {}", id);
         return roleRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(
-                                ErrorCode.ENTITY_NOT_FOUND,
-                                Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())
-                        ));
+                .orElseThrow(() -> {
+                    log.warn("Role with ID {} not found.", id);
+                    return new BusinessException(
+                            ErrorCode.ENTITY_NOT_FOUND,
+                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())
+                    );
+                });
     }
 
     @Override
     public Page<Role> search(String name, Integer page, Integer size) {
-        log.info("RoleServiceImpl search: name={}", name);
-
-        Pageable pageable = PageRequest.of(page-1, size);
+        log.info("Searching roles with name: '{}', page: {}, size: {}.", name, page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         if (name == null || name.isBlank()) {
-            return roleRepository.findAll(pageable);
+            Page<Role> roles = roleRepository.findAll(pageable);
+            log.info("Found {} roles without name filter.", roles.getTotalElements());
+            return roles;
         }
 
-        return roleRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Role> roles = roleRepository.findByNameContainingIgnoreCase(name, pageable);
+        log.info("Found {} roles matching name '{}'.", roles.getTotalElements(), name);
+        return roles;
     }
 
     @Override
     public Role update(Integer id, Role request) {
-        return null;
+        log.warn("Attempted to update a role via update method, which is not supported. ID: {}, Request: {}", id, request);
+        throw new BusinessException(ErrorCode.SYSTEM_ERROR); // Or a more specific error if role updates are not allowed
     }
 
     @Override
     public void deleteById(Integer id) {
-        log.info("RoleServiceImpl deleteById: {}", id);
-
+        log.warn("Attempted to delete a role via deleteById method, which is not supported. ID: {}", id);
         throw new BusinessException(ErrorCode.SYSTEM_ERROR);
     }
 }

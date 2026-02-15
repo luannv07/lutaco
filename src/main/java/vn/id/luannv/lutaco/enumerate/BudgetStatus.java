@@ -2,7 +2,6 @@ package vn.id.luannv.lutaco.enumerate;
 
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;

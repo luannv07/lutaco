@@ -82,22 +82,4 @@ public class ExportContainer {
         return rowIdx + 1;
     }
 
-
-    public static void setMoneyCell(
-            XSSFRow row,
-            int colIdx,
-            Number value,
-            XSSFCellStyle moneyStyle
-    ) {
-        row.createCell(colIdx).setCellValue(value.doubleValue());
-        row.getCell(colIdx).setCellStyle(moneyStyle);
-    }
-
-    public static void setTextCell(
-            XSSFRow row,
-            int colIdx,
-            String value
-    ) {
-        row.createCell(colIdx).setCellValue(value);
-    }
 }

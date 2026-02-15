@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 

@@ -1,7 +1,6 @@
 package vn.id.luannv.lutaco.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import vn.id.luannv.lutaco.dto.UserAuditFilterRequest;
 import vn.id.luannv.lutaco.entity.UserAuditLog;
 

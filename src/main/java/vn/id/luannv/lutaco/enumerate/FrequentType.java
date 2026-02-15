@@ -1,10 +1,6 @@
 package vn.id.luannv.lutaco.enumerate;
 
-import vn.id.luannv.lutaco.exception.BusinessException;
-import vn.id.luannv.lutaco.exception.ErrorCode;
-
 import java.time.LocalDate;
-import java.util.Map;
 
 public enum FrequentType {
     DAILY {

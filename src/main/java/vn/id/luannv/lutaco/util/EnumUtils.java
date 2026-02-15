@@ -8,13 +8,14 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 public class EnumUtils {
     public static <T extends Enum<T>> T from(Class<T> enumClasses, Object value) {
         if (value == null || value.toString().isEmpty()) {
+            log.warn("Attempted to convert null or empty value to enum {}.", enumClasses.getName());
             throw new BusinessException(ErrorCode.ENUM_NOT_FOUND);
         }
 
         try {
             return Enum.valueOf(enumClasses, value.toString().toUpperCase());
         } catch (IllegalArgumentException e) {
-            log.error("error when convert {} to enum {}", value, enumClasses.getName());
+            log.error("Failed to convert value '{}' to enum type '{}'. Error: {}", value, enumClasses.getName(), e.getMessage());
             throw new BusinessException(ErrorCode.ENUM_NOT_FOUND);
         }
     }

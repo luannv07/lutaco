@@ -52,11 +52,12 @@ public class PayOsSignatureUtils {
             raw.deleteCharAt(raw.length() - 1);
 
             String expectedSignature = hmacSha256(raw.toString(), checksumKey);
+            log.debug("Generated signature for webhook: {}", expectedSignature);
 
             return expectedSignature.equals(req.getSignature());
 
         } catch (Exception e) {
-            log.error("Verify PayOS webhook failed", e);
+            log.error("Failed to verify PayOS webhook signature. Error: {}", e.getMessage(), e);
             return false;
         }
     }
@@ -70,7 +71,7 @@ public class PayOsSignatureUtils {
                 request.getOrderCode(),
                 request.getReturnUrl()
         );
-        log.info("[PAYOS] raw signature data: {}", rawData);
+        log.debug("Raw data for PayOS payment request signature generation: {}", rawData);
         return hmacSha256(rawData, checksumKey);
     }
 
@@ -84,6 +85,7 @@ public class PayOsSignatureUtils {
 
             return HexFormat.of().formatHex(rawHmac);
         } catch (Exception e) {
+            log.error("HMAC SHA256 signature generation failed. Error: {}", e.getMessage(), e);
             throw new RuntimeException("SIGNATURE_VERIFY_FAILED", e);
         }
     }

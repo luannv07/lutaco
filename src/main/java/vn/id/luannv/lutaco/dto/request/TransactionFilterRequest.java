@@ -1,7 +1,6 @@
 package vn.id.luannv.lutaco.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

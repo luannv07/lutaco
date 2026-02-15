@@ -33,9 +33,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken createRefreshToken(String username) {
-
+        log.info("Creating refresh token for user: {}", username);
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.warn("User {} not found when creating refresh token.", username);
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
@@ -43,36 +46,65 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .user(user)
                 .build();
 
-        return refreshTokenRepository.save(refreshToken);
+        RefreshToken savedToken = refreshTokenRepository.save(refreshToken);
+        log.info("Refresh token created for user {}. Token ID: {}", username, savedToken.getToken());
+        return savedToken;
     }
 
     @Override
     public RefreshToken findByTokenWithUser(String username) {
+        log.debug("Attempting to find refresh token for user: {}", username);
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.warn("User {} not found when searching for refresh token.", username);
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
 
-        return refreshTokenRepository.findByUser(user).orElse(null);
+        RefreshToken token = refreshTokenRepository.findByUser(user).orElse(null);
+        if (token != null) {
+            log.debug("Refresh token found for user {}.", username);
+        } else {
+            log.debug("No refresh token found for user {}.", username);
+        }
+        return token;
     }
 
     @Override
     @Transactional
     public void deleteRefreshToken(String username) {
+        log.info("Deleting refresh token for user: {}", username);
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.warn("User {} not found when deleting refresh token.", username);
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
 
         refreshTokenRepository.deleteByUser(user);
+        log.info("Refresh token successfully deleted for user {}.", username);
     }
 
     @Override
     public RefreshToken findByToken(String token) {
-        return refreshTokenRepository.findByToken(token)
+        log.debug("Attempting to find refresh token by token string.");
+        RefreshToken foundToken = refreshTokenRepository.findByToken(token)
                 .filter(refreshToken -> refreshToken.getExpiryTime().after(new Date()))
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> {
+                    log.warn("Invalid or expired refresh token provided.");
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
+        log.debug("Refresh token found and is valid.");
+        return foundToken;
     }
 
     @Override
     public String getUsernameByToken(String token) {
-        return refreshTokenRepository.findUsernameByToken(token)
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+        log.debug("Attempting to get username from refresh token.");
+        String username = refreshTokenRepository.findUsernameByToken(token)
+                .orElseThrow(() -> {
+                    log.warn("Username not found for provided refresh token.");
+                    return new BusinessException(ErrorCode.UNAUTHORIZED);
+                });
+        log.debug("Username '{}' extracted from refresh token.", username);
+        return username;
     }
 }
