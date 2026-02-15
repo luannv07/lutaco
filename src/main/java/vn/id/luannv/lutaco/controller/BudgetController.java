@@ -1,6 +1,8 @@
 package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -23,7 +25,7 @@ import vn.id.luannv.lutaco.service.BudgetService;
 @RequestMapping("/api/v1/budgets")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(name = "Budget API", description = "API quản lý ngân sách chi tiêu")
+@Tag(name = "Budget", description = "API quản lý ngân sách chi tiêu")
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
 public class BudgetController {
 
@@ -31,6 +33,11 @@ public class BudgetController {
 
     @PostMapping
     @Operation(summary = "Tạo ngân sách mới")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tạo ngân sách thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     public ResponseEntity<BaseResponse<BudgetResponse>> create(@Valid @RequestBody BudgetRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
@@ -40,7 +47,12 @@ public class BudgetController {
     }
 
     @PatchMapping("/{id}")
-    @Operation(summary = "Tạo ngân sách mới")
+    @Operation(summary = "Tắt/Bật email cảnh báo ngân sách")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cập nhật thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ngân sách")
+    })
     public ResponseEntity<BaseResponse<Boolean>> preventDangerEmail(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
@@ -51,6 +63,11 @@ public class BudgetController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết ngân sách")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy chi tiết ngân sách thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ngân sách")
+    })
     public ResponseEntity<BaseResponse<BudgetResponse>> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -61,6 +78,11 @@ public class BudgetController {
 
     @GetMapping
     @Operation(summary = "Tìm kiếm và phân trang ngân sách")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy danh sách ngân sách thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     public ResponseEntity<BaseResponse<Page<BudgetResponse>>> search(
             @ModelAttribute BudgetFilterRequest request,
             @RequestParam(defaultValue = "0") Integer page,
@@ -75,6 +97,12 @@ public class BudgetController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Cập nhật ngân sách")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cập nhật ngân sách thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ngân sách")
+    })
     public ResponseEntity<BaseResponse<BudgetResponse>> update(@PathVariable Long id, @Valid @RequestBody BudgetRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -85,6 +113,11 @@ public class BudgetController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Xoá ngân sách")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xóa ngân sách thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ngân sách")
+    })
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
         budgetService.deleteById(id);
         return ResponseEntity.ok(

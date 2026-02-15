@@ -2,6 +2,8 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ import vn.id.luannv.lutaco.service.PayOsService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
 @Tag(
-        name = "Payment / PayOS",
+        name = "PayOS",
         description = "API thanh toán tích hợp PayOS (nâng cấp tài khoản, truy vấn giao dịch)"
 )
 public class PayOSController {
@@ -34,6 +36,12 @@ public class PayOSController {
             summary = "Tạo giao dịch nâng cấp Premium",
             description = "Khởi tạo giao dịch thanh toán PayOS để nâng cấp tài khoản người dùng lên Premium"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tạo thanh toán thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Tài khoản đã là Premium")
+    })
     public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
         return ResponseEntity.ok()
                 .body(
@@ -50,6 +58,12 @@ public class PayOSController {
             summary = "Lấy chi tiết giao dịch PayOS",
             description = "Truy vấn thông tin chi tiết của một giao dịch PayOS theo mã giao dịch"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy chi tiết thanh toán thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy giao dịch")
+    })
     public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
             @Parameter(
                     description = "Mã giao dịch PayOS",

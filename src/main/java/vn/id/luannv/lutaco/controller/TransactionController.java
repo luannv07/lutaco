@@ -2,6 +2,8 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -28,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(
-        name = "Transaction API",
+        name = "Transaction",
         description = "API quản lý giao dịch tài chính của người dùng"
 )
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
@@ -41,6 +43,11 @@ public class TransactionController {
             summary = "Lấy danh sách giao dịch",
             description = "Lấy danh sách giao dịch của người dùng hiện tại, hỗ trợ lọc theo nhiều tiêu chí và phân trang"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy danh sách giao dịch thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     public ResponseEntity<BaseResponse<Page<TransactionResponse>>> search(
             @Parameter(description = "Điều kiện lọc và phân trang giao dịch")
             @Valid @ModelAttribute TransactionFilterRequest request
@@ -62,6 +69,11 @@ public class TransactionController {
             summary = "Lấy chi tiết giao dịch",
             description = "Lấy thông tin chi tiết của một giao dịch theo id"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy chi tiết giao dịch thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy giao dịch")
+    })
     public ResponseEntity<BaseResponse<TransactionResponse>> getDetail(
             @Parameter(
                     description = "ID giao dịch",
@@ -83,6 +95,11 @@ public class TransactionController {
             summary = "Tạo giao dịch mới",
             description = "Tạo mới một giao dịch cho người dùng hiện tại"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tạo giao dịch thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     public ResponseEntity<BaseResponse<TransactionResponse>> create(
             @Valid
             @Parameter(description = "Thông tin giao dịch cần tạo")
@@ -100,6 +117,11 @@ public class TransactionController {
             summary = "Tạo nhiều giao dịch cùng lúc",
             description = "Tạo nhiều giao dịch cho người dùng hiện tại trong một lần gọi API"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tạo hàng loạt giao dịch thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     public ResponseEntity<BaseResponse<List<TransactionResponse>>> createBulk(
             @Valid
             @Parameter(description = "Danh sách thông tin giao dịch cần tạo")
@@ -117,6 +139,12 @@ public class TransactionController {
             summary = "Cập nhật giao dịch",
             description = "Cập nhật thông tin giao dịch theo id"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cập nhật giao dịch thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy giao dịch")
+    })
     public ResponseEntity<BaseResponse<Void>> update(
             @Parameter(
                     description = "ID giao dịch",
@@ -139,6 +167,11 @@ public class TransactionController {
             summary = "Xoá giao dịch (soft delete)",
             description = "Đánh dấu giao dịch là không còn hiệu lực, không xoá vật lý khỏi hệ thống"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xóa giao dịch thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy giao dịch")
+    })
     public ResponseEntity<BaseResponse<Void>> delete(
             @Parameter(
                     description = "ID giao dịch",
@@ -164,6 +197,12 @@ public class TransactionController {
             summary = "Phục hồi giao dịch (undo delete)",
             description = "Phục hồi giao dịch, dành cho premium user"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Phục hồi giao dịch thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Yêu cầu quyền Premium"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy giao dịch")
+    })
     @PreAuthorize("@securityPermission.isPremiumUser()")
     public ResponseEntity<BaseResponse<Void>> unDelete(
             @Parameter(

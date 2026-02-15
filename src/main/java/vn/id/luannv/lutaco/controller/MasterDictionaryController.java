@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -38,11 +39,11 @@ public class MasterDictionaryController {
             summary = "Lấy danh sách dictionary theo category",
             description = "Trả về danh sách các giá trị đang active theo category (ví dụ: GENDER, USER_STATUS)"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Lấy danh sách thành công",
-            content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
-    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy category")
+    })
     public ResponseEntity<BaseResponse<List<MasterDictionaryDto>>> getByCategory(
             @Parameter(
                     description = "Nhóm dữ liệu dictionary",
@@ -63,11 +64,11 @@ public class MasterDictionaryController {
             summary = "Lấy dictionary theo category và code",
             description = "Dùng để map một giá trị cụ thể trong category (ví dụ: GENDER + MALE)"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Lấy dữ liệu thành công",
-            content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
-    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy dữ liệu thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy dữ liệu")
+    })
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> getByCategoryAndCode(
             @Parameter(description = "Nhóm dữ liệu", example = "GENDER", required = true)
             @PathVariable String category,
@@ -88,11 +89,12 @@ public class MasterDictionaryController {
             summary = "Tạo mới dictionary",
             description = "Tạo mới một giá trị dictionary dùng cho cấu hình hệ thống"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Tạo mới thành công",
-            content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
-    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tạo mới thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập")
+    })
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> create(
             @Valid
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -102,7 +104,7 @@ public class MasterDictionaryController {
             )
             @RequestBody MasterDictionaryDto dto
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         service.create(dto),
                         "Tạo mới thành công."
@@ -115,11 +117,13 @@ public class MasterDictionaryController {
             summary = "Cập nhật dictionary",
             description = "Cập nhật thông tin dictionary dựa trên id"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Cập nhật thành công",
-            content = @Content(schema = @Schema(implementation = MasterDictionaryDto.class))
-    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cập nhật thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy dictionary")
+    })
     public ResponseEntity<BaseResponse<MasterDictionaryDto>> update(
             @Parameter(description = "ID của dictionary", example = "1", required = true)
             @PathVariable Integer id,

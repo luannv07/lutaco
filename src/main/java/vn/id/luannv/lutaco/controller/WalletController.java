@@ -2,6 +2,8 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -26,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(
-        name = "Wallet API",
+        name = "Wallet",
         description = "API quản lý wallet/ngân sách cá nhân của người dùng"
 )
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
@@ -39,6 +41,12 @@ public class WalletController {
             summary = "Tạo wallet mới",
             description = "Người dùng tạo wallet mới theo giới hạn của gói dịch vụ"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tạo ví thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Vượt quá giới hạn số lượng ví")
+    })
     public ResponseEntity<BaseResponse<Wallet>> create(
             @Valid @RequestBody WalletCreateRequest request
     ) {
@@ -54,6 +62,12 @@ public class WalletController {
             summary = "Cập nhật wallet",
             description = "Cập nhật tên hoặc mô tả wallet của chính người dùng"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cập nhật ví thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
+    })
     public ResponseEntity<BaseResponse<Wallet>> update(
             @Parameter(
                     description = "Tên wallet cần cập nhật",
@@ -75,6 +89,11 @@ public class WalletController {
             summary = "Xoá wallet",
             description = "Người dùng xoá wallet của mình (chuyển trạng thái sang INACTIVE)"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xóa ví thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
+    })
     public ResponseEntity<BaseResponse<Void>> delete(
             @Parameter(
                     description = "Tên wallet cần xoá",
@@ -94,6 +113,11 @@ public class WalletController {
             summary = "Lấy chi tiết wallet",
             description = "Lấy thông tin chi tiết một wallet thuộc quyền sở hữu của user hiện tại"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy chi tiết ví thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
+    })
     public ResponseEntity<BaseResponse<Wallet>> getDetail(
             @Parameter(
                     description = "Tên wallet cần lấy thông tin",
@@ -114,6 +138,10 @@ public class WalletController {
             summary = "Lấy danh sách wallet của tôi",
             description = "Lấy toàn bộ wallet của user đang đăng nhập"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy danh sách ví thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     public ResponseEntity<BaseResponse<List<Wallet>>> getMyWallets() {
         return ResponseEntity.ok(
                 BaseResponse.success(

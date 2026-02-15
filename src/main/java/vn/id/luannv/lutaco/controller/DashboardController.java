@@ -1,6 +1,8 @@
 package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -23,7 +25,7 @@ import vn.id.luannv.lutaco.util.EnumUtils;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(
-        name = "Dashboard API",
+        name = "Dashboard",
         description = "API for dashboard operations including summary and data exports."
 )
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
@@ -35,6 +37,11 @@ public class DashboardController {
             summary = "Get dashboard summary",
             description = "Provides a summary of key metrics for the dashboard."
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy dữ liệu dashboard thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     @GetMapping("/summary")
     public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "LAST_1_MONTH", required = false) String period) {
         PeriodRange periodRange = EnumUtils.from(PeriodRange.class, period);
@@ -50,6 +57,10 @@ public class DashboardController {
             summary = "Export basic data to Excel",
             description = "Exports a basic report of dashboard data to an Excel file."
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xuất file thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
     @GetMapping("/export/basic")
     public void exportBasic(
             HttpServletResponse response
@@ -71,6 +82,11 @@ public class DashboardController {
             summary = "Export advanced data to Excel (Premium)",
             description = "Exports a more detailed report of dashboard data to an Excel file. This feature is available only to premium users."
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xuất file thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Yêu cầu quyền Premium")
+    })
     @GetMapping("/export/advanced")
     @PreAuthorize("@securityPermission.isPremiumUser()")
     public void exportAdvanced(

@@ -2,6 +2,8 @@ package vn.id.luannv.lutaco.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -21,7 +23,7 @@ import vn.id.luannv.lutaco.service.RoleService;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(
-        name = "Role API",
+        name = "Role",
         description = "API quản lý vai trò hệ thống (Role), chỉ dành cho admin"
 )
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
@@ -35,6 +37,12 @@ public class RoleController {
             summary = "Tìm kiếm danh sách role",
             description = "Lấy danh sách role trong hệ thống, hỗ trợ tìm kiếm theo tên và phân trang"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy danh sách vai trò thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập")
+    })
     public ResponseEntity<BaseResponse<Page<Role>>> getAllRoles(
             @Parameter(description = "Điều kiện lọc và phân trang")
             @Valid @ModelAttribute RoleFilterRequest request
@@ -57,6 +65,12 @@ public class RoleController {
             summary = "Lấy chi tiết role",
             description = "Lấy thông tin chi tiết của một role theo id"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy chi tiết vai trò thành công"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập"),
+            @ApiResponse(responseCode = "404", description = "Không tìm thấy vai trò")
+    })
     public ResponseEntity<BaseResponse<Role>> getRoleById(
             @Parameter(
                     description = "ID của role",

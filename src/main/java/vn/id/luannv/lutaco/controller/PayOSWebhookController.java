@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -41,6 +43,10 @@ public class PayOSWebhookController {
             description = "Hứng kết quả thanh toán PayOS sau khi chuyển khoản hoàn tất. " +
                     "API sẽ validate chữ ký (signature) và xử lý trạng thái giao dịch."
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xử lý webhook thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ hoặc chữ ký không hợp lệ")
+    })
     public ResponseEntity<BaseResponse<Void>> handleWebhook(
             @Parameter(
                     description = "Payload webhook do PayOS gửi về",
@@ -68,6 +74,12 @@ public class PayOSWebhookController {
             description = "API trung gian dùng để gọi PayOS confirm webhook URL. " +
                     "Chỉ tài khoản có quyền SYS_ADMIN mới được phép sử dụng."
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Xác nhận webhook thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
+            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập")
+    })
     public ResponseEntity<BaseResponse<Void>> handleConfirmWebhook(
             @Parameter(
                     description = "Body chứa webhookUrl cần đăng ký với PayOS",
