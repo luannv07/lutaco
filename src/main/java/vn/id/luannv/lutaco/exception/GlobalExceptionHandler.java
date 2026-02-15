@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
             ConstraintViolation<?> violation = fieldError.unwrap(ConstraintViolation.class);
             Map<String, Object> attributes = violation.getConstraintDescriptor().getAttributes();
 
-            String localizedMessage = localizationUtils.getLocalizedMessage(messageKey, attributes);
+                String localizedMessage = localizationUtils.getLocalizedMessage(messageKey, attributes);
             errors.put(fieldError.getField(), localizedMessage);
             log.warn("Validation error in field '{}': {}", fieldError.getField(), localizedMessage);
         }

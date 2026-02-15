@@ -17,9 +17,9 @@ import lombok.experimental.FieldDefaults;
 )
 public class VerifyOtpRequest {
 
-    @NotBlank(message = "{input.required}")
-    @Email(message = "{input.invalid}")
-    @Size(max = 255, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Email(message = "{validation.failed}")
+    @Size(max = 255, message = "{validation.field.too_long}")
     @Schema(
             description = "Email đã dùng để đăng ký / nhận OTP",
             example = "vanluandvlp@gmail.com",
@@ -29,7 +29,7 @@ public class VerifyOtpRequest {
     )
     String email;
 
-    @NotNull(message = "{input.required}")
+    @NotNull(message = "{validation.required}")
     @Schema(
             description = "Loại OTP cần xác thực (đăng ký, quên mật khẩu, ...)",
             example = "REGISTER",
@@ -38,8 +38,8 @@ public class VerifyOtpRequest {
     )
     String otpType;
 
-    @NotBlank(message = "{input.required}")
-    @Size(min = 6, max = 6, message = "{input.invalid}")
+    @NotBlank(message = "{validation.required}")
+    @Size(min = 6, max = 6, message = "{validation.failed}")
     @Schema(
             description = "Mã OTP gồm 6 chữ số",
             example = "123456",

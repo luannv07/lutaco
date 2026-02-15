@@ -39,7 +39,7 @@ public class UserFilterRequest extends BaseFilterRequest {
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String userStatus;
 
-    @Range(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
+    @Range(min = 0, max = 255, message = "{validation.field.size_not_in_range}")
     @Schema(
             description = "ID vai trò (role) của người dùng",
             example = "1",

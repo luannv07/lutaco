@@ -13,8 +13,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 public class MasterDictionaryDto {
 
-    @NotBlank(message = "{input.required}")
-    @Size(max = 50, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 50, message = "{validation.field.too_long}")
     @Schema(
             description = "Nhóm dữ liệu",
             example = "GENDER",
@@ -22,8 +22,8 @@ public class MasterDictionaryDto {
     )
     String category;
 
-    @NotBlank(message = "{input.required}")
-    @Size(max = 50, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 50, message = "{validation.field.too_long}")
     @Schema(
             description = "Giá trị chuẩn",
             example = "MALE",
@@ -31,8 +31,8 @@ public class MasterDictionaryDto {
     )
     String code;
 
-    @NotBlank(message = "{input.required}")
-    @Size(max = 100, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 100, message = "{validation.field.too_long}")
     @Schema(
             description = "Nhãn hiển thị",
             example = "Nam",
@@ -40,8 +40,8 @@ public class MasterDictionaryDto {
     )
     String valueVi;
 
-    @NotBlank(message = "{input.required}")
-    @Size(max = 100, message = "{input.tooLong}")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 100, message = "{validation.field.too_long}")
     @Schema(
             description = "Nhãn hiển thị",
             example = "Nam",
@@ -49,7 +49,7 @@ public class MasterDictionaryDto {
     )
     String valueEn;
 
-    @NotNull(message = "{input.required}")
+    @NotNull(message = "{validation.required}")
     @Schema(
             description = "Trạng thái hoạt động",
             example = "true",

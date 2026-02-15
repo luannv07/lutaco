@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 )
 public class UserRoleRequest {
 
-    @NotBlank(message = "{input.required}")
+    @NotBlank(message = "{validation.required}")
     @Schema(
             description = "Tên role cần gán cho người dùng",
             example = "ADMIN",
