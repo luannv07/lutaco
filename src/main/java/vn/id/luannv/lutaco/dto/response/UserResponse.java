@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
         description = "Thông tin chi tiết người dùng"
 )
 public class UserResponse {
-
+    String id;
     @Schema(
             description = "Tên đăng nhập của người dùng",
             example = "luannv"
