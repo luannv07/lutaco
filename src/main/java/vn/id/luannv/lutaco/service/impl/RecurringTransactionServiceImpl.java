@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +30,7 @@ import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -46,6 +50,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
+    @CacheEvict(value = "recurringTransactions", allEntries = true)
     public RecurringTransactionResponse create(RecurringTransactionRequest request) {
         log.info("Attempting to create a new recurring transaction with request: {}", request);
         InternalState state = createAndSaveTransaction(request);
@@ -55,6 +60,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     @Transactional
+    @CacheEvict(value = "recurringTransactions", allEntries = true)
     public void createWithCronJob(RecurringTransactionRequest request) {
         log.info("Creating recurring transaction via cron job with request: {}", request);
         InternalState state = createAndSaveTransaction(request);
@@ -64,11 +70,15 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
+    @CacheEvict(value = "recurringTransactions", allEntries = true)
     public void processOne(RecurringTransaction rt) {
         log.info("Processing single recurring transaction with ID: {}", rt.getId());
         RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
                 .getRecurringUserFieldsByTransactionId(rt.getTransaction().getId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> {
+                    log.warn("Original transaction for recurring transaction ID {} not found.", rt.getId());
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("transactionId", rt.getTransaction().getId()));
+                });
 
         InternalState state = new InternalState(rt, recurringUserFields);
         publishEvent(state, RecurringTransactionEvent.RecurringTransactionState.FREQUENCY);
@@ -81,7 +91,10 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     private InternalState createAndSaveTransaction(RecurringTransactionRequest request) {
         RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
                 .getRecurringUserFieldsByTransactionId(request.getTransactionId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> {
+                    log.warn("Original transaction for recurring transaction request {} not found.", request.getTransactionId());
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("transactionId", request.getTransactionId()));
+                });
 
         Transaction transaction = transactionRepository.getReferenceById(request.getTransactionId());
         RecurringTransaction recurringTransaction = recurringTransactionMapper.toEntity(request);
@@ -120,6 +133,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     @Override
+    @Cacheable(value = "recurringTransactions", key = "#id")
     public RecurringTransactionResponse getDetail(Long id) {
         log.info("Fetching recurring transaction details for ID: {}", id);
 
@@ -132,6 +146,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     @Override
+    @Cacheable(value = "recurringTransactions", key = "{#request, #page, #size}")
     public Page<RecurringTransactionResponse> search(RecurringTransactionFilterRequest request, Integer page, Integer size) {
         log.info("Searching recurring transactions for current user with filter: {}", request);
 
@@ -144,6 +159,8 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
+    @CachePut(value = "recurringTransactions", key = "#id")
+    @CacheEvict(value = "recurringTransactions", allEntries = true) // Evict search results
     public RecurringTransactionResponse update(Long id, RecurringTransactionRequest request) {
         log.info("Updating recurring transaction with ID: {} using request: {}", id, request);
 
@@ -165,6 +182,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
+    @CacheEvict(value = "recurringTransactions", key = "#id")
     public void deleteById(Long id) {
         log.info("Attempting to delete recurring transaction with ID: {}", id);
         RecurringTransaction recurringTransaction = recurringTransactionRepository.findByUserIdAndId(SecurityUtils.getCurrentId(), id)

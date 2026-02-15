@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponse getDetail(String id) {
         log.info("Fetching details for user with ID: {}", id);
         return userRepository.findById(id)
@@ -55,6 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "{#request, #page, #size}")
     public Page<UserResponse> search(UserFilterRequest request, Integer page, Integer size) {
         log.info("Searching users with filter: {}, page: {}, size: {}.", request, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -77,6 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CachePut(value = "users", key = "#id")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         log.info("Updating user with ID: {} with data: {}", id, request);
 
@@ -102,6 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void updateStatus(String id, UserStatusSetRequest request) {
         log.info("Updating status for user ID: {} to isActive: {}.", id, request.getIsActive());
         User user = userRepository.findById(id)
@@ -141,6 +148,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CachePut(value = "users", key = "#id")
     public void updateUserRole(String id, UserRoleRequest request) {
         log.info("Updating role for user ID: {} to role: {}.", id, request.getRoleName());
         User user = userRepository.findById(id)
@@ -160,6 +168,7 @@ public class UserServiceImpl implements UserService {
         log.info("User ID {} role updated to {}.", id, role.getName());
     }
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void updatePassword(String id, UpdatePasswordRequest request) {
         log.info("Attempting to update password for user ID: {}.", id);
 

@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
@@ -32,6 +35,7 @@ public class WalletServiceImpl implements WalletService {
     UserRepository userRepository;
 
     @Override
+    @CacheEvict(value = "wallets", key = "#root.target.currentUserId", allEntries = false)
     public Wallet create(WalletCreateRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create wallet for user ID: {}. Request: {}", userId, request.getWalletName());
@@ -57,6 +61,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
+    @CacheEvict(value = "wallets", key = "#userId", allEntries = false)
     public void createDefaultWallet(String userId) {
         log.info("Attempting to create default wallet for user ID: {}.", userId);
         User user = userRepository.findById(userId)
@@ -84,6 +89,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @CachePut(value = "wallets", key = "#walletName + #root.target.currentUserId")
+    @CacheEvict(value = "wallets", key = "#root.target.currentUserId", allEntries = false)
     public Wallet update(String walletName, WalletUpdateRequest request) {
         log.info("Attempting to update wallet '{}' for current user. Request: {}", walletName, request);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -97,6 +104,7 @@ public class WalletServiceImpl implements WalletService {
      * User xoá → INACTIVE (có thể khôi phục)
      */
     @Override
+    @CacheEvict(value = "wallets", key = "#walletName + #root.target.currentUserId", allEntries = false)
     public void deleteByUser(String walletName) {
         log.info("Attempting to soft delete wallet '{}' for current user.", walletName);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -109,6 +117,7 @@ public class WalletServiceImpl implements WalletService {
      * Admin xoá → ARCHIVED (vĩnh viễn)
      */
     @Override
+    @CacheEvict(value = "wallets", key = "#walletName + #userId", allEntries = false)
     public void archiveByAdmin(String userId, String walletName) {
         log.info("Admin attempting to archive wallet '{}' for user ID: {}.", walletName, userId);
         Wallet wallet = walletRepository
@@ -124,6 +133,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Cacheable(value = "wallets", key = "#walletName + #root.target.currentUserId")
     public Wallet getDetail(String walletName) {
         log.info("Fetching details for wallet '{}' for current user.", walletName);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -132,6 +142,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Cacheable(value = "wallets", key = "#root.target.currentUserId")
     public List<Wallet> getMyWallets() {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Fetching all wallets for current user ID: {}.", currentUserId);

@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(value = "roles", key = "#id")
     public Role getDetail(Integer id) {
         log.info("Fetching details for role with ID: {}", id);
         return roleRepository.findById(id)
@@ -44,6 +47,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(value = "roles", key = "{#name, #page, #size}")
     public Page<Role> search(String name, Integer page, Integer size) {
         log.info("Searching roles with name: '{}', page: {}, size: {}.", name, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -66,6 +70,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(value = "roles", key = "#id")
     public void deleteById(Integer id) {
         log.warn("Attempted to delete a role via deleteById method, which is not supported. ID: {}", id);
         throw new BusinessException(ErrorCode.SYSTEM_ERROR);

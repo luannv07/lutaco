@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.CategoryDto;
@@ -45,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryDto create(CategoryDto request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create category for user ID: {}. Request: {}", userId, request.getCategoryName());
@@ -90,6 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "categories", key = "{#request.categoryName, #request.categoryType, #root.target.currentUserId}")
     public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Searching categories for user ID: {} with filter: {}.", userId, request);
@@ -103,6 +108,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CachePut(value = "categories", key = "#categoryName + #root.target.currentUserId")
+    @CacheEvict(value = "categories", allEntries = true) // Evict all entries for search to reflect changes
     public CategoryDto update(String categoryName, CategoryDto request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to update category '{}' for user ID: {}. Request: {}", categoryName, userId, request);
@@ -123,6 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = "categories", key = "#categoryName + #root.target.currentUserId")
     public void deleteById(String categoryName) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to soft delete category '{}' for user ID: {}.", categoryName, userId);

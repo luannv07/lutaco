@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -47,6 +50,7 @@ public class BudgetServiceImpl implements BudgetService {
     BudgetMapper budgetMapper;
 
     @Override
+    @CacheEvict(value = "budgets", allEntries = true)
     public BudgetResponse create(BudgetRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create budget for user ID: {}", userId);
@@ -99,6 +103,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @CacheEvict(value = "budgets", key = "#id")
     public Boolean preventDangerEmail(Long id) {
         log.info("Attempting to prevent danger email for budget ID: {}", id);
         Budget budget = budgetRepository.findById(id)
@@ -128,6 +133,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @Cacheable(value = "budgets", key = "#id")
     public BudgetResponse getDetail(Long id) {
         log.info("Fetching details for budget ID: {}", id);
         Budget budget = budgetRepository.findById(id)
@@ -140,6 +146,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @Cacheable(value = "budgets", key = "{#request, #page, #size}")
     public Page<BudgetResponse> search(BudgetFilterRequest request, Integer page, Integer size) {
         log.info("Searching budgets with filter: {}, page: {}, size: {}.", request, page, size);
         Specification<Budget> spec = (root, query, criteriaBuilder) -> {
@@ -164,6 +171,8 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @CachePut(value = "budgets", key = "#id")
+    @CacheEvict(value = "budgets", allEntries = true) // Evict all entries for search to reflect changes
     public BudgetResponse update(Long id, BudgetRequest request) {
         log.info("Updating budget with ID: {} with request: {}", id, request);
         Budget existingBudget = budgetRepository.findById(id)
@@ -200,6 +209,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @CacheEvict(value = "budgets", key = "#id")
     public void deleteById(Long id) {
         log.info("Attempting to delete budget with ID: {}", id);
         Budget budget = budgetRepository.findById(id)
