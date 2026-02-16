@@ -6,6 +6,8 @@ import vn.id.luannv.lutaco.enumerate.PeriodRange;
 
 public interface DashboardService {
     DashboardResponse handleSummary(PeriodRange periodRange);
+
     void exportBasic(HttpServletResponse response, PeriodRange period);
+
     void exportAdvanced(HttpServletResponse response, PeriodRange period);
 }

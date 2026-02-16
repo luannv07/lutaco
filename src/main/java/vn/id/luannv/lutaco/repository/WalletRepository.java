@@ -9,6 +9,7 @@ import vn.id.luannv.lutaco.entity.Wallet;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, String> {
 
@@ -18,22 +19,22 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
 
     /**
      * and :amount > 0
-     *           and (
-     *                 :type = 'INCOME'
-     *                 or (:type = 'EXPENSE' and w.currentBalance >= :amount)
-     *               )
+     * and (
+     * :type = 'INCOME'
+     * or (:type = 'EXPENSE' and w.currentBalance >= :amount)
+     * )
      * Cho phép trừ âm, nó là app wallet ko phải app ngân hàng
      */
     @Modifying
     @Query("""
-        update Wallet w
-        set w.currentBalance =
-            case 
-                when :type = 'EXPENSE' then w.currentBalance - :amount
-                when :type = 'INCOME' then w.currentBalance + :amount
-            end
-        where w.id = :walletId
-""")
+                    update Wallet w
+                    set w.currentBalance =
+                        case 
+                            when :type = 'EXPENSE' then w.currentBalance - :amount
+                            when :type = 'INCOME' then w.currentBalance + :amount
+                        end
+                    where w.id = :walletId
+            """)
     void updateBalance(
             @Param("walletId") String walletId,
             @Param("amount") Long amount,

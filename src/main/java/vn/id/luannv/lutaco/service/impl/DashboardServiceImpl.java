@@ -46,15 +46,14 @@ import static vn.id.luannv.lutaco.export.ExportContainer.createMetaRow;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DashboardServiceImpl implements DashboardService {
+    public static int bigDecimalScale = 4;
     WalletRepository walletRepository;
     TransactionRepository transactionRepository;
     InsightService insightService;
 
-    public static int bigDecimalScale = 4;
-
     @Override
     @Transactional
-    @Cacheable(value = "dashboardSummaries", key = "{#range, #root.target.currentUserId}")
+    @Cacheable(value = "dashboardSummaries", key = "{#range, @securityPermission.getCurrentUserId()}")
     public DashboardResponse handleSummary(PeriodRange range) {
         log.info("Generating dashboard summary for period range: {}", range);
         String currentUserId = SecurityUtils.getCurrentId();

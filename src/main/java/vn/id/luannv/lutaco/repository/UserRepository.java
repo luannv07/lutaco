@@ -16,14 +16,14 @@ import java.util.Optional;
 @Transactional
 public interface UserRepository extends JpaRepository<User, String> {
     @Query("""
-        select u from User u
-        where (:#{#request.username} is null or lower(u.username) like concat('%', lower(:#{#request.username}), '%'))
-            and (:#{#request.address} is null or lower(u.address) like concat('%', lower(:#{#request.address}), '%' ))
-            and (:#{#request.userStatus} is null or u.userStatus = :#{#request.userStatus})
-            and (:#{#request.roleId} is null or u.role.id = :#{#request.roleId})
-                    and (:#{#request.userPlan} is null or lower(u.userPlan) like concat('%', lower(:#{#request.userPlan}), '%'))
-        order by u.createdDate desc
-    """)
+                select u from User u
+                where (:#{#request.username} is null or lower(u.username) like concat('%', lower(:#{#request.username}), '%'))
+                    and (:#{#request.address} is null or lower(u.address) like concat('%', lower(:#{#request.address}), '%' ))
+                    and (:#{#request.userStatus} is null or u.userStatus = :#{#request.userStatus})
+                    and (:#{#request.roleId} is null or u.role.id = :#{#request.roleId})
+                            and (:#{#request.userPlan} is null or lower(u.userPlan) like concat('%', lower(:#{#request.userPlan}), '%'))
+                order by u.createdDate desc
+            """)
     Page<User> findByFilters(@Param("request") UserFilterRequest request, Pageable pageable);
 
     boolean existsByEmail(String email);
@@ -32,5 +32,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByUsername(String username);
 
-    Optional<User>  findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

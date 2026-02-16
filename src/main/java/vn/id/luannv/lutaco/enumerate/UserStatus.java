@@ -6,8 +6,8 @@ public enum UserStatus {
     PENDING_VERIFICATION,
     ACTIVE,
     DISABLED_BY_USER,
-    BANNED
-    ;
+    BANNED;
+
     public static boolean isValid(String userStatus) {
         return Arrays.stream(UserStatus.values()).anyMatch(u -> u.name().equals(userStatus));
     }

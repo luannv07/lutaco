@@ -6,6 +6,7 @@ import vn.id.luannv.lutaco.entity.MasterDictionary;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 
 public interface MasterDictionaryRepository extends JpaRepository<MasterDictionary, Integer> {

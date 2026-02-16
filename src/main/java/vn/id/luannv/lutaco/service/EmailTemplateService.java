@@ -20,8 +20,6 @@ import java.time.format.DateTimeFormatter;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailTemplateService {
 
-    public record EmailFields(String to, String subject, String body) {}
-
     private static String buildEmailLayout(String title, String content, String footerInfo) {
         return "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>"
                 // General
@@ -78,18 +76,18 @@ public class EmailTemplateService {
             subject = String.format("LUTACO | Cảnh báo: Ngân sách '%s' đã vượt ngưỡng nguy hiểm!", budget.getName());
             greeting = "Cảnh báo khẩn cấp,";
             paragraph = String.format(
-                "Ngân sách <b>%s</b> của bạn đã đạt <b>%.2f%%</b>, vượt qua ngưỡng nguy hiểm (%.0f%%). " +
-                "Vui lòng xem xét lại các khoản chi tiêu của mình ngay lập tức.",
-                budget.getName(), percentage, threshold
+                    "Ngân sách <b>%s</b> của bạn đã đạt <b>%.2f%%</b>, vượt qua ngưỡng nguy hiểm (%.0f%%). " +
+                            "Vui lòng xem xét lại các khoản chi tiêu của mình ngay lập tức.",
+                    budget.getName(), percentage, threshold
             );
         } else { // WARNING
             title = "Ngân Sách Sắp Đạt Giới Hạn";
             subject = String.format("LUTACO | Cảnh báo: Ngân sách '%s' sắp đạt giới hạn", budget.getName());
             greeting = "Lưu ý quan trọng,";
             paragraph = String.format(
-                "Ngân sách <b>%s</b> của bạn đã đạt <b>%.2f%%</b>, vượt qua ngưỡng cảnh báo (%.0f%%). " +
-                "Hãy chú ý hơn đến các khoản chi tiêu của mình nhé.",
-                budget.getName(), percentage, threshold
+                    "Ngân sách <b>%s</b> của bạn đã đạt <b>%.2f%%</b>, vượt qua ngưỡng cảnh báo (%.0f%%). " +
+                            "Hãy chú ý hơn đến các khoản chi tiêu của mình nhé.",
+                    budget.getName(), percentage, threshold
             );
         }
 
@@ -181,5 +179,8 @@ public class EmailTemplateService {
             case MONTHLY -> "Hàng tháng";
             case YEARLY -> "Hàng năm";
         };
+    }
+
+    public record EmailFields(String to, String subject, String body) {
     }
 }

@@ -17,10 +17,10 @@ import java.util.Optional;
 public interface RecurringTransactionRepository extends JpaRepository<RecurringTransaction, Long> {
 
     @Query("""
-    select rt from RecurringTransaction rt
-    where rt.transaction.userId = :userId
-    and (:#{#request.frequentType} is null or rt.frequentType = :#{#request.frequentType})
-""")
+                select rt from RecurringTransaction rt
+                where rt.transaction.userId = :userId
+                and (:#{#request.frequentType} is null or rt.frequentType = :#{#request.frequentType})
+            """)
     Page<RecurringTransaction> findByFilters(
             @Param("request") RecurringTransactionFilterRequest request,
             @Param("userId") String userId,
@@ -28,10 +28,10 @@ public interface RecurringTransactionRepository extends JpaRepository<RecurringT
     );
 
     @Query("""
-        select rt from RecurringTransaction rt
-        where rt.transaction.userId = :userId
-        and rt.id = :id
-    """)
+                select rt from RecurringTransaction rt
+                where rt.transaction.userId = :userId
+                and rt.id = :id
+            """)
     Optional<RecurringTransaction> findByUserIdAndId(@Param("userId") String userId, @Param("id") Long id);
 
     List<RecurringTransaction> findAllByNextDateBefore(LocalDate date);

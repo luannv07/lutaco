@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return SecurityConstants.PUBLIC_URLS_SHOULD_NOT_AUTH
-                .stream().anyMatch(uri ->  request.getRequestURI().endsWith(uri));
+                .stream().anyMatch(uri -> request.getRequestURI().endsWith(uri));
     }
 
     @Override
@@ -80,8 +80,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     customUserDetails.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("Successfully authenticated user: {} for request URI: {}", username, request.getRequestURI());
-
             filterChain.doFilter(request, response);
         } catch (AuthenticationException ae) {
             SecurityContextHolder.clearContext();

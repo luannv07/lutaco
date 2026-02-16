@@ -30,7 +30,8 @@ public class UserActivityLogger {
     PublicAuditValidate publicAuditValidate;
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
-    public void restController() {}
+    public void restController() {
+    }
 
     @Around("restController()")
     public Object logUserActivity(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -71,8 +72,6 @@ public class UserActivityLogger {
 
         return result;
     }
-
-
 
 
 }

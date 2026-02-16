@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +49,7 @@ public class BudgetServiceImpl implements BudgetService {
     BudgetMapper budgetMapper;
 
     @Override
-    @CacheEvict(value = "budgets", allEntries = true)
+    @CacheEvict(value = "budgets", key = "@securityPermission.getCurrentUserId()")
     public BudgetResponse create(BudgetRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create budget for user ID: {}", userId);
@@ -146,7 +145,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    @Cacheable(value = "budgets", key = "{#request, #page, #size}")
+    @Cacheable(value = "budgetsList", key = "{#request, #page, #size}")
     public Page<BudgetResponse> search(BudgetFilterRequest request, Integer page, Integer size) {
         log.info("Searching budgets with filter: {}, page: {}, size: {}.", request, page, size);
         Specification<Budget> spec = (root, query, criteriaBuilder) -> {
@@ -171,8 +170,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    @CachePut(value = "budgets", key = "#id")
-    @CacheEvict(value = "budgets", allEntries = true) // Evict all entries for search to reflect changes
+    @CacheEvict(value = "budgets", key = "#id")
     public BudgetResponse update(Long id, BudgetRequest request) {
         log.info("Updating budget with ID: {} with request: {}", id, request);
         Budget existingBudget = budgetRepository.findById(id)

@@ -26,4 +26,8 @@ public class SecurityPermission {
     public boolean isPremiumUser() {
         return SecurityUtils.getCurrentUserPlan() == UserPlan.PREMIUM;
     }
+
+    public String getCurrentUserId() {
+        return SecurityUtils.getCurrentId();
+    }
 }

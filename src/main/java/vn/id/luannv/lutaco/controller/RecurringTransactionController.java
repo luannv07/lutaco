@@ -45,7 +45,7 @@ public class RecurringTransactionController {
     })
     public ResponseEntity<BaseResponse<Page<RecurringTransactionResponse>>> search(
             @Parameter(description = "Điều kiện lọc và phân trang giao dịch định kỳ")
-            @Valid  @ModelAttribute RecurringTransactionFilterRequest request
+            @Valid @ModelAttribute RecurringTransactionFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(

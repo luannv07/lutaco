@@ -8,11 +8,13 @@ import vn.id.luannv.lutaco.enumerate.FrequentType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 public class RecurringTransactionEvent {
     public enum RecurringTransactionState {
         INITIALIZER,
         FREQUENCY
     }
+
     @Builder
     @Data
     @NoArgsConstructor

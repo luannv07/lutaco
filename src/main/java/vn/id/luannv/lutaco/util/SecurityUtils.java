@@ -43,6 +43,7 @@ public class SecurityUtils {
         log.error("Principal is not of type CustomUserDetails. Actual type: {}", authentication.getPrincipal().getClass().getName());
         throw new BusinessException(ErrorCode.UNAUTHORIZED);
     }
+
     public static String resolveClientIp(HttpServletRequest request) {
         String[] headers = {
                 "X-Forwarded-For",

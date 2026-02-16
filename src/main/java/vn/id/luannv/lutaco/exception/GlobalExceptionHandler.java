@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
             ConstraintViolation<?> violation = fieldError.unwrap(ConstraintViolation.class);
             Map<String, Object> attributes = violation.getConstraintDescriptor().getAttributes();
 
-                String localizedMessage = localizationUtils.getLocalizedMessage(messageKey, attributes);
+            String localizedMessage = localizationUtils.getLocalizedMessage(messageKey, attributes);
             errors.put(fieldError.getField(), localizedMessage);
             log.warn("Validation error in field '{}': {}", fieldError.getField(), localizedMessage);
         }
@@ -78,6 +78,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseResponse.error(ErrorCode.PERSISTENCE_STATE_ERROR, message, null));
     }
+
     @ExceptionHandler(BindException.class)
     public ResponseEntity<BaseResponse<?>> handleBindException(
             BindException ex) {
@@ -88,6 +89,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, message, null));
     }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<BaseResponse<?>> handleTypeMismatch(
             MethodArgumentTypeMismatchException ex) {
@@ -96,6 +98,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, ex.getMessage(), null));
     }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<BaseResponse<Void>> handleNoResourceFoundException(NoResourceFoundException ex) {
         log.warn("Requested resource not found: {}", ex.getResourcePath());

@@ -60,11 +60,11 @@ public interface OtpRepository extends JpaRepository<Otp, Integer> {
             )
             """, nativeQuery = true)
     int insertIfNotExists(@Param("code") String code,
-                           @Param("otpType") String otpType,
-                           @Param("expiryTime") LocalDateTime expiryTime,
-                           @Param("userId") String userId,
-                           @Param("maxResend") int maxResend,
-                           @Param("maxAttempt") int maxAttempt);
+                          @Param("otpType") String otpType,
+                          @Param("expiryTime") LocalDateTime expiryTime,
+                          @Param("userId") String userId,
+                          @Param("maxResend") int maxResend,
+                          @Param("maxAttempt") int maxAttempt);
 
     @Modifying
     @Query(value = """

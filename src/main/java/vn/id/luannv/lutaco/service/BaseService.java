@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 
 /**
  * Base interface service for system.
+ *
  * @param <E> FilterRequestDTO
  * @param <R> ResponseDTO
  * @param <T> RequestDTO
@@ -11,8 +12,12 @@ import org.springframework.data.domain.Page;
  */
 public interface BaseService<E, R, T, I> {
     R create(T request);
+
     R getDetail(I id);
+
     Page<R> search(E request, Integer page, Integer size);
+
     R update(I id, T request);
+
     void deleteById(I id);
 }

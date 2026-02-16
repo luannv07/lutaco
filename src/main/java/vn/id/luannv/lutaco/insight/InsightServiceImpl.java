@@ -24,6 +24,7 @@ import static vn.id.luannv.lutaco.service.impl.DashboardServiceImpl.bigDecimalSc
 @RequiredArgsConstructor
 public class InsightServiceImpl implements InsightService {
     InsightThresholdConfig insightConfig;
+
     @Override
     public List<InsightDto> generate(InsightContext ctx) {
         List<InsightDto> insights = new ArrayList<>();
@@ -35,6 +36,7 @@ public class InsightServiceImpl implements InsightService {
 
         return insights;
     }
+
     private InsightDto buildInsight(
             InsightDto.InsightLevel level,
             InsightDto.InsightCode code,
@@ -50,6 +52,7 @@ public class InsightServiceImpl implements InsightService {
                 .defaultColor(level.getColor())
                 .build();
     }
+
     private Optional<InsightDto> expenseInsight(Long thisMonth, Long lastMonth) {
         if (lastMonth == null || lastMonth == 0) return Optional.empty();
 
@@ -84,6 +87,7 @@ public class InsightServiceImpl implements InsightService {
 
         return Optional.empty();
     }
+
     private Optional<InsightDto> incomeInsight(Long thisMonth, Long lastMonth) {
         if (lastMonth == null || lastMonth == 0) return Optional.empty();
 
@@ -109,6 +113,7 @@ public class InsightServiceImpl implements InsightService {
 
         return Optional.empty();
     }
+
     private Optional<InsightDto> balanceInsight(Long balance) {
         if (balance < insightConfig.getBalance().getNegative()) {
             return Optional.ofNullable(buildInsight(
@@ -120,6 +125,7 @@ public class InsightServiceImpl implements InsightService {
         }
         return Optional.empty();
     }
+
     private Optional<InsightDto> categoryInsight(List<CategoryExpenseResponse> categories) {
         return categories.stream()
                 .max(Comparator.comparing(CategoryExpenseResponse::getRatioNormalized))

@@ -15,21 +15,23 @@ import java.util.Optional;
 public interface BudgetRepository extends JpaRepository<Budget, Long>, JpaSpecificationExecutor<Budget> {
     /**
      * Counts the number of budgets associated with a specific user.
+     *
      * @param user The user entity.
      * @return The total number of budgets for the user.
      */
     long countByUser(User user);
 
     @Query("""
-    select b from Budget b
-    where b.user.id = :userId
-      and b.category.id = :categoryId
-      and :date between b.startDate and b.endDate
-""")
+                select b from Budget b
+                where b.user.id = :userId
+                  and b.category.id = :categoryId
+                  and :date between b.startDate and b.endDate
+            """)
     Optional<Budget> findActiveBudget(
             String userId,
             String categoryId,
             LocalDate date
     );
+
     boolean existsByUserAndCategory(User user, Category category);
 }

@@ -33,7 +33,8 @@ public class TimeUtils {
      * Convert từ UTC LocalDateTime sang String theo Timezone của User
      * Dùng cho việc hiển thị email, xuất file, sms...
      * * @param utcDateTime Thời gian gốc (đang lưu là UTC trong DB)
-     * @param zoneId Timezone của user (VD: "Asia/Ho_Chi_Minh")
+     *
+     * @param zoneId  Timezone của user (VD: "Asia/Ho_Chi_Minh")
      * @param pattern Định dạng mong muốn (null sẽ lấy mặc định)
      * @return String thời gian đã convert
      */

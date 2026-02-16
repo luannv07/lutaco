@@ -17,11 +17,11 @@ public interface CategoryOverrideRepository extends JpaRepository<CategoryOverri
 
     @Modifying
     @Query("""
-        update CategoryOverride co
-        set co.disabled = false
-        where co.category.categoryName = :name
-          and co.userId = :userId
-    """)
+                update CategoryOverride co
+                set co.disabled = false
+                where co.category.categoryName = :name
+                  and co.userId = :userId
+            """)
     void restoreByCategoryName(@Param("name") String name,
-                              @Param("userId") String userId);
+                               @Param("userId") String userId);
 }

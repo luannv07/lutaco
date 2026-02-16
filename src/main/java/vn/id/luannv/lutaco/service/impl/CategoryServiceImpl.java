@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -40,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findByParentId(categoryId)
                 .stream().map(categoryMapper::toDto).toList();
     }
+
     private CategoryDto buildDto(Category entity) {
         CategoryDto dto = categoryMapper.toDto(entity);
         dto.setChildren(getChildrenById(entity.getId()));
@@ -48,12 +48,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "categories", allEntries = true)
+    @CacheEvict(value = "categories", key = "@securityPermission.getCurrentUserId()")
     public CategoryDto create(CategoryDto request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create category for user ID: {}. Request: {}", userId, request.getCategoryName());
 
-        // Check if a system category was previously disabled by this user and re-enable it
         if (categoryOverrideRepository.existsByCategory_CategoryNameAndUserId(request.getCategoryName(), userId)) {
             categoryOverrideRepository.restoreByCategoryName(request.getCategoryName(), userId);
             log.info("Restored previously disabled system category '{}' for user ID {}.", request.getCategoryName(), userId);
@@ -65,7 +64,6 @@ public class CategoryServiceImpl implements CategoryService {
             return buildDto(entity);
         }
 
-        // Create a brand new category
         Category entity = categoryMapper.toEntity(request);
         categoryRepository.findById(request.getParentId())
                 .ifPresent(entity::setParent);
@@ -88,28 +86,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "categoriesList", key = "{#request, #page, #size, @securityPermission.getCurrentUserId()}")
     public Page<CategoryDto> search(CategoryFilterRequest request, Integer page, Integer size) {
         log.warn("Method search(CategoryFilterRequest request, Integer page, Integer size) is not implemented for CategoryService. Use searchNoPag for details.");
         return null; // Or throw an UnsupportedOperationException
     }
 
     @Override
-    @Cacheable(value = "categories", key = "{#request.categoryName, #request.categoryType, #root.target.currentUserId}")
-    public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
-        String userId = SecurityUtils.getCurrentId();
-        log.info("Searching categories for user ID: {} with filter: {}.", userId, request);
-        CategoryType categoryType = EnumUtils.from(CategoryType.class, request.getCategoryType());
-
-        List<Category> categories = categoryRepository
-                .advancedSearch(request.getCategoryName(), categoryType, userId);
-
-        log.info("Found {} categories for user ID {} matching the criteria.", categories.size(), userId);
-        return categories.stream().map(this::buildDto).toList();
-    }
-
-    @Override
-    @CachePut(value = "categories", key = "#categoryName + #root.target.currentUserId")
-    @CacheEvict(value = "categories", allEntries = true) // Evict all entries for search to reflect changes
+    @CacheEvict(value = "categories", key = "@securityPermission.getCurrentUserId()")
     public CategoryDto update(String categoryName, CategoryDto request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to update category '{}' for user ID: {}. Request: {}", categoryName, userId, request);
@@ -130,7 +114,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @CacheEvict(value = "categories", key = "#categoryName + #root.target.currentUserId")
+    @Cacheable(value = "categoriesList", key = "{#request.categoryName, #request.categoryType, @securityPermission.getCurrentUserId()}")
+    public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
+        String userId = SecurityUtils.getCurrentId();
+        log.info("Searching categories for user ID: {} with filter: {}.", userId, request);
+        CategoryType categoryType = EnumUtils.from(CategoryType.class, request.getCategoryType());
+
+        List<Category> categories = categoryRepository
+                .advancedSearch(request.getCategoryName(), categoryType, userId);
+
+        log.info("Found {} categories for user ID {} matching the criteria.", categories.size(), userId);
+        return categories.stream().map(this::buildDto).toList();
+    }
+
+    @Override
+    @CacheEvict(value = "categories", key = "@securityPermission.getCurrentUserId()")
     public void deleteById(String categoryName) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to soft delete category '{}' for user ID: {}.", categoryName, userId);

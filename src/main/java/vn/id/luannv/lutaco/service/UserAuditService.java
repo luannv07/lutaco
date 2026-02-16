@@ -8,6 +8,8 @@ import java.time.LocalDate;
 
 public interface UserAuditService {
     Page<UserAuditLog> viewUserAuditLogs(UserAuditFilterRequest filter);
+
     void deleteUserAuditLogs(UserAuditFilterRequest filter);
+
     Long manualCleanup(LocalDate startDate, LocalDate endDate);
 }

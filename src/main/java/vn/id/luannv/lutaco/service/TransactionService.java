@@ -11,7 +11,9 @@ public interface TransactionService extends
     void deleteByIdAndWalletId(String transactionId, String walletId);
 
     void restoreTransaction(String id, String walletId);
+
     void autoCreateTransactionWithCronJob(String transactionId, String userId);
+
     TransactionResponse customCreate(TransactionRequest request, String userId);
 
     List<TransactionResponse> createBulk(List<TransactionRequest> requests, String currentId);

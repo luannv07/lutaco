@@ -125,9 +125,9 @@ public class AuthServiceImpl implements AuthService {
 
         applicationEventPublisher.publishEvent(
                 new UserRegisteredEvent(
-                    entity.getUsername(),
-                    entity.getEmail(),
-                    entity.getId()
+                        entity.getUsername(),
+                        entity.getEmail(),
+                        entity.getId()
                 )
         );
         log.debug("UserRegisteredEvent published for user ID: {}", entity.getId());

@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
@@ -51,8 +50,7 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
     }
 
     @Override
-    @CachePut(value = "masterDictionary", key = "#id")
-    @CacheEvict(value = "masterDictionary", key = "#dto.category", allEntries = false)
+    @CacheEvict(value = "masterDictionary", key = "#dto.category")
     public MasterDictionaryDto update(Integer id, MasterDictionaryDto dto) {
         MasterDictionary entity = repository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));

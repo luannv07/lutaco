@@ -167,6 +167,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("User ID {} role updated to {}.", id, role.getName());
     }
+
     @Override
     @CacheEvict(value = "users", key = "#id")
     public void updatePassword(String id, UpdatePasswordRequest request) {
@@ -190,7 +191,7 @@ public class UserServiceImpl implements UserService {
 
         boolean isAdmin =
                 currentUser.getRole().getName().equals(UserType.ADMIN.name()) ||
-                currentUser.getRole().getName().equals(UserType.SYS_ADMIN.name());
+                        currentUser.getRole().getName().equals(UserType.SYS_ADMIN.name());
 
         boolean isSelf = currentUser.getId().equals(id);
 

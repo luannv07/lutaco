@@ -53,7 +53,7 @@ public class PayOSWebhookController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = PayOsWebhookRequest.class))
             )
-            @Valid  @RequestBody PayOsWebhookRequest request
+            @Valid @RequestBody PayOsWebhookRequest request
     ) {
         log.info("Received PayOS webhook request: {}", request);
         try {

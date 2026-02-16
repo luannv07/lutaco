@@ -68,6 +68,7 @@ public class BudgetUpdateListener {
         log.info("Budget ID: {} successfully updated. New actual amount: {}, New percentage: {}",
                 budget.getId(), newActualAmount, budget.getPercentage());
     }
+
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleTransactionDeletedEvent(TransactionDeletedEvent event) {
         Transaction transaction = event.getTransaction();
@@ -103,6 +104,7 @@ public class BudgetUpdateListener {
         log.info("Budget ID: {} successfully updated after transaction deletion. New actual amount: {}, New percentage: {}",
                 budget.getId(), newActualAmount, newPercentage);
     }
+
     private BudgetStatus updateStatus(float percentage) {
         if (percentage > BudgetStatus.DANGER.getPercentage())
             return BudgetStatus.DANGER;

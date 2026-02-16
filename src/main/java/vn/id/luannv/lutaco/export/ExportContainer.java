@@ -14,22 +14,6 @@ import java.time.LocalDateTime;
 @UtilityClass
 public class ExportContainer {
 
-    public record ExportContext(
-            String author,
-            String authorId,
-            PeriodWindow window,
-            LocalDateTime exportedAt,
-            String range
-    ) {}
-
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ExcelStyles {
-        XSSFCellStyle bold;
-        XSSFCellStyle centerBold;
-        XSSFCellStyle money;
-    }
-
     public static ExcelStyles createCommonStyles(XSSFWorkbook workbook) {
         XSSFFont boldFont = workbook.createFont();
         boldFont.setBold(true);
@@ -80,6 +64,23 @@ public class ExportContainer {
                 new CellRangeAddress(rowIdx, rowIdx, fromCol, toCol)
         );
         return rowIdx + 1;
+    }
+
+    public record ExportContext(
+            String author,
+            String authorId,
+            PeriodWindow window,
+            LocalDateTime exportedAt,
+            String range
+    ) {
+    }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class ExcelStyles {
+        XSSFCellStyle bold;
+        XSSFCellStyle centerBold;
+        XSSFCellStyle money;
     }
 
 }

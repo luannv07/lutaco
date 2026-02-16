@@ -43,7 +43,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
     })
     public ResponseEntity<BaseResponse<List<CategoryDto>>> search(
-            @Valid  @ModelAttribute CategoryFilterRequest request
+            @Valid @ModelAttribute CategoryFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(

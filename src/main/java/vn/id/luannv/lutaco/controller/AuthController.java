@@ -111,7 +111,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
             @ApiResponse(responseCode = "401", description = "Refresh token không hợp lệ hoặc đã hết hạn")
     })
-    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken( @Valid @RequestBody RefreshTokenRequest refreshToken) {
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshToken) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         authService.refreshToken(refreshToken.getRefreshToken()),

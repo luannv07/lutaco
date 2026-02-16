@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.entity.InvalidatedToken;
 
 import java.util.Date;
+
 @Repository
 public interface InvalidatedTokenRepository extends JpaRepository<InvalidatedToken, Integer> {
 
