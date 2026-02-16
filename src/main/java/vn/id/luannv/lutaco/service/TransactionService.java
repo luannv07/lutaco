@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.service;
 
+import jakarta.validation.Valid;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.TransactionRequest;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
@@ -17,4 +18,6 @@ public interface TransactionService extends
     TransactionResponse customCreate(TransactionRequest request, String userId);
 
     List<TransactionResponse> createBulk(List<TransactionRequest> requests, String currentId);
+
+    void deleteBulk(@Valid List<String> ids, String currentId);
 }

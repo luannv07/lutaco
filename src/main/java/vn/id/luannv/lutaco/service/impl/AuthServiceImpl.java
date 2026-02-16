@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthenticateResponse login(LoginRequest request) {
         log.info("Attempting to log in user: {}", request.getUsername());
 
-        User entity = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> {
+        User entity = userRepository.findByUsername(request.getUsername().toLowerCase()).orElseThrow(() -> {
             log.warn("Login failed for user {}: User not found.", request.getUsername());
             return new BusinessException(ErrorCode.LOGIN_FAILED);
         });

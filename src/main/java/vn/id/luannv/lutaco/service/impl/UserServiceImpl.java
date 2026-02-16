@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
     public void updateStatus(String id, UserStatusSetRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+        log.info("{}, {}", SecurityUtils.getCurrentRoleName(), UserType.USER.name());
         if (SecurityUtils.getCurrentRoleName().equals(UserType.USER.name())) {
             user.setUserStatus(UserStatus.DISABLED_BY_USER);
             return;
@@ -141,79 +142,32 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "users", key = "#id")
     @Transactional
     public void updateUserRole(String id, UserRoleRequest request) {
-        log.info("Updating role for user ID: {} to role: {}.", id, request.getRoleName());
         User user = userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User with ID {} not found for role update.", id);
-                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
-                });
-        if (user.getRole().getName().equals(request.getRoleName())) {
-            log.info("System admin can change their own role. [username: {}]", SecurityUtils.getCurrentUsername());
-            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
-        }
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         Role role = roleRepository.findByName(request.getRoleName())
-                .orElseThrow(() -> {
-                    log.warn("Role '{}' not found for role update.", request.getRoleName());
-                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
-                });
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         user.setRole(role);
         userRepository.save(user);
-        log.info("User ID {} role updated to {}.", id, role.getName());
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "users", key = "#id")
     public void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime) {
-        log.info("Attempting to update password for user ID: {}.", id);
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword()))
+            throw new BusinessException(ErrorCode.PASSWORD_CONFIRM_NOT_MATCH);
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User with ID {} not found for password update.", id);
-                    return new BusinessException(
-                            ErrorCode.ENTITY_NOT_FOUND,
-                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage())
-                    );
-                });
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        String currentRoleName = SecurityUtils.getCurrentRoleName();
 
-        User currentUser = userRepository
-                .findByUsername(SecurityUtils.getCurrentUsername())
-                .orElseThrow(() -> {
-                    log.error("Current authenticated user not found in repository during password update.");
-                    return new BusinessException(ErrorCode.UNAUTHORIZED);
-                });
-
-        boolean isAdmin =
-                currentUser.getRole().getName().equals(UserType.ADMIN.name()) ||
-                        currentUser.getRole().getName().equals(UserType.SYS_ADMIN.name());
-
-        boolean isSelf = currentUser.getId().equals(id);
-
-        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
-            log.warn("Password update failed for user ID {}: New password and confirmation do not match.", id);
-            throw new BusinessException(ErrorCode.PASSWORD_CONFIRM_NOT_MATCH);
+        if (currentRoleName.equals(UserType.SYS_ADMIN.name()) || currentRoleName.equals(UserType.ADMIN.name())
+                || (currentRoleName.equals(UserType.USER.name()) && passwordEncoder.matches(request.getOldPassword(), user.getPassword()))) {
+            user.setPassword(request.getNewPassword());
+            userRepository.save(user);
+            invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
+            return;
         }
-
-        if (!isAdmin && isSelf) {
-            if (!passwordEncoder.matches(
-                    request.getOldPassword(),
-                    user.getPassword()
-            )) {
-                log.warn("Password update failed for user ID {}: Invalid old password provided.", id);
-                throw new BusinessException(ErrorCode.INVALID_OLD_PASSWORD);
-            }
-        }
-
-        if (!isAdmin && !isSelf) {
-            log.warn("Unauthorized attempt to change password for user ID {} by user {}.", id, currentUser.getUsername());
-            throw new BusinessException(ErrorCode.FORBIDDEN);
-        }
-
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
-        invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
-        log.info("Password successfully updated for user ID {}.", id);
+        throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
     }
 }

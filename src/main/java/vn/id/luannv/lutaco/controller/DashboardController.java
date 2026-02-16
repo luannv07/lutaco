@@ -88,7 +88,7 @@ public class DashboardController {
             @ApiResponse(responseCode = "403", description = "Yêu cầu quyền Premium")
     })
     @GetMapping("/export/advanced")
-    @PreAuthorize("@securityPermission.isPremiumUser()")
+    @PreAuthorize("isAuthenticated() and @securityPermission.isActive() and @securityPermission.isPremiumUser()")
     public void exportAdvanced(
             HttpServletResponse response,
             @RequestParam(defaultValue = "LAST_1_MONTH") String period

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,7 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 import java.util.Date;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -33,15 +35,15 @@ import java.util.Date;
         name = "User",
         description = "API quản lý người dùng hệ thống (tìm kiếm, cập nhật thông tin, phân quyền, trạng thái)"
 )
-@PreAuthorize("isAuthenticated()")
 public class UserController {
 
     UserService userService;
     JwtService jwtService;
 
     @GetMapping
-    @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.isActive()")
     @Operation(
+
             summary = "Lấy danh sách người dùng",
             description = "Tìm kiếm và phân trang danh sách người dùng theo các tiêu chí lọc"
     )
@@ -72,6 +74,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
             @ApiResponse(responseCode = "404", description = "Không tìm thấy người dùng")
     })
+    @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<UserResponse>> getMe() {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -81,9 +84,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize(
-            "hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id and @securityPermission.isActive()"
-    )
+    @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.isActive()")
     @Operation(
             summary = "Lấy chi tiết người dùng",
             description = "Lấy thông tin chi tiết người dùng theo ID"
@@ -133,7 +134,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/role")
-    @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN') and @securityPermission.isActive()")
     @Operation(
             summary = "Cập nhật quyền người dùng",
             description = "Thay đổi role của người dùng (chỉ SYS_ADMIN)"

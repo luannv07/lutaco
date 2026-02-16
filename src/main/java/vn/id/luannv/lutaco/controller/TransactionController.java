@@ -132,6 +132,28 @@ public class TransactionController {
                 ));
     }
 
+    @PutMapping("/bulk")
+    @Operation(
+            summary = "Xoá nhiều giao dịch cùng lúc",
+            description = "Xoá nhiều giao dịch cho người dùng hiện tại trong một lần gọi API"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Xoá hàng loạt giao dịch thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
+    public ResponseEntity<BaseResponse<Void>> deleteBulk(
+            @Valid
+            @Parameter(description = "Danh sách thông tin giao dịch cần xoá")
+            @RequestBody List<String> ids
+    ) {
+        transactionService.deleteBulk(ids, SecurityUtils.getCurrentId());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(BaseResponse.success(
+                        "Tạo hàng loạt giao dịch thành công."
+                ));
+    }
+
     @PutMapping("/{id}")
     @Operation(
             summary = "Cập nhật giao dịch",

@@ -33,9 +33,7 @@ import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -93,7 +91,7 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponse> createBulk(List<TransactionRequest> requests, String userId) {
         log.info("Attempting to create {} bulk transactions for user ID: {}.", requests.size(), userId);
 
-        List<Transaction> transactionsToSave = new ArrayList<>();
+        Set<Transaction> transactionsToSave = new HashSet<>();
         for (TransactionRequest request : requests) {
             Category category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> {
@@ -123,6 +121,20 @@ public class TransactionServiceImpl implements TransactionService {
         return savedTransactions.stream()
                 .map(transactionMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteBulk(List<String> ids, String currentId) {
+        Set<Transaction> transactionsToSave = new HashSet<>();
+        for (String id : ids) {
+            transactionRepository.findById(id).ifPresent(transaction -> {
+                transaction.setDeletedAt(LocalDateTime.now());
+                transactionsToSave.add(transaction);
+            });
+        }
+        transactionRepository.saveAll(transactionsToSave);
+        transactionsToSave.forEach(t -> eventPublisher.publishEvent(new TransactionDeletedEvent(this, t)));
     }
 
     @Override
