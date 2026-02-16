@@ -58,7 +58,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"transactions", "dashboardSummaries", "categoryExpenses"}, key = "#userId")
     public TransactionResponse customCreate(TransactionRequest request, String userId) {
         log.info("Attempting to create a custom transaction for user ID: {}. Request: {}", userId, request);
 
@@ -91,7 +90,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"transactions", "dashboardSummaries", "categoryExpenses"}, key = "#userId")
     public List<TransactionResponse> createBulk(List<TransactionRequest> requests, String userId) {
         log.info("Attempting to create {} bulk transactions for user ID: {}.", requests.size(), userId);
 
@@ -129,7 +127,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"transactions", "dashboardSummaries", "categoryExpenses"}, key = "#userId")
     public void autoCreateTransactionWithCronJob(String transactionId, String userId) {
         log.info("Auto-creating transaction via cron job for recurring transaction ID: {} for user ID: {}.", transactionId, userId);
 
@@ -185,7 +182,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Cacheable(value = "transactions",
-            key = "#id + '_' + @securityPermission.getCurrentUserId()")
+            key = "#id + @securityPermission.getCurrentUserId()")
     public TransactionResponse getDetail(String id) {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Fetching details for transaction ID: {} for user ID: {}.", id, currentUserId);
@@ -203,8 +200,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Cacheable(value = "transactions",
-            key = "{#request, #page, #size, @securityPermission.getCurrentUserId()}")
     public Page<TransactionResponse> search(TransactionFilterRequest request, Integer page, Integer size) {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Searching transactions for user ID: {} with filter: {}, page: {}, size: {}.", currentUserId, request, page, size);
@@ -220,7 +215,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     @CacheEvict(value = "transactions",
-            key = "#id + '_' + @securityPermission.getCurrentUserId()")
+            key = "#id + @securityPermission.getCurrentUserId()")
     public TransactionResponse update(String id, TransactionRequest request) {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Updating transaction ID: {} for user ID: {}. Request: {}", id, currentUserId, request);
@@ -282,7 +277,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     @CacheEvict(value = "transactions",
-            key = "#transactionId + '_' + @securityPermission.getCurrentUserId()")
+            key = "#transactionId + @securityPermission.getCurrentUserId()")
     public void deleteByIdAndWalletId(String transactionId, String walletId) {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Attempting to soft delete transaction ID: {} from wallet ID: {} for user ID: {}.", transactionId, walletId, currentUserId);
@@ -318,7 +313,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     @CacheEvict(value = "transactions",
-            key = "#id + '_' + @securityPermission.getCurrentUserId()")
+            key = "#id + @securityPermission.getCurrentUserId()")
     public void restoreTransaction(String id, String walletId) {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Attempting to restore transaction ID: {} to wallet ID: {} for user ID: {}.", id, walletId, currentUserId);

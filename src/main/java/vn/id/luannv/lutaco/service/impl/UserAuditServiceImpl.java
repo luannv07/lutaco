@@ -32,7 +32,7 @@ public class UserAuditServiceImpl implements UserAuditService {
     public Page<UserAuditLog> viewUserAuditLogs(UserAuditFilterRequest filter) {
         log.info("Fetching user audit logs with filter: {}", filter);
         Pageable pageable = PageRequest.of(
-                filter.getPage(),
+                filter.getPage() - 1,
                 filter.getSize(),
                 Sort.by(Sort.Direction.DESC, "createdDate")
         );

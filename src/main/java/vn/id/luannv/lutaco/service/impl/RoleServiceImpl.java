@@ -47,7 +47,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "roles", key = "{#name, #page, #size}")
     public Page<Role> search(String name, Integer page, Integer size) {
         log.info("Searching roles with name: '{}', page: {}, size: {}.", name, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -64,6 +63,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(value = "roles", key = "#id")
     public Role update(Integer id, Role request) {
         log.warn("Attempted to update a role via update method, which is not supported. ID: {}, Request: {}", id, request);
         throw new BusinessException(ErrorCode.SYSTEM_ERROR); // Or a more specific error if role updates are not allowed

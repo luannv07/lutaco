@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.MasterDictionaryDto;
 import vn.id.luannv.lutaco.entity.MasterDictionary;
@@ -33,7 +34,7 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
     }
 
     @Override
-    @Cacheable(value = "masterDictionary", key = "{#category, #code}")
+    @Cacheable(value = "masterDictionary", key = "#category + #code")
     public MasterDictionaryDto getByCategoryAndCode(String category, String code) {
         MasterDictionary entity = repository
                 .findByCategoryAndCode(category.toUpperCase(), code.toUpperCase())
@@ -50,7 +51,7 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
     }
 
     @Override
-    @CacheEvict(value = "masterDictionary", key = "#dto.category")
+    @CacheEvict(value = "masterDictionary", allEntries = true)
     public MasterDictionaryDto update(Integer id, MasterDictionaryDto dto) {
         MasterDictionary entity = repository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));

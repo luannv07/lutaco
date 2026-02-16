@@ -16,9 +16,9 @@ public class UserStatusSetRequest {
 
     @NotNull(message = "{validation.required}")
     @Schema(
-            description = "The new active status for the user (true for active, false for inactive).",
-            example = "true",
+            description = "The new active status for the user.",
+            example = "BANNED",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    Boolean isActive;
+    String status;
 }

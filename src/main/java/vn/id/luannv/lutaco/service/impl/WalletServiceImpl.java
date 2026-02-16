@@ -34,7 +34,6 @@ public class WalletServiceImpl implements WalletService {
     UserRepository userRepository;
 
     @Override
-    @CacheEvict(value = "wallets", key = "@securityPermission.getCurrentUserId()")
     public Wallet create(WalletCreateRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create wallet for user ID: {}. Request: {}", userId, request.getWalletName());
@@ -64,7 +63,6 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
-    @CacheEvict(value = "wallets", key = "@securityPermission.getCurrentUserId()")
     public void createDefaultWallet(String userId) {
         log.info("Attempting to create default wallet for user ID: {}.", userId);
 
@@ -95,7 +93,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets", key = "@securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()")
     public Wallet update(String walletName, WalletUpdateRequest request) {
         log.info("Attempting to update wallet '{}' for current user. Request: {}", walletName, request);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -108,7 +106,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @CacheEvict(value = "wallets",
-            key = "#walletName + '_' + " + "@securityPermission.getCurrentUserId()")
+            key = "#walletName + @securityPermission.getCurrentUserId()")
     public void deleteByUser(String walletName) {
         log.info("Attempting to soft delete wallet '{}' for current user.", walletName);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -119,8 +117,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets",
-            key = "#walletName + '_' + #userId")
     public void archiveByAdmin(String userId, String walletName) {
         log.info("Admin attempting to archive wallet '{}' for user ID: {}.", walletName, userId);
 
@@ -139,7 +135,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Cacheable(value = "wallets",
-            key = "#walletName + '_' + " + "@securityPermission.getCurrentUserId()")
+            key = "#walletName + @securityPermission.getCurrentUserId()")
     public Wallet getDetail(String walletName) {
         log.info("Fetching details for wallet '{}' for current user.", walletName);
         Wallet wallet = getMywalletOrThrow(walletName);

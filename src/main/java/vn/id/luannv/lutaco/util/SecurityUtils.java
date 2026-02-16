@@ -27,7 +27,9 @@ public class SecurityUtils {
     public static UserStatus getCurrentUserStatus() {
         return getCurrentPrincipal().getStatus();
     }
-
+    public static String getCurrentRoleName() {
+        return getCurrentPrincipal().getRole();
+    }
     private static CustomUserDetails getCurrentPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

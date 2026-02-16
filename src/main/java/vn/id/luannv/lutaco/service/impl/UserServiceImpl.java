@@ -12,21 +12,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.UserGender;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.mapper.UserMapper;
+import vn.id.luannv.lutaco.repository.InvalidatedTokenRepository;
 import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
+import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 import vn.id.luannv.lutaco.service.UserService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -38,6 +44,7 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
+    InvalidatedTokenService invalidatedTokenService;
 
     @Override
     public UserResponse create(UserCreateRequest request) {
@@ -59,14 +66,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "{#request, #page, #size}")
     public Page<UserResponse> search(UserFilterRequest request, Integer page, Integer size) {
         log.info("Searching users with filter: {}, page: {}, size: {}.", request, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        if (request.getUserStatus() != null && !UserStatus.isValid(request.getUserStatus())) {
-            log.warn("Invalid user status '{}' provided in filter. Ignoring status filter.", request.getUserStatus());
+        try {
+            request.setUserPlan(EnumUtils.from(UserPlan.class, request.getUserPlan()).name());
+            request.setUserStatus(EnumUtils.from(UserStatus.class, request.getUserStatus()).name());
+        } catch (Exception e) {
+            request.setUserPlan(null);
             request.setUserStatus(null);
+            log.info("{}", e.getMessage());
         }
 
         Page<UserResponse> result = userRepository.findByFilters(request, pageable)
@@ -82,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "users", key = "#id")
+    @CacheEvict(value = "users", key = "#id")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         log.info("Updating user with ID: {} with data: {}", id, request);
 
@@ -110,35 +120,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = "users", key = "#id")
     public void updateStatus(String id, UserStatusSetRequest request) {
-        log.info("Updating status for user ID: {} to isActive: {}.", id, request.getIsActive());
         User user = userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User with ID {} not found for status update.", id);
-                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
-                            Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
-                });
-
-        User currentUser = userRepository
-                .findByUsername(SecurityUtils.getCurrentUsername())
-                .orElseThrow(() -> {
-                    log.error("Current authenticated user not found in repository.");
-                    return new BusinessException(ErrorCode.UNAUTHORIZED);
-                });
-
-        if (currentUser.getUsername().equals(SecurityUtils.getCurrentUsername())) {
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
+        if (SecurityUtils.getCurrentRoleName().equals(UserType.USER.name())) {
             user.setUserStatus(UserStatus.DISABLED_BY_USER);
-            log.info("User ID {} self-disabled their account.", id);
-        } else if (currentUser.getRole().getName().equals(UserType.SYS_ADMIN.name())
-                || currentUser.getRole().getName().equals(UserType.ADMIN.name())) {
-            user.setUserStatus(UserStatus.BANNED);
-            log.info("Admin/SysAdmin {} banned user ID {}.", currentUser.getUsername(), id);
-        } else {
-            log.warn("Unauthorized attempt to change user status for user ID {} by user {}.", id, currentUser.getUsername());
-            throw new BusinessException(ErrorCode.FORBIDDEN);
+            return;
         }
-
+        user.setUserStatus(EnumUtils.from(UserStatus.class, request.getStatus()));
         userRepository.save(user);
-        log.info("User ID {} status updated to {}.", id, user.getUserStatus());
+        log.info("elkjdslfk: {}",user.getUserStatus());
     }
 
     @Override
@@ -148,7 +138,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "users", key = "#id")
+    @CacheEvict(value = "users", key = "#id")
+    @Transactional
     public void updateUserRole(String id, UserRoleRequest request) {
         log.info("Updating role for user ID: {} to role: {}.", id, request.getRoleName());
         User user = userRepository.findById(id)
@@ -157,6 +148,10 @@ public class UserServiceImpl implements UserService {
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
                             Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
                 });
+        if (user.getRole().getName().equals(request.getRoleName())) {
+            log.info("System admin can change their own role. [username: {}]", SecurityUtils.getCurrentUsername());
+            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
+        }
         Role role = roleRepository.findByName(request.getRoleName())
                 .orElseThrow(() -> {
                     log.warn("Role '{}' not found for role update.", request.getRoleName());
@@ -169,8 +164,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     @CacheEvict(value = "users", key = "#id")
-    public void updatePassword(String id, UpdatePasswordRequest request) {
+    public void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime) {
         log.info("Attempting to update password for user ID: {}.", id);
 
         User user = userRepository.findById(id)
@@ -217,6 +213,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+        invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
         log.info("Password successfully updated for user ID {}.", id);
     }
 }

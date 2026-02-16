@@ -48,7 +48,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "categories", key = "@securityPermission.getCurrentUserId()")
     public CategoryDto create(CategoryDto request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create category for user ID: {}. Request: {}", userId, request.getCategoryName());
@@ -86,14 +85,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Cacheable(value = "categoriesList", key = "{#request, #page, #size, @securityPermission.getCurrentUserId()}")
     public Page<CategoryDto> search(CategoryFilterRequest request, Integer page, Integer size) {
         log.warn("Method search(CategoryFilterRequest request, Integer page, Integer size) is not implemented for CategoryService. Use searchNoPag for details.");
         return null; // Or throw an UnsupportedOperationException
     }
 
     @Override
-    @CacheEvict(value = "categories", key = "@securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "categories", key = "#categoryName + @securityPermission.getCurrentUserId()")
     public CategoryDto update(String categoryName, CategoryDto request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to update category '{}' for user ID: {}. Request: {}", categoryName, userId, request);
@@ -114,7 +112,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Cacheable(value = "categoriesList", key = "{#request.categoryName, #request.categoryType, @securityPermission.getCurrentUserId()}")
     public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Searching categories for user ID: {} with filter: {}.", userId, request);
@@ -128,7 +125,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @CacheEvict(value = "categories", key = "@securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "categories", key = "#categoryName + @securityPermission.getCurrentUserId()")
     public void deleteById(String categoryName) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to soft delete category '{}' for user ID: {}.", categoryName, userId);

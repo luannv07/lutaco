@@ -44,7 +44,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    @CacheEvict(value = "recurringTransactions", key = "@securityPermission.getCurrentUserId()")
     public RecurringTransactionResponse create(RecurringTransactionRequest request) {
         log.info("Attempting to create a new recurring transaction with request: {}", request);
         InternalState state = createAndSaveTransaction(request);
@@ -55,7 +54,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    @CacheEvict(value = "recurringTransactions", key = "@securityPermission.getCurrentUserId()")
     public void processOne(RecurringTransaction rt) {
         log.info("Processing single recurring transaction with ID: {}", rt.getId());
         RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
@@ -131,7 +129,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     @Override
-    @Cacheable(value = "recurringTransactions", key = "{#request, #page, #size, @securityPermission.getCurrentUserId()}")
     public Page<RecurringTransactionResponse> search(RecurringTransactionFilterRequest request, Integer page, Integer size) {
         log.info("Searching recurring transactions for current user with filter: {}", request);
 

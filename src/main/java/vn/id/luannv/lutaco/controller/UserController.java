@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
+import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.UserService;
+import vn.id.luannv.lutaco.util.JwtUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
+
+import java.util.Date;
 
 
 @RestController
@@ -32,6 +37,7 @@ import vn.id.luannv.lutaco.util.SecurityUtils;
 public class UserController {
 
     UserService userService;
+    JwtService jwtService;
 
     @GetMapping
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
@@ -152,7 +158,7 @@ public class UserController {
 
     @PatchMapping("/{id}/status")
     @PreAuthorize(
-            "hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and #request.isActive == false)"
+            "hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and @securityPermission.isActive())"
     )
     @Operation(
             summary = "Cập nhật trạng thái người dùng",
@@ -194,9 +200,12 @@ public class UserController {
     public ResponseEntity<BaseResponse<Void>> updatePassword(
             @Parameter(description = "ID người dùng", example = "USR_123456", required = true)
             @PathVariable String id,
-            @Valid @RequestBody UpdatePasswordRequest request
+            @Valid @RequestBody UpdatePasswordRequest request, HttpServletRequest req
     ) {
-        userService.updatePassword(id, request);
+        String token = JwtUtils.resolveToken(req);
+        String jti = jwtService.getJtiFromToken(token);
+        Date expiryTime = jwtService.getExpiryTimeFromToken(token);
+        userService.updatePassword(id, request, jti, expiryTime);
         return ResponseEntity.ok(
                 BaseResponse.success("Cập nhật mật khẩu thành công.")
         );

@@ -53,7 +53,6 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     @Transactional
-    @Cacheable(value = "dashboardSummaries", key = "{#range, @securityPermission.getCurrentUserId()}")
     public DashboardResponse handleSummary(PeriodRange range) {
         log.info("Generating dashboard summary for period range: {}", range);
         String currentUserId = SecurityUtils.getCurrentId();
