@@ -19,7 +19,7 @@ public class AsyncEmailService {
 
     @Async
     public void sendEmail(String to, String subject, String body) {
-        log.info("Attempting to send email to '{}' with subject '{}'.", to, subject);
+        log.info("[system]: Attempting to send email to '{}' with subject '{}'.", to, subject);
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(
@@ -35,10 +35,10 @@ public class AsyncEmailService {
             long startTime = System.currentTimeMillis();
             mailSender.send(mimeMessage);
             long endTime = System.currentTimeMillis();
-            log.info("Successfully sent email to '{}'. Time taken: {}ms.", to, (endTime - startTime));
+            log.info("[system]: Successfully sent email to '{}'. Time taken: {}ms.", to, (endTime - startTime));
 
         } catch (Exception e) {
-            log.error("Failed to send email to '{}' with subject '{}'. Error: {}", to, subject, e.getMessage(), e);
+            log.error("[system]: Failed to send email to '{}' with subject '{}'. Error: {}", to, subject, e.getMessage(), e);
         }
     }
 }

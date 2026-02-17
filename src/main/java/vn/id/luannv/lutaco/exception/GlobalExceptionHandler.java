@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<BaseResponse<Void>> handleBusinessException(BusinessException ex) {
-        log.warn("Caught BusinessException: Code={}, Message={}, Params={}", ex.getErrorCode(), ex.getMessage(), ex.getParams());
+        log.warn("[system]: Caught BusinessException: Code={}, Message={}, Params={}", ex.getErrorCode(), ex.getMessage(), ex.getParams());
         Map<String, Object> params = new HashMap<>();
         if (ex.getParams() != null) {
             ex.getParams().forEach((key, valueObj) -> {
@@ -61,9 +61,9 @@ public class GlobalExceptionHandler {
 
             String localizedMessage = localizationUtils.getLocalizedMessage(messageKey, attributes);
             errors.put(fieldError.getField(), localizedMessage);
-            log.warn("Validation error in field '{}': {}", fieldError.getField(), localizedMessage);
+            log.warn("[system]: Validation error in field '{}': {}", fieldError.getField(), localizedMessage);
         }
-        log.warn("MethodArgumentNotValidException: {} validation errors occurred.", errors.size());
+        log.warn("[system]: MethodArgumentNotValidException: {} validation errors occurred.", errors.size());
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
     public ResponseEntity<BaseResponse<Void>> handleInvalidDataAccess(InvalidDataAccessApiUsageException ex) {
-        log.error("Invalid JPA data access API usage detected: {}", ex.getMessage(), ex);
+        log.error("[system]: Invalid JPA data access API usage detected: {}", ex.getMessage(), ex);
         String message = localizationUtils.getLocalizedMessage(ErrorCode.PERSISTENCE_STATE_ERROR.getMessage());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
         String message = ex.getAllErrors()
                 .get(0)
                 .getDefaultMessage();
-        log.warn("Data binding error: {}", message);
+        log.warn("[system]: Data binding error: {}", message);
         return ResponseEntity.badRequest()
                 .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, message, null));
     }
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<BaseResponse<?>> handleTypeMismatch(
             MethodArgumentTypeMismatchException ex) {
-        log.warn("Method argument type mismatch: Parameter '{}' expected type '{}' but received '{}'. Message: {}",
+        log.warn("[system]: Method argument type mismatch: Parameter '{}' expected type '{}' but received '{}'. Message: {}",
                 ex.getName(), ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown", ex.getValue(), ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, ex.getMessage(), null));
@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<BaseResponse<Void>> handleNoResourceFoundException(NoResourceFoundException ex) {
-        log.warn("Requested resource not found: {}", ex.getResourcePath());
+        log.warn("[system]: Requested resource not found: {}", ex.getResourcePath());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
         return ResponseEntity
                 .status(ex.getStatusCode())
@@ -110,7 +110,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<BaseResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        log.warn("Illegal argument provided: {}", ex.getMessage());
+        log.warn("[system]: Illegal argument provided: {}", ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.VALIDATION_FAILED.getMessage());
         return ResponseEntity
                 .status(ErrorCode.VALIDATION_FAILED.getHttpStatus())
@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<BaseResponse<Void>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        log.warn("HTTP message not readable (malformed JSON/request body): {}", ex.getMessage());
+        log.warn("[system]: HTTP message not readable (malformed JSON/request body): {}", ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.JSON_WRONG_FORMAT.getMessage());
         return ResponseEntity
                 .status(ErrorCode.JSON_WRONG_FORMAT.getHttpStatus())
@@ -140,35 +140,35 @@ public class GlobalExceptionHandler {
                 logMessage = "Foreign key constraint violation: " + sqlEx.getConstraintName();
             }
         }
-        log.warn("{}: {}", logMessage, ex.getMessage());
+        log.warn("[system]: {}: {}", logMessage, ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(BaseResponse.error(errorCode, message, null));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<BaseResponse<Void>> handleAccessDeniedException(AccessDeniedException ex) {
-        log.warn("Access denied for current user: {}", ex.getMessage());
+        log.warn("[system]: Access denied for current user: {}", ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.FORBIDDEN.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(BaseResponse.error(ErrorCode.FORBIDDEN, message, null));
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<BaseResponse<Void>> handleAuthenticationException(AuthenticationException ex) {
-        log.warn("Authentication failed: {}", ex.getMessage());
+        log.warn("[system]: Authentication failed: {}", ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(BaseResponse.error(ErrorCode.UNAUTHORIZED, message, null));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<Void>> handleException(Exception e) {
-        log.error("An unexpected internal server error occurred: {}", e.getMessage(), e);
+        log.error("[system]: An unexpected internal server error occurred: {}", e.getMessage(), e);
         String message = localizationUtils.getLocalizedMessage(ErrorCode.SYSTEM_ERROR.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponse.error(ErrorCode.SYSTEM_ERROR, message, null));
     }
 
     @ExceptionHandler(SocketException.class)
     public ResponseEntity<BaseResponse<Void>> handleSocketException(SocketException ex) {
-        log.warn("Network communication error (SocketException): {}", ex.getMessage());
+        log.warn("[system]: Network communication error (SocketException): {}", ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.EXTERNAL_SERVICE_UNAVAILABLE.getMessage());
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
@@ -177,7 +177,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WebClientRequestException.class)
     public ResponseEntity<BaseResponse<Void>> handleWebClientRequestException(WebClientRequestException ex) {
-        log.warn("External service connection error (WebClientRequestException), possibly PayOS: {}", ex.getMessage());
+        log.warn("[system]: External service connection error (WebClientRequestException), possibly PayOS: {}", ex.getMessage());
         String message = localizationUtils.getLocalizedMessage(ErrorCode.PAYMENT_PROVIDER_UNAVAILABLE.getMessage());
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
@@ -186,7 +186,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchMessageException.class)
     public ResponseEntity<BaseResponse<Void>> handleNoSuchMessageException(NoSuchMessageException ex) {
-        log.error("Missing i18n message key in localization bundle: {}", ex.getMessage(), ex);
+        log.error("[system]: Missing i18n message key in localization bundle: {}", ex.getMessage(), ex);
         String message = "(System) The message for key '" + ex.getMessage() + "' was not found.";
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

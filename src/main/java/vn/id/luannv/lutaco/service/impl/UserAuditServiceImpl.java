@@ -15,6 +15,7 @@ import vn.id.luannv.lutaco.dto.UserAuditFilterRequest;
 import vn.id.luannv.lutaco.entity.UserAuditLog;
 import vn.id.luannv.lutaco.repository.UserAuditRepository;
 import vn.id.luannv.lutaco.service.UserAuditService;
+import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,41 +31,44 @@ public class UserAuditServiceImpl implements UserAuditService {
 
     @Override
     public Page<UserAuditLog> viewUserAuditLogs(UserAuditFilterRequest filter) {
-        log.info("Fetching user audit logs with filter: {}", filter);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Fetching user audit logs with filter: {}", username, filter);
         Pageable pageable = PageRequest.of(
                 filter.getPage() - 1,
                 filter.getSize(),
                 Sort.by(Sort.Direction.DESC, "createdDate")
         );
         Page<UserAuditLog> result = userAuditRepository.findAll(createSpecification(filter), pageable);
-        log.info("Found {} user audit logs matching the criteria.", result.getTotalElements());
+        log.info("[{}]: Found {} user audit logs matching the criteria.", username, result.getTotalElements());
         return result;
     }
 
     @Transactional
     @Override
     public void deleteUserAuditLogs(UserAuditFilterRequest filter) {
-        log.info("Attempting to delete user audit logs with filter: {}", filter);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to delete user audit logs with filter: {}", username, filter);
         List<UserAuditLog> logs = userAuditRepository.findAll(createSpecification(filter));
 
         if (logs.isEmpty()) {
-            log.info("No user audit logs found to delete with the given filter.");
+            log.info("[{}]: No user audit logs found to delete with the given filter.", username);
             return;
         }
 
         userAuditRepository.deleteAll(logs);
-        log.info("Successfully deleted {} user audit logs matching the filter.", logs.size());
+        log.info("[{}]: Successfully deleted {} user audit logs matching the filter.", username, logs.size());
     }
 
     @Transactional
     @Override
     public Long manualCleanup(LocalDate startDate, LocalDate endDate) {
-        log.info("Starting manual cleanup of user audit logs from {} to {}.", startDate, endDate);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Starting manual cleanup of user audit logs from {} to {}.", username, startDate, endDate);
         long count = 0;
         if (startDate == null && endDate == null) {
             count = userAuditRepository.count();
             userAuditRepository.deleteAll();
-            log.info("Cleaned up all {} user audit logs.", count);
+            log.info("[{}]: Cleaned up all {} user audit logs.", username, count);
             return count;
         }
 
@@ -78,12 +82,12 @@ public class UserAuditServiceImpl implements UserAuditService {
         count = logs.size();
 
         if (logs.isEmpty()) {
-            log.info("No user audit logs found for manual cleanup between {} and {}.", startDate, endDate);
+            log.info("[{}]: No user audit logs found for manual cleanup between {} and {}.", username, startDate, endDate);
             return count;
         }
 
         userAuditRepository.deleteAll(logs);
-        log.info("Successfully cleaned up {} user audit logs between {} and {}.", count, startDate, endDate);
+        log.info("[{}]: Successfully cleaned up {} user audit logs between {} and {}.", username, count, startDate, endDate);
         return count;
     }
 

@@ -10,7 +10,7 @@ public class JwtUtils {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring("Bearer ".length());
         }
-        log.debug("Authorization header not found or does not start with 'Bearer ' in request.");
+        log.debug("[system]: Authorization header not found or does not start with 'Bearer ' in request.");
         return "";
     }
 }

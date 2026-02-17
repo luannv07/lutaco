@@ -33,7 +33,7 @@ public class PaymentJob {
     @Transactional
     public void reconcilePendingPayments() {
 
-        log.info("Starting scheduled job: Reconciling pending payments.");
+        log.info("[system]: Starting scheduled job: Reconciling pending payments.");
 
         List<PayOS> pendings =
                 payOSRepository.findByStatusAndPaidAtIsNullAndCreatedDateIsLessThan(
@@ -41,10 +41,10 @@ public class PaymentJob {
                         LocalDateTime.now().minusSeconds(expirationTime)
                 );
 
-        log.debug("Found {} pending payments to reconcile.", pendings.size());
+        log.debug("[system]: Found {} pending payments to reconcile.", pendings.size());
 
         for (PayOS payOS : pendings) {
-            log.info("Reconciling payment for order code: {}", payOS.getOrderCode());
+            log.info("[system]: Reconciling payment for order code: {}", payOS.getOrderCode());
             PayOSResponse<PayOSResponse.PayOSDataDetail> detail =
                     payOsClient.getDetail(String.valueOf(payOS.getOrderCode()));
 
@@ -56,15 +56,15 @@ public class PaymentJob {
 
                 if (newStatus == PaymentStatus.PAID && payOS.getPaidAt() == null) {
                     payOS.setPaidAt(LocalDateTime.now());
-                    log.info("Payment for order code {} is now PAID. Paid at: {}", payOS.getOrderCode(), payOS.getPaidAt());
+                    log.info("[system]: Payment for order code {} is now PAID. Paid at: {}", payOS.getOrderCode(), payOS.getPaidAt());
                 } else {
-                    log.info("Payment for order code {} status updated from {} to {}.", payOS.getOrderCode(), payOS.getStatus(), newStatus);
+                    log.info("[system]: Payment for order code {} status updated from {} to {}.", payOS.getOrderCode(), payOS.getStatus(), newStatus);
                 }
             } else {
-                log.debug("Payment for order code {} status remains {}.", payOS.getOrderCode(), payOS.getStatus());
+                log.debug("[system]: Payment for order code {} status remains {}.", payOS.getOrderCode(), payOS.getStatus());
             }
         }
 
-        log.info("Finished scheduled job: Reconciled {} pending payments.", pendings.size());
+        log.info("[system]: Finished scheduled job: Reconciled {} pending payments.", pendings.size());
     }
 }

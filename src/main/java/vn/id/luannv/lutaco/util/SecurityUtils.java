@@ -34,7 +34,7 @@ public class SecurityUtils {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            log.warn("Authentication object is null or not authenticated.");
+            log.warn("[system]: Authentication object is null or not authenticated.");
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
         }
 
@@ -42,7 +42,7 @@ public class SecurityUtils {
             return (CustomUserDetails) authentication.getPrincipal();
         }
 
-        log.error("Principal is not of type CustomUserDetails. Actual type: {}", authentication.getPrincipal().getClass().getName());
+        log.error("[system]: Principal is not of type CustomUserDetails. Actual type: {}", authentication.getPrincipal().getClass().getName());
         throw new BusinessException(ErrorCode.UNAUTHORIZED);
     }
 
@@ -57,13 +57,13 @@ public class SecurityUtils {
         for (String header : headers) {
             String ip = request.getHeader(header);
             if (ip != null && !ip.isBlank() && !"unknown".equalsIgnoreCase(ip)) {
-                log.debug("Resolved client IP '{}' from header '{}'.", ip, header);
+                log.debug("[system]: Resolved client IP '{}' from header '{}'.", ip, header);
                 return ip.split(",")[0].trim();
             }
         }
 
         String remoteAddr = request.getRemoteAddr();
-        log.debug("Resolved client IP '{}' from request.getRemoteAddr().", remoteAddr);
+        log.debug("[system]: Resolved client IP '{}' from request.getRemoteAddr().", remoteAddr);
         return remoteAddr;
     }
 }

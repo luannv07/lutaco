@@ -28,7 +28,7 @@ public class RecurringTransactionListener {
     public void sendRecurringTransactionInitializationEmail(
             RecurringTransactionEvent.RecurringInitialization recurring) {
         try {
-            log.info("Processing recurring transaction initialization event for transaction ID: {}",
+            log.info("[system]: Processing recurring transaction initialization event for transaction ID: {}",
                     recurring.getRecurringUserFields().getTransactionId());
 
             EmailTemplateService.EmailFields fields = EmailTemplateService.getRecurringInitializationTemplate(recurring);
@@ -39,10 +39,10 @@ public class RecurringTransactionListener {
                     fields.body()
             );
 
-            log.info("Successfully sent recurring transaction initialization email to: {}", fields.to());
+            log.info("[system]: Successfully sent recurring transaction initialization email to: {}", fields.to());
 
         } catch (Exception e) {
-            log.error("Error sending recurring transaction initialization email for transaction ID: {}", recurring.getRecurringUserFields().getTransactionId(), e);
+            log.error("[system]: Error sending recurring transaction initialization email for transaction ID: {}", recurring.getRecurringUserFields().getTransactionId(), e);
         }
     }
 
@@ -56,7 +56,7 @@ public class RecurringTransactionListener {
         transactionService
                 .autoCreateTransactionWithCronJob(recurring.getRecurringUserFields().getTransactionId(), recurring.getRecurringUserFields().getUserId());
         try {
-            log.info("Processing recurring transaction frequency event for transaction ID: {}",
+            log.info("[system]: Processing recurring transaction frequency event for transaction ID: {}",
                     recurring.getRecurringUserFields().getTransactionId());
 
             EmailTemplateService.EmailFields fields = EmailTemplateService.getRecurringFrequencyTemplate(recurring);
@@ -68,10 +68,10 @@ public class RecurringTransactionListener {
                     fields.body()
             );
 
-            log.info("Successfully sent recurring transaction frequency email to: {}", fields.to());
+            log.info("[system]: Successfully sent recurring transaction frequency email to: {}", fields.to());
 
         } catch (Exception e) {
-            log.error("Error sending recurring transaction frequency email for transaction ID: {}", recurring.getRecurringUserFields().getTransactionId(), e);
+            log.error("[system]: Error sending recurring transaction frequency email for transaction ID: {}", recurring.getRecurringUserFields().getTransactionId(), e);
         }
     }
 

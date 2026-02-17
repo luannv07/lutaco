@@ -60,7 +60,7 @@ public class JwtService {
         try {
             jwsObject.sign(new MACSigner(secretKey.getBytes()));
         } catch (JOSEException e) {
-            log.error("Failed to generate JWT token: {}", e.getMessage(), e);
+            log.error("[system]: Failed to generate JWT token: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to generate JWT token", e);
         }
 
@@ -73,7 +73,7 @@ public class JwtService {
 
             JWSVerifier verifier = new MACVerifier(secretKey);
             if (!signedJWT.verify(verifier)) {
-                log.warn("JWT token verification failed: Invalid signature.");
+                log.warn("[system]: JWT token verification failed: Invalid signature.");
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);
             }
 
@@ -81,16 +81,16 @@ public class JwtService {
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
 
             if (expirationTime == null || expirationTime.before(new Date()) || invalidatedTokenService.existByJti(jti)) {
-                log.warn("JWT token is expired or invalidated. JTI: {}", jti);
+                log.warn("[system]: JWT token is expired or invalidated. JTI: {}", jti);
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);
             }
 
             return signedJWT.getJWTClaimsSet();
         } catch (ParseException e) {
-            log.error("Failed to parse JWT token: {}", e.getMessage(), e);
+            log.error("[system]: Failed to parse JWT token: {}", e.getMessage(), e);
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         } catch (JOSEException e) {
-            log.error("JWT verification failed due to JOSEException: {}", e.getMessage(), e);
+            log.error("[system]: JWT verification failed due to JOSEException: {}", e.getMessage(), e);
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
     }
@@ -129,7 +129,7 @@ public class JwtService {
         Object val = claimsSet.getClaim(field);
 
         if (val == null) {
-            log.debug("Claim '{}' not found in token for subject: {}", field, claimsSet.getSubject());
+            log.debug("[system]: Claim '{}' not found in token for subject: {}", field, claimsSet.getSubject());
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
 

@@ -21,6 +21,7 @@ import vn.id.luannv.lutaco.dto.request.PayOsWebhookRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.service.PayOsClient;
 import vn.id.luannv.lutaco.service.PayOsWebhookService;
+import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Map;
 
@@ -55,12 +56,12 @@ public class PayOSWebhookController {
             )
             @Valid @RequestBody PayOsWebhookRequest request
     ) {
-        log.info("Received PayOS webhook request: {}", request);
+        log.info("[system]: Received PayOS webhook request: {}", request);
         try {
             payOsWebhookService.handle(request);
-            log.info("Successfully processed PayOS webhook for order code: {}", request.getData().getOrderCode());
+            log.info("[system]: Successfully processed PayOS webhook for order code: {}", request.getData().getOrderCode());
         } catch (Exception e) {
-            log.error("Error processing PayOS webhook for order code {}: {}", request.getData().getOrderCode(), e.getMessage(), e);
+            log.error("[system]: Error processing PayOS webhook for order code {}: {}", request.getData().getOrderCode(), e.getMessage(), e);
         }
         return ResponseEntity.ok()
                 .body(
@@ -89,9 +90,10 @@ public class PayOSWebhookController {
             )
             @Valid @RequestBody Map<String, Object> confirm
     ) {
-        log.info("Attempting to confirm PayOS webhook URL with request: {}", confirm);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to confirm PayOS webhook URL with request: {}", username, confirm);
         payOsClient.confirmHookUrl(confirm);
-        log.info("Successfully confirmed PayOS webhook URL.");
+        log.info("[{}]: Successfully confirmed PayOS webhook URL.", username);
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success("Xác nhận webhook thành công.")

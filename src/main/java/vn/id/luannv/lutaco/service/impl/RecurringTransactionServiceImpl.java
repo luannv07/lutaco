@@ -45,22 +45,23 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     @Override
     @Transactional
     public RecurringTransactionResponse create(RecurringTransactionRequest request) {
-        log.info("Attempting to create a new recurring transaction with request: {}", request);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to create a new recurring transaction with request: {}", username, request);
         InternalState state = createAndSaveTransaction(request);
         publishEvent(state, RecurringTransactionEvent.RecurringTransactionState.INITIALIZER);
-        log.info("Successfully created recurring transaction with ID: {}", state.recurringTransaction().getId());
+        log.info("[{}]: Successfully created recurring transaction with ID: {}", username, state.recurringTransaction().getId());
         return recurringTransactionMapper.toResponse(state.recurringTransaction());
     }
 
     @Override
     @Transactional
     public boolean processOne(RecurringTransaction rt) {
-        log.info("Processing single recurring transaction with ID: {}", rt.getId());
+        log.info("[system]: Processing single recurring transaction with ID: {}", rt.getId());
         RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
                 .getRecurringUserFieldsByTransactionId(rt.getTransaction().getId())
                 .orElse(null);
         if (recurringUserFields == null) {
-            log.info("Transaction for recurring transaction [ID: {}] has been deleted.", rt.getId());
+            log.info("[system]: Transaction for recurring transaction [ID: {}] has been deleted.", rt.getId());
             return false;
         }
 
@@ -69,15 +70,16 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
         rt.setNextDate(rt.getFrequentType().calculateNextDate(LocalDate.now()));
         recurringTransactionRepository.save(rt);
-        log.info("Finished processing recurring transaction with ID: {}. Next scheduled date: {}", rt.getId(), rt.getNextDate());
+        log.info("[system]: Finished processing recurring transaction with ID: {}. Next scheduled date: {}", rt.getId(), rt.getNextDate());
         return true;
     }
 
     private InternalState createAndSaveTransaction(RecurringTransactionRequest request) {
+        String username = SecurityUtils.getCurrentUsername();
         RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
                 .getRecurringUserFieldsByTransactionId(request.getTransactionId())
                 .orElseThrow(() -> {
-                    log.warn("Original transaction for recurring transaction request {} not found.", request.getTransactionId());
+                    log.warn("[{}]: Original transaction for recurring transaction request {} not found.", username, request.getTransactionId());
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("transactionId", request.getTransactionId()));
                 });
 
@@ -93,6 +95,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     private void publishEvent(InternalState state, RecurringTransactionEvent.RecurringTransactionState eventState) {
+        String username = SecurityUtils.getCurrentUsername();
         RecurringTransaction recurringTransaction = state.recurringTransaction();
         FrequentType frequentType = recurringTransaction.getFrequentType();
         LocalDate nextPaymentDate = frequentType.calculateNextDate(recurringTransaction.getStartDate());
@@ -114,30 +117,32 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                     .build();
         };
         applicationEventPublisher.publishEvent(event);
-        log.debug("Published event {} for recurring transaction ID: {}", eventState, recurringTransaction.getId());
+        log.debug("[{}]: Published event {} for recurring transaction ID: {}", username, eventState, recurringTransaction.getId());
     }
 
     @Override
     @Cacheable(value = "recurringTransactions", key = "#id + @securityPermission.getCurrentUserId()")
     public RecurringTransactionResponse getDetail(Long id) {
-        log.info("Fetching recurring transaction details for ID: {}", id);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Fetching recurring transaction details for ID: {}", username, id);
 
         return recurringTransactionRepository.findByUserIdAndId(SecurityUtils.getCurrentId(), id)
                 .map(recurringTransactionMapper::toResponse)
                 .orElseThrow(() -> {
-                    log.warn("Recurring transaction with ID: {} not found for current user.", id);
+                    log.warn("[{}]: Recurring transaction with ID: {} not found for current user.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
     }
 
     @Override
     public Page<RecurringTransactionResponse> search(RecurringTransactionFilterRequest request, Integer page, Integer size) {
-        log.info("Searching recurring transactions for current user with filter: {}", request);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Searching recurring transactions for current user with filter: {}", username, request);
 
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<RecurringTransactionResponse> result = recurringTransactionRepository.findByFilters(request, SecurityUtils.getCurrentId(), pageable)
                 .map(recurringTransactionMapper::toResponse);
-        log.info("Found {} recurring transactions matching the criteria.", result.getTotalElements());
+        log.info("[{}]: Found {} recurring transactions matching the criteria.", username, result.getTotalElements());
         return result;
     }
 
@@ -145,11 +150,12 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     @Transactional
     @CacheEvict(value = "recurringTransactions", key = "#id + @securityPermission.getCurrentUserId()")
     public RecurringTransactionResponse update(Long id, RecurringTransactionRequest request) {
-        log.info("Updating recurring transaction with ID: {} using request: {}", id, request);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Updating recurring transaction with ID: {} using request: {}", username, id, request);
 
         RecurringTransaction recurringTransaction = recurringTransactionRepository.findByUserIdAndId(SecurityUtils.getCurrentId(), id)
                 .orElseThrow(() -> {
-                    log.warn("Recurring transaction with ID: {} not found for current user for update.", id);
+                    log.warn("[{}]: Recurring transaction with ID: {} not found for current user for update.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
 
@@ -159,7 +165,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         recurringTransaction.setNextDate(frequentType.calculateNextDate(recurringTransaction.getStartDate()));
 
         RecurringTransaction updatedTransaction = recurringTransactionRepository.save(recurringTransaction);
-        log.info("Successfully updated recurring transaction with ID: {}", updatedTransaction.getId());
+        log.info("[{}]: Successfully updated recurring transaction with ID: {}", username, updatedTransaction.getId());
         return recurringTransactionMapper.toResponse(updatedTransaction);
     }
 
@@ -167,14 +173,15 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     @Transactional
     @CacheEvict(value = "recurringTransactions", key = "#id + @securityPermission.getCurrentUserId()")
     public void deleteById(Long id) {
-        log.info("Attempting to delete recurring transaction with ID: {}", id);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to delete recurring transaction with ID: {}", username, id);
         RecurringTransaction recurringTransaction = recurringTransactionRepository.findByUserIdAndId(SecurityUtils.getCurrentId(), id)
                 .orElseThrow(() -> {
-                    log.warn("Recurring transaction with ID: {} not found for current user for deletion.", id);
+                    log.warn("[{}]: Recurring transaction with ID: {} not found for current user for deletion.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
         recurringTransactionRepository.deleteById(recurringTransaction.getId());
-        log.info("Successfully deleted recurring transaction with ID: {}", id);
+        log.info("[{}]: Successfully deleted recurring transaction with ID: {}", username, id);
     }
 
     private record InternalState(

@@ -48,18 +48,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse create(UserCreateRequest request) {
-        log.warn("Attempted to create user via create method, which is not supported. Use AuthServiceImpl.register instead.");
+        log.warn("[system]: Attempted to create user via create method, which is not supported. Use AuthServiceImpl.register instead.");
         return null;
     }
 
     @Override
     @Cacheable(value = "users", key = "#id")
     public UserResponse getDetail(String id) {
-        log.info("Fetching details for user with ID: {}", id);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Fetching details for user with ID: {}", username, id);
         return userRepository.findById(id)
                 .map(userMapper::toResponse)
                 .orElseThrow(() -> {
-                    log.warn("User with ID {} not found.", id);
+                    log.warn("[{}]: User with ID {} not found.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
                             Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
                 });
@@ -67,7 +68,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserResponse> search(UserFilterRequest request, Integer page, Integer size) {
-        log.info("Searching users with filter: {}, page: {}, size: {}.", request, page, size);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Searching users with filter: {}, page: {}, size: {}.", username, request, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
 
         try {
@@ -76,29 +78,30 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             request.setUserPlan(null);
             request.setUserStatus(null);
-            log.info("{}", e.getMessage());
+            log.info("[{}]: {}", username, e.getMessage());
         }
 
         Page<UserResponse> result = userRepository.findByFilters(request, pageable)
                 .map(userMapper::toResponse);
-        log.info("Found {} users matching the criteria.", result.getTotalElements());
+        log.info("[{}]: Found {} users matching the criteria.", username, result.getTotalElements());
         return result;
     }
 
     @Override
     public UserResponse update(String id, UserCreateRequest request) {
-        log.warn("Attempted to update user via update method, which is not supported. Use updateUser instead.");
+        log.warn("[system]: Attempted to update user via update method, which is not supported. Use updateUser instead.");
         return null;
     }
 
     @Override
     @CacheEvict(value = "users", key = "#id")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
-        log.info("Updating user with ID: {} with data: {}", id, request);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Updating user with ID: {} with data: {}", username, id, request);
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("User with ID {} not found for update.", id);
+                    log.warn("[{}]: User with ID {} not found for update.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
                             Map.of("id", ErrorCode.ENTITY_NOT_FOUND.getMessage()));
                 });
@@ -107,34 +110,35 @@ public class UserServiceImpl implements UserService {
         try {
             userGender = UserGender.valueOf(request.getGender());
         } catch (IllegalArgumentException e) {
-            log.warn("Invalid gender '{}' provided for user ID {}. Keeping existing gender.", request.getGender(), id);
+            log.warn("[{}]: Invalid gender '{}' provided for user ID {}. Keeping existing gender.", username, request.getGender(), id);
         }
 
         userMapper.updateUser(request, user);
         user.setGender(userGender);
         User saved = userRepository.save(user);
-        log.info("User with ID {} updated successfully.", id);
+        log.info("[{}]: User with ID {} updated successfully.", username, id);
         return userMapper.toResponse(saved);
     }
 
     @Override
     @CacheEvict(value = "users", key = "#id")
     public void updateStatus(String id, UserStatusSetRequest request) {
+        String username = SecurityUtils.getCurrentUsername();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
-        log.info("{}, {}", SecurityUtils.getCurrentRoleName(), UserType.USER.name());
+        log.info("[{}]: {}, {}", username, SecurityUtils.getCurrentRoleName(), UserType.USER.name());
         if (SecurityUtils.getCurrentRoleName().equals(UserType.USER.name())) {
             user.setUserStatus(UserStatus.DISABLED_BY_USER);
             return;
         }
         user.setUserStatus(EnumUtils.from(UserStatus.class, request.getStatus()));
         userRepository.save(user);
-        log.info("elkjdslfk: {}",user.getUserStatus());
+        log.info("[{}]: User status updated to: {}", username, user.getUserStatus());
     }
 
     @Override
     public void deleteById(String id) {
-        log.warn("Attempted to delete user by ID {}, which is not supported. Use updateStatus to disable/ban.", id);
+        log.warn("[system]: Attempted to delete user by ID {}, which is not supported. Use updateStatus to disable/ban.", id);
         throw new UnsupportedOperationException("Direct deletion of users is not supported. Use updateStatus to disable or ban.");
     }
 
@@ -142,18 +146,21 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "users", key = "#id")
     @Transactional
     public void updateUserRole(String id, UserRoleRequest request) {
+        String username = SecurityUtils.getCurrentUsername();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         Role role = roleRepository.findByName(request.getRoleName())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         user.setRole(role);
         userRepository.save(user);
+        log.info("[{}]: Updated role for user {} to {}", username, id, request.getRoleName());
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "users", key = "#id")
     public void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime) {
+        String username = SecurityUtils.getCurrentUsername();
         if (!request.getNewPassword().equals(request.getConfirmNewPassword()))
             throw new BusinessException(ErrorCode.PASSWORD_CONFIRM_NOT_MATCH);
 
@@ -166,8 +173,10 @@ public class UserServiceImpl implements UserService {
             user.setPassword(request.getNewPassword());
             userRepository.save(user);
             invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
+            log.info("[{}]: Password updated for user {}", username, id);
             return;
         }
+        log.warn("[{}]: Password update failed for user {}. Operation not allowed.", username, id);
         throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
     }
 }
