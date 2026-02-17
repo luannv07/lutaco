@@ -51,25 +51,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthenticateResponse login(LoginRequest request) {
-        log.info("Attempting to log in user: {}", request.getUsername());
+        log.info("[unknown]: Attempting to log in user: {}", request.getUsername());
 
         User entity = userRepository.findByUsername(request.getUsername().toLowerCase()).orElseThrow(() -> {
-            log.warn("Login failed for user {}: User not found.", request.getUsername());
+            log.warn("[unknown]: Login failed for user {}: User not found.", request.getUsername());
             return new BusinessException(ErrorCode.LOGIN_FAILED);
         });
 
         if (!passwordEncoder.matches(request.getPassword(), entity.getPassword())) {
-            log.warn("Login failed for user {}: Invalid credentials.", request.getUsername());
+            log.warn("[unknown]: Login failed for user {}: Invalid credentials.", request.getUsername());
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
         }
 
         if (entity.getUserStatus().equals(UserStatus.DISABLED_BY_USER) || entity.getUserStatus().equals(UserStatus.BANNED)) {
-            log.warn("Login failed for user {}: Account is {}.", request.getUsername(), entity.getUserStatus());
+            log.warn("[unknown]: Login failed for user {}: Account is {}.", request.getUsername(), entity.getUserStatus());
             throw new BusinessException(ErrorCode.LOGIN_FAILED);
         }
 
         if (refreshTokenService.findByTokenWithUser(request.getUsername()) != null) {
-            log.debug("Existing refresh token found for user {}, deleting it.", request.getUsername());
+            log.debug("[unknown]: Existing refresh token found for user {}, deleting it.", request.getUsername());
             refreshTokenService.deleteRefreshToken(request.getUsername());
         }
 
@@ -78,22 +78,22 @@ public class AuthServiceImpl implements AuthService {
                 .refreshToken(refreshTokenService.createRefreshToken(request.getUsername()).getToken())
                 .authenticated(true)
                 .build();
-        log.info("User {} logged in successfully.", request.getUsername());
+        log.info("[unknown]: User {} logged in successfully.", request.getUsername());
         return response;
     }
 
     @Override
     @Transactional
     public AuthenticateResponse register(UserCreateRequest request) {
-        log.info("Attempting to register new user with username: {} and email: {}", request.getUsername(), request.getEmail());
+        log.info("[unknown]: Attempting to register new user with username: {} and email: {}", request.getUsername(), request.getEmail());
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            log.warn("User registration failed: Email {} already exists.", request.getEmail());
+            log.warn("[unknown]: User registration failed: Email {} already exists.", request.getEmail());
             throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("email", ErrorCode.FIELD_EXISTED.getMessage()));
         }
 
         if (userRepository.existsByUsername(request.getUsername())) {
-            log.warn("User registration failed: Username {} already exists.", request.getUsername());
+            log.warn("[unknown]: User registration failed: Username {} already exists.", request.getUsername());
             throw new BusinessException(ErrorCode.FIELD_EXISTED, Map.of("username", ErrorCode.FIELD_EXISTED.getMessage()));
         }
 
@@ -101,13 +101,13 @@ public class AuthServiceImpl implements AuthService {
         try {
             userGender = UserGender.valueOf(request.getGender());
         } catch (IllegalArgumentException e) {
-            log.warn("Invalid gender '{}' provided during registration for user {}. Defaulting to OTHER.", request.getGender(), request.getUsername());
+            log.warn("[unknown]: Invalid gender '{}' provided during registration for user {}. Defaulting to OTHER.", request.getGender(), request.getUsername());
         }
 
         User entity = userMapper.toEntity(request);
         Role role = roleRepository.findByName(UserType.USER.name())
                 .orElseThrow(() -> {
-                    log.error("Role '{}' not found in the system during user registration.", UserType.USER.name());
+                    log.error("[system]: Role '{}' not found in the system during user registration.", UserType.USER.name());
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
 
@@ -118,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
         entity.setGender(userGender);
         entity.setUserStatus(UserStatus.PENDING_VERIFICATION);
         entity = userRepository.save(entity);
-        log.info("New user {} (ID: {}) registered successfully with status PENDING_VERIFICATION.", entity.getUsername(), entity.getId());
+        log.info("[unknown]: New user {} (ID: {}) registered successfully with status PENDING_VERIFICATION.", entity.getUsername(), entity.getId());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.setAuthenticated(true);
@@ -130,7 +130,7 @@ public class AuthServiceImpl implements AuthService {
                         entity.getId()
                 )
         );
-        log.debug("UserRegisteredEvent published for user ID: {}", entity.getId());
+        log.debug("[unknown]: UserRegisteredEvent published for user ID: {}", entity.getId());
 
         return AuthenticateResponse.builder()
                 .authenticated(true)
@@ -142,39 +142,41 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(String jti, Date expiryTime) {
-        log.info("User {} logging out. Invalidating token JTI: {}", SecurityUtils.getCurrentUsername(), jti);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: User logging out. Invalidating token JTI: {}", username, jti);
         invalidatedTokenService.addInvalidatedToken(jti, expiryTime);
-        refreshTokenService.deleteRefreshToken(SecurityUtils.getCurrentUsername());
-        log.info("User {} successfully logged out.", SecurityUtils.getCurrentUsername());
+        refreshTokenService.deleteRefreshToken(username);
+        log.info("[{}]: User successfully logged out.", username);
     }
 
     @Override
     public AuthenticateResponse refreshToken(String refreshToken) {
-        log.info("Attempting to refresh token.");
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to refresh token.", username);
         RefreshToken entity = refreshTokenService.findByToken(refreshToken);
-        String username = refreshTokenService.getUsernameByToken(refreshToken);
-        User user = userRepository.findByUsername(username)
+        String tokenUsername = refreshTokenService.getUsernameByToken(refreshToken);
+        User user = userRepository.findByUsername(tokenUsername)
                 .orElseThrow(() -> {
-                    log.warn("Refresh token failed: User {} not found.", username);
+                    log.warn("[{}]: Refresh token failed: User {} not found.", username, tokenUsername);
                     return new BusinessException(ErrorCode.ENUM_NOT_FOUND);
                 });
 
-        if (refreshTokenService.findByTokenWithUser(username) != null) {
-            log.debug("Existing refresh token found for user {}, deleting it before issuing new one.", username);
-            refreshTokenService.deleteRefreshToken(username);
+        if (refreshTokenService.findByTokenWithUser(tokenUsername) != null) {
+            log.debug("[{}]: Existing refresh token found for user {}, deleting it before issuing new one.", username, tokenUsername);
+            refreshTokenService.deleteRefreshToken(tokenUsername);
         }
 
         if (entity.getExpiryTime().after(new Date())) {
-            log.debug("Invalidating old refresh token for user {}.", username);
+            log.debug("[{}]: Invalidating old refresh token for user {}.", username, tokenUsername);
             invalidatedTokenService.addInvalidatedToken(entity.getToken(), entity.getExpiryTime());
         }
 
         AuthenticateResponse response = AuthenticateResponse.builder()
-                .refreshToken(refreshTokenService.createRefreshToken(username).getToken())
+                .refreshToken(refreshTokenService.createRefreshToken(tokenUsername).getToken())
                 .authenticated(true)
                 .accessToken(jwtAuthenticateService.generateToken(user))
                 .build();
-        log.info("Token refreshed successfully for user {}.", username);
+        log.info("[{}]: Token refreshed successfully for user {}.", username, tokenUsername);
         return response;
     }
 }

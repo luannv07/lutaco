@@ -30,26 +30,27 @@ public class PublicController {
         String clientIp = SecurityUtils.resolveClientIp(request);
         String userAgent = request.getHeader("User-Agent");
         String recordedInfo = String.format("Client IP: %s, User-Agent: %s", clientIp, userAgent);
-        log.info("Client audit info recorded: {}", recordedInfo);
+        log.info("[unknown]: Client audit info recorded: {}", recordedInfo);
         return ResponseEntity.ok(BaseResponse.success(recordedInfo, "Client audit information recorded."));
     }
 
     @GetMapping("/test-locale")
     public ResponseEntity<BaseResponse<String>> testLocale(@RequestHeader(value = "Accept-Language", required = false) Locale locale) {
         String message = localizationUtils.getLocalizedMessage("greeting.message", "John");
-        log.info("Testing locale with Accept-Language: {}. Localized message: {}", locale, message);
+        log.info("[unknown]: Testing locale with Accept-Language: {}. Localized message: {}", locale, message);
         return ResponseEntity.ok(BaseResponse.success(message, "Localization test successful."));
     }
 
     @PostMapping("/clear-cache")
     @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Void>> clearAllCaches() {
-        log.info("Attempting to clear all caches.");
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to clear all caches.", username);
         cacheManager.getCacheNames().forEach(cacheName -> {
             Objects.requireNonNull(cacheManager.getCache(cacheName)).clear();
-            log.info("Cache '{}' cleared.", cacheName);
+            log.info("[{}]: Cache '{}' cleared.", username, cacheName);
         });
-        log.info("All caches cleared successfully.");
+        log.info("[{}]: All caches cleared successfully.", username);
         return ResponseEntity.ok(BaseResponse.success("All caches cleared successfully."));
     }
 }

@@ -19,8 +19,8 @@ public class InvalidatedTokenCleanupJob {
     @Scheduled(cron = "0 15 */1 * * ?") // mỗi giờ, phút 15
     @Async
     public void cleanupExpiredTokens() {
-        log.info("Starting scheduled job: Cleaning up expired invalidated tokens.");
+        log.info("[system]: Starting scheduled job: Cleaning up expired invalidated tokens.");
         invalidatedTokenService.deleteExpiredTokens();
-        log.info("Finished scheduled job: Expired invalidated tokens cleanup complete.");
+        log.info("[system]: Finished scheduled job: Expired invalidated tokens cleanup complete.");
     }
 }

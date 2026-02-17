@@ -7,5 +7,5 @@ import vn.id.luannv.lutaco.entity.RecurringTransaction;
 
 public interface RecurringTransactionService extends
         BaseService<RecurringTransactionFilterRequest, RecurringTransactionResponse, RecurringTransactionRequest, Long> {
-    void processOne(RecurringTransaction request);
+    boolean processOne(RecurringTransaction request);
 }

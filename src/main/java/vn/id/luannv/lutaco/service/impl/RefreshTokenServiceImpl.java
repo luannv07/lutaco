@@ -17,6 +17,7 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.RefreshTokenRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.RefreshTokenService;
+import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Date;
 import java.util.UUID;
@@ -36,10 +37,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     @CacheEvict(value = "refreshTokens", key = "#username")
     public RefreshToken createRefreshToken(String username) {
-        log.info("Creating refresh token for user: {}", username);
+        log.info("[{}]: Creating refresh token for user: {}", username, username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    log.warn("User {} not found when creating refresh token.", username);
+                    log.warn("[{}]: User {} not found when creating refresh token.", username, username);
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
 
@@ -50,25 +51,25 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .build();
 
         RefreshToken savedToken = refreshTokenRepository.save(refreshToken);
-        log.info("Refresh token created for user {}. Token ID: {}", username, savedToken.getToken());
+        log.info("[{}]: Refresh token created for user {}. Token ID: {}", username, username, savedToken.getToken());
         return savedToken;
     }
 
     @Override
     @Cacheable(value = "refreshTokens", key = "#username")
     public RefreshToken findByTokenWithUser(String username) {
-        log.debug("Attempting to find refresh token for user: {}", username);
+        log.debug("[{}]: Attempting to find refresh token for user: {}", username, username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    log.warn("User {} not found when searching for refresh token.", username);
+                    log.warn("[{}]: User {} not found when searching for refresh token.", username, username);
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
 
         RefreshToken token = refreshTokenRepository.findByUser(user).orElse(null);
         if (token != null) {
-            log.debug("Refresh token found for user {}.", username);
+            log.debug("[{}]: Refresh token found for user {}.", username, username);
         } else {
-            log.debug("No refresh token found for user {}.", username);
+            log.debug("[{}]: No refresh token found for user {}.", username, username);
         }
         return token;
     }
@@ -77,41 +78,41 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Transactional
     @CacheEvict(value = "refreshTokens", key = "#username")
     public void deleteRefreshToken(String username) {
-        log.info("Deleting refresh token for user: {}", username);
+        log.info("[{}]: Deleting refresh token for user: {}", username, username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    log.warn("User {} not found when deleting refresh token.", username);
+                    log.warn("[{}]: User {} not found when deleting refresh token.", username, username);
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
 
         refreshTokenRepository.deleteByUser(user);
-        log.info("Refresh token successfully deleted for user {}.", username);
+        log.info("[{}]: Refresh token successfully deleted for user {}.", username, username);
     }
 
     @Override
     @Cacheable(value = "refreshTokens", key = "#token")
     public RefreshToken findByToken(String token) {
-        log.debug("Attempting to find refresh token by token string.");
+        log.debug("[unknown]: Attempting to find refresh token by token string.");
         RefreshToken foundToken = refreshTokenRepository.findByToken(token)
                 .filter(refreshToken -> refreshToken.getExpiryTime().after(new Date()))
                 .orElseThrow(() -> {
-                    log.warn("Invalid or expired refresh token provided.");
+                    log.warn("[unknown]: Invalid or expired refresh token provided.");
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
-        log.debug("Refresh token found and is valid.");
+        log.debug("[unknown]: Refresh token found and is valid.");
         return foundToken;
     }
 
     @Override
     @Cacheable(value = "refreshTokens", key = "#token + 'username'")
     public String getUsernameByToken(String token) {
-        log.debug("Attempting to get username from refresh token.");
+        log.debug("[unknown]: Attempting to get username from refresh token.");
         String username = refreshTokenRepository.findUsernameByToken(token)
                 .orElseThrow(() -> {
-                    log.warn("Username not found for provided refresh token.");
+                    log.warn("[unknown]: Username not found for provided refresh token.");
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
-        log.debug("Username '{}' extracted from refresh token.", username);
+        log.debug("[unknown]: Username '{}' extracted from refresh token.", username);
         return username;
     }
 }

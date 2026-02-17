@@ -94,7 +94,7 @@ public class PayOsClient {
 
         request.setSignature(signature);
 
-        log.info("Sending payment creation request to PayOS for order code: {}", payOS.getOrderCode());
+        log.info("[system]: Sending payment creation request to PayOS for order code: {}", payOS.getOrderCode());
         PayOSResponse<PayOSResponse.PayOSDataCreated> response = webClient.post()
                 .uri("/v2/payment-requests")
                 .bodyValue(request)
@@ -102,7 +102,7 @@ public class PayOsClient {
                 .onStatus(HttpStatusCode::isError, resp ->
                         resp.bodyToMono(String.class)
                                 .flatMap(body -> {
-                                    log.error("PayOS create payment failed for order code {}. Response body: {}", payOS.getOrderCode(), body);
+                                    log.error("[system]: PayOS create payment failed for order code {}. Response body: {}", payOS.getOrderCode(), body);
                                     return Mono.error(() -> new BusinessException(ErrorCode.PAYMENT_PROVIDER_ERROR));
                                 })
                 )
@@ -112,7 +112,7 @@ public class PayOsClient {
 
         if (response != null) {
             if (response.getData() == null || response.getSignature() == null) {
-                log.warn("PayOS response for order code {} indicates an error or missing data. Code: {}, Desc: {}", payOS.getOrderCode(), response.getCode(), response.getDesc());
+                log.warn("[system]: PayOS response for order code {} indicates an error or missing data. Code: {}, Desc: {}", payOS.getOrderCode(), response.getCode(), response.getDesc());
                 PayOSResponse<PayOSResponse.PayOSDataDetail> detail =
                         getDetailExecute(String.valueOf(payOS.getOrderCode()));
 
@@ -121,26 +121,26 @@ public class PayOsClient {
                     if (payOS.getStatus() == PaymentStatus.PAID && payOS.getPaidAt() == null)
                         payOS.setPaidAt(LocalDateTime.now());
                 } catch (Exception exception) {
-                    log.error("Failed to parse payment status from PayOS detail response for order code {}. Status: {}", payOS.getOrderCode(), detail.getData().getStatus(), exception);
+                    log.error("[system]: Failed to parse payment status from PayOS detail response for order code {}. Status: {}", payOS.getOrderCode(), detail.getData().getStatus(), exception);
                     payOS.setStatus(PaymentStatus.UNKNOWN);
                 }
                 payOSRepository.save(payOS);
                 if (response.getCode() != null && response.getCode().equals("231")) {
-                    log.info("PayOS reported order code {} already exists. Local server did not have it, throwing PAYMENT_SYSTEM_ERROR.", payOS.getOrderCode());
+                    log.info("[system]: PayOS reported order code {} already exists. Local server did not have it, throwing PAYMENT_SYSTEM_ERROR.", payOS.getOrderCode());
                     throw new BusinessException(ErrorCode.PAYMENT_SYSTEM_ERROR);
                 }
             } else {
                 payOS.setStatus(PaymentStatus.PENDING);
                 payOS.setPaymentLinkId(response.getData().getPaymentLinkId());
-                log.info("PayOS payment link created successfully for order code {}. Payment Link ID: {}", payOS.getOrderCode(), payOS.getPaymentLinkId());
+                log.info("[system]: PayOS payment link created successfully for order code {}. Payment Link ID: {}", payOS.getOrderCode(), payOS.getPaymentLinkId());
             }
         } else {
-            log.error("Received null response from PayOS for order code {}.", payOS.getOrderCode());
+            log.error("[system]: Received null response from PayOS for order code {}.", payOS.getOrderCode());
             throw new BusinessException(ErrorCode.PAYMENT_PROVIDER_ERROR);
         }
 
         if (payOS.getPaymentLinkId().contains("not_")) {
-            log.error("PayOS payment link ID for order code {} contains 'not_' prefix, indicating an issue. Response Code: {}, Description: {}. PayOS Description Length: {}", payOS.getOrderCode(), response.getCode(), response.getDesc(), payOS.getDescription().length());
+            log.error("[system]: PayOS payment link ID for order code {} contains 'not_' prefix, indicating an issue. Response Code: {}, Description: {}. PayOS Description Length: {}", payOS.getOrderCode(), response.getCode(), response.getDesc(), payOS.getDescription().length());
             throw new BusinessException(ErrorCode.PAYMENT_SYSTEM_ERROR);
         }
         payOSRepository.save(payOS);
@@ -148,13 +148,13 @@ public class PayOsClient {
     }
 
     public PayOSResponse<PayOSResponse.PayOSDataDetail> getDetail(String id) {
-        log.info("Fetching payment details from PayOS for ID: {}", id);
+        log.info("[system]: Fetching payment details from PayOS for ID: {}", id);
         return getDetailExecute(id);
     }
 
     public void confirmHookUrl(Map<String, Object> hookLink) {
         hookLink.putIfAbsent("webhookUrl", "");
-        log.info("Attempting to confirm webhook URL with PayOS: {}", hookLink.get("webhookUrl"));
+        log.info("[system]: Attempting to confirm webhook URL with PayOS: {}", hookLink.get("webhookUrl"));
 
         webClient.post()
                 .uri("confirm-webhook")
@@ -163,25 +163,25 @@ public class PayOsClient {
                 .onStatus(HttpStatusCode::isError, resp ->
                         resp.bodyToMono(Map.class)
                                 .flatMap(body -> {
-                                    log.error("PayOS confirm-webhook request failed. Response body: {}", body);
+                                    log.error("[system]: PayOS confirm-webhook request failed. Response body: {}", body);
                                     return Mono.error(() -> new BusinessException(ErrorCode.SYSTEM_ERROR, body));
                                 })
                 )
                 .bodyToMono(Object.class)
                 .block();
-        log.info("Successfully confirmed webhook URL with PayOS.");
+        log.info("[system]: Successfully confirmed webhook URL with PayOS.");
     }
 
     // get chi tiết trạng thái order cho đơn hàng nào đó theo orderCode
     private PayOSResponse<PayOSResponse.PayOSDataDetail> getDetailExecute(String id) {
-        log.debug("Executing PayOS getDetail for ID: {}", id);
+        log.debug("[system]: Executing PayOS getDetail for ID: {}", id);
         return webClient.get()
                 .uri("/v2/payment-requests/" + id)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, resp ->
                         resp.bodyToMono(String.class)
                                 .flatMap(body -> {
-                                    log.error("PayOS getDetail failed for ID {}. Response body: {}", id, body);
+                                    log.error("[system]: PayOS getDetail failed for ID {}. Response body: {}", id, body);
                                     return Mono.error(() -> new BusinessException(ErrorCode.PAYMENT_PROVIDER_ERROR));
                                 })
                 )

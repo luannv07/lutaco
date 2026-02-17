@@ -26,24 +26,24 @@ public class InvalidatedTokenServiceImpl implements InvalidatedTokenService {
     @CacheEvict(value = "invalidatedTokens", allEntries = true)
     public void deleteExpiredTokens() {
         long deletedCount = invalidatedTokenRepository.deleteByExpiryTimeBefore(new Date());
-        log.info("Cleaned up {} expired invalidated tokens.", deletedCount);
+        log.info("[system]: Cleaned up {} expired invalidated tokens.", deletedCount);
     }
 
     @Override
     @Cacheable(value = "invalidatedTokens", key = "#jti")
     public boolean existByJti(String jti) {
         boolean exists = invalidatedTokenRepository.existsByJti(jti);
-        log.debug("Checking if JTI '{}' exists in invalidated tokens: {}.", jti, exists);
+        log.debug("[system]: Checking if JTI '{}' exists in invalidated tokens: {}.", jti, exists);
         return exists;
     }
 
     @Override
     @CacheEvict(value = "invalidatedTokens", key = "#jti")
     public void addInvalidatedToken(String jti, Date expiryTime) {
-        log.debug("Adding invalidated token with JTI: '{}' and expiry time: '{}'.", jti, expiryTime);
+        log.debug("[system]: Adding invalidated token with JTI: '{}' and expiry time: '{}'.", jti, expiryTime);
         invalidatedTokenRepository.save(InvalidatedToken.builder()
                 .jti(jti)
                 .expiryTime(expiryTime).build());
-        log.info("Invalidated token with JTI: '{}' added successfully.", jti);
+        log.info("[system]: Invalidated token with JTI: '{}' added successfully.", jti);
     }
 }

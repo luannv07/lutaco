@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
@@ -34,20 +35,24 @@ public class WalletServiceImpl implements WalletService {
     UserRepository userRepository;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+    })
     public Wallet create(WalletCreateRequest request) {
+        String username = SecurityUtils.getCurrentUsername();
         String userId = SecurityUtils.getCurrentId();
-        log.info("Attempting to create wallet for user ID: {}. Request: {}", userId, request.getWalletName());
+        log.info("[{}]: Attempting to create wallet for user ID: {}. Request: {}", username, userId, request.getWalletName());
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
-                    log.warn("User with ID {} not found during wallet creation.", userId);
+                    log.warn("[{}]: User with ID {} not found during wallet creation.", username, userId);
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
 
-        long count = walletRepository.countByUser_Id(userId);
+        long count = walletRepository.countByUser_IdAndStatus(userId, WalletStatus.ACTIVE);
         if (count >= user.getUserPlan().getMaxWallets()) {
-            log.warn("User ID {} has reached maximum wallet limit ({}). Cannot create new wallet.",
-                    userId, user.getUserPlan().getMaxWallets());
+            log.warn("[{}]: User ID {} has reached maximum wallet limit ({}). Cannot create new wallet.",
+                    username, userId, user.getUserPlan().getMaxWallets());
             throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
         }
 
@@ -56,25 +61,25 @@ public class WalletServiceImpl implements WalletService {
         wallet.setStatus(WalletStatus.ACTIVE);
 
         Wallet savedWallet = walletRepository.save(wallet);
-        log.info("Wallet '{}' (ID: {}) created successfully for user ID {}.",
-                savedWallet.getWalletName(), savedWallet.getId(), userId);
+        log.info("[{}]: Wallet '{}' (ID: {}) created successfully for user ID {}.",
+                username, savedWallet.getWalletName(), savedWallet.getId(), userId);
         return savedWallet;
     }
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void createDefaultWallet(String userId) {
-        log.info("Attempting to create default wallet for user ID: {}.", userId);
+        log.info("[system]: Attempting to create default wallet for user ID: {}.", userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
-                    log.warn("User with ID {} not found during default wallet creation.", userId);
+                    log.warn("[system]: User with ID {} not found during default wallet creation.", userId);
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
 
         long count = walletRepository.countByUser_Id(userId);
         if (count >= user.getUserPlan().getMaxWallets()) {
-            log.warn("User ID {} has reached maximum wallet limit ({}). Cannot create default wallet.",
+            log.warn("[system]: User ID {} has reached maximum wallet limit ({}). Cannot create default wallet.",
                     userId, user.getUserPlan().getMaxWallets());
             throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
         }
@@ -88,78 +93,89 @@ public class WalletServiceImpl implements WalletService {
         wallet.setStatus(WalletStatus.ACTIVE);
 
         Wallet savedWallet = walletRepository.save(wallet);
-        log.info("Default wallet '{}' (ID: {}) created successfully for user ID {}.",
+        log.info("[system]: Default wallet '{}' (ID: {}) created successfully for user ID {}.",
                 savedWallet.getWalletName(), savedWallet.getId(), userId);
     }
 
     @Override
-    @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()")
+    @Caching(evict = {
+            @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()"),
+            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+    })
     public Wallet update(String walletName, WalletUpdateRequest request) {
-        log.info("Attempting to update wallet '{}' for current user. Request: {}", walletName, request);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to update wallet '{}' for current user. Request: {}", username, walletName, request);
         Wallet wallet = getMywalletOrThrow(walletName);
         walletMapper.update(wallet, request);
         Wallet updatedWallet = walletRepository.save(wallet);
-        log.info("Wallet '{}' (ID: {}) updated successfully.",
-                updatedWallet.getWalletName(), updatedWallet.getId());
+        log.info("[{}]: Wallet '{}' (ID: {}) updated successfully.",
+                username, updatedWallet.getWalletName(), updatedWallet.getId());
         return updatedWallet;
     }
 
     @Override
-    @CacheEvict(value = "wallets",
-            key = "#walletName + @securityPermission.getCurrentUserId()")
+    @Caching(evict = {
+            @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()"),
+            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+    })
     public void deleteByUser(String walletName) {
-        log.info("Attempting to soft delete wallet '{}' for current user.", walletName);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to soft delete wallet '{}' for current user.", username, walletName);
         Wallet wallet = getMywalletOrThrow(walletName);
         wallet.setStatus(WalletStatus.INACTIVE);
         walletRepository.save(wallet);
-        log.info("Wallet '{}' (ID: {}) soft deleted successfully.",
-                wallet.getWalletName(), wallet.getId());
+        log.info("[{}]: Wallet '{}' (ID: {}) soft deleted successfully.",
+                username, wallet.getWalletName(), wallet.getId());
     }
 
     @Override
     public void archiveByAdmin(String userId, String walletName) {
-        log.info("Admin attempting to archive wallet '{}' for user ID: {}.", walletName, userId);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Admin attempting to archive wallet '{}' for user ID: {}.", username, walletName, userId);
 
         Wallet wallet = walletRepository
                 .findByUser_IdAndWalletName(userId, walletName)
                 .orElseThrow(() -> {
-                    log.warn("Wallet '{}' not found for user ID {} for archiving.", walletName, userId);
+                    log.warn("[{}]: Wallet '{}' not found for user ID {} for archiving.", username, walletName, userId);
                     return new BusinessException(ErrorCode.ENUM_NOT_FOUND);
                 });
 
         wallet.setStatus(WalletStatus.ARCHIVED);
         walletRepository.save(wallet);
-        log.info("Wallet '{}' (ID: {}) archived successfully for user ID {}.",
-                wallet.getWalletName(), wallet.getId(), userId);
+        log.info("[{}]: Wallet '{}' (ID: {}) archived successfully for user ID {}.",
+                username, wallet.getWalletName(), wallet.getId(), userId);
     }
 
     @Override
     @Cacheable(value = "wallets",
             key = "#walletName + @securityPermission.getCurrentUserId()")
     public Wallet getDetail(String walletName) {
-        log.info("Fetching details for wallet '{}' for current user.", walletName);
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Fetching details for wallet '{}' for current user.", username, walletName);
         Wallet wallet = getMywalletOrThrow(walletName);
-        log.info("Successfully retrieved details for wallet '{}' (ID: {}).",
-                wallet.getWalletName(), wallet.getId());
+        log.info("[{}]: Successfully retrieved details for wallet '{}' (ID: {}).",
+                username, wallet.getWalletName(), wallet.getId());
         return wallet;
     }
 
     @Override
-    @Cacheable(value = "wallets", key = "@securityPermission.getCurrentUserId()")
+    @Cacheable(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     public List<Wallet> getMyWallets() {
+        String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
-        log.info("Fetching all wallets for current user ID: {}.", currentUserId);
-        List<Wallet> wallets = walletRepository.findByUser_Id(currentUserId);
-        log.info("Found {} wallets for user ID {}.", wallets.size(), currentUserId);
+        log.info("[{}]: Fetching all wallets for current user ID: {}.", username, currentUserId);
+        List<Wallet> wallets = walletRepository.findByUser_IdAndStatus(currentUserId, WalletStatus.ACTIVE);
+        log.info("[{}]: Found {} wallets for user ID {}.", username, wallets.size(), currentUserId);
         return wallets;
     }
 
     private Wallet getMywalletOrThrow(String walletName) {
+        String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
         return walletRepository
-                .findByUser_IdAndWalletName(currentUserId, walletName)
+                .findByUser_IdAndWalletNameAndStatus(currentUserId, walletName, WalletStatus.ACTIVE)
                 .orElseThrow(() -> {
-                    log.warn("Wallet '{}' not found for current user ID {}.", walletName, currentUserId);
+                    log.warn("[{}]: Wallet '{}' not found for current user ID {}.", username, walletName, currentUserId);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
     }

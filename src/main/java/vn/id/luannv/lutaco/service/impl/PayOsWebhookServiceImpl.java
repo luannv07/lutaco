@@ -41,23 +41,23 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
     @Override
     @Transactional
     public void handle(PayOsWebhookRequest request) {
-        log.info("Received PayOS webhook for order code: {}", request.getData().getOrderCode());
+        log.info("[system]: Received PayOS webhook for order code: {}", request.getData().getOrderCode());
 
         if (!PayOsSignatureUtils.verify(request, checkSumKey)) {
-            log.warn("PayOS webhook verification failed for order code: {}. Invalid signature.", request.getData().getOrderCode());
+            log.warn("[system]: PayOS webhook verification failed for order code: {}. Invalid signature.", request.getData().getOrderCode());
             throw new BusinessException(ErrorCode.INVALID_SIGNATURE);
         }
-        log.debug("PayOS webhook signature verified successfully for order code: {}.", request.getData().getOrderCode());
+        log.debug("[system]: PayOS webhook signature verified successfully for order code: {}.", request.getData().getOrderCode());
 
         PayOS payOS = payOSRepository.getPayOSByOrderCode(request.getData().getOrderCode())
                 .orElseThrow(() -> {
-                    log.warn("PayOS record not found for order code: {} from webhook.", request.getData().getOrderCode());
+                    log.warn("[system]: PayOS record not found for order code: {} from webhook.", request.getData().getOrderCode());
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
-        log.debug("Found PayOS record for order code: {}. Current status: {}.", payOS.getOrderCode(), payOS.getStatus());
+        log.debug("[system]: Found PayOS record for order code: {}. Current status: {}.", payOS.getOrderCode(), payOS.getStatus());
 
         if (amount != request.getData().getAmount()) {
-            log.warn("Webhook amount mismatch for order code {}. Expected: {}, Received: {}.", payOS.getOrderCode(), amount, request.getData().getAmount());
+            log.warn("[system]: Webhook amount mismatch for order code {}. Expected: {}, Received: {}.", payOS.getOrderCode(), amount, request.getData().getAmount());
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
 
@@ -67,34 +67,34 @@ public class PayOsWebhookServiceImpl implements PayOsWebhookService {
                         request.getData().getOrderCode(),
                         PaymentStatus.PENDING);
         if (updatedRows == 0) {
-            log.info("PayOS record for order code {} was not in PENDING status or already updated. No further action taken.", payOS.getOrderCode());
+            log.info("[system]: PayOS record for order code {} was not in PENDING status or already updated. No further action taken.", payOS.getOrderCode());
             return;
         }
-        log.info("PayOS record for order code {} successfully updated to PAID status.", payOS.getOrderCode());
+        log.info("[system]: PayOS record for order code {} successfully updated to PAID status.", payOS.getOrderCode());
 
         User user = userRepository.findById(payOSRepository.getUserIdByOrderCode(payOS.getOrderCode()))
                 .orElseThrow(() -> {
-                    log.error("User associated with PayOS order code {} not found.", payOS.getOrderCode());
+                    log.error("[system]: User associated with PayOS order code {} not found.", payOS.getOrderCode());
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
-        log.debug("User {} associated with PayOS order code {} found. Current status: {}, Plan: {}.", user.getUsername(), payOS.getOrderCode(), user.getUserStatus(), user.getUserPlan());
+        log.debug("[system]: User {} associated with PayOS order code {} found. Current status: {}, Plan: {}.", user.getUsername(), payOS.getOrderCode(), user.getUserStatus(), user.getUserPlan());
 
         if (user.getUserStatus() == UserStatus.BANNED || user.getUserStatus() == UserStatus.DISABLED_BY_USER) {
-            log.warn("User {} (ID: {}) associated with order code {} is banned or disabled. Cannot upgrade plan.", user.getUsername(), user.getId(), payOS.getOrderCode());
+            log.warn("[system]: User {} (ID: {}) associated with order code {} is banned or disabled. Cannot upgrade plan.", user.getUsername(), user.getId(), payOS.getOrderCode());
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
 
         if (user.getUserPlan() == UserPlan.PREMIUM) {
-            log.info("User {} (ID: {}) is already a PREMIUM user. No plan upgrade needed for order code {}.", user.getUsername(), user.getId(), payOS.getOrderCode());
+            log.info("[system]: User {} (ID: {}) is already a PREMIUM user. No plan upgrade needed for order code {}.", user.getUsername(), user.getId(), payOS.getOrderCode());
             return;
         }
 
         if (user.getUserStatus() == UserStatus.ACTIVE) {
             user.setUserPlan(UserPlan.PREMIUM);
             userRepository.save(user);
-            log.info("User {} (ID: {}) plan successfully upgraded to PREMIUM for order code {}.", user.getUsername(), user.getId(), payOS.getOrderCode());
+            log.info("[system]: User {} (ID: {}) plan successfully upgraded to PREMIUM for order code {}.", user.getUsername(), user.getId(), payOS.getOrderCode());
         } else {
-            log.warn("User {} (ID: {}) is not in ACTIVE status (current status: {}). Plan not upgraded to PREMIUM for order code {}.", user.getUsername(), user.getId(), user.getUserStatus(), payOS.getOrderCode());
+            log.warn("[system]: User {} (ID: {}) is not in ACTIVE status (current status: {}). Plan not upgraded to PREMIUM for order code {}.", user.getUsername(), user.getId(), user.getUserStatus(), payOS.getOrderCode());
         }
     }
 }
