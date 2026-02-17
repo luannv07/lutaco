@@ -51,9 +51,9 @@ public class BudgetUpdateListener {
         if (budget.getTargetAmount() > 0) {
             float percentage = ((float) newActualAmount / budget.getTargetAmount()) * 100;
             budget.setPercentage(percentage);
-            budget.setStatus(updateStatus(percentage));
+            if (budget.getStatus() != BudgetStatus.UNKNOWN)
+                budget.setStatus(updateStatus(percentage));
         }
-
         if (budget.getStatus() == BudgetStatus.DANGER || budget.getStatus() == BudgetStatus.WARNING) {
             EmailTemplateService.EmailFields fields = EmailTemplateService.sendAttentionBudget(budget);
             emailService.sendEmail(
@@ -63,7 +63,6 @@ public class BudgetUpdateListener {
             );
             log.info("Sent budget alert email for budget ID: {} (status: {})", budget.getId(), budget.getStatus());
         }
-
         budgetRepository.save(budget);
         log.info("Budget ID: {} successfully updated. New actual amount: {}, New percentage: {}",
                 budget.getId(), newActualAmount, budget.getPercentage());

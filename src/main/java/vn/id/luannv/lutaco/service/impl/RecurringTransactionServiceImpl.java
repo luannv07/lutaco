@@ -54,14 +54,15 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    public void processOne(RecurringTransaction rt) {
+    public boolean processOne(RecurringTransaction rt) {
         log.info("Processing single recurring transaction with ID: {}", rt.getId());
         RecurringTransactionEvent.RecurringUserFields recurringUserFields = transactionRepository
                 .getRecurringUserFieldsByTransactionId(rt.getTransaction().getId())
-                .orElseThrow(() -> {
-                    log.warn("Original transaction for recurring transaction ID {} not found.", rt.getId());
-                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("transactionId", rt.getTransaction().getId()));
-                });
+                .orElse(null);
+        if (recurringUserFields == null) {
+            log.info("Transaction for recurring transaction [ID: {}] has been deleted.", rt.getId());
+            return false;
+        }
 
         InternalState state = new InternalState(rt, recurringUserFields);
         publishEvent(state, RecurringTransactionEvent.RecurringTransactionState.FREQUENCY);
@@ -69,6 +70,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         rt.setNextDate(rt.getFrequentType().calculateNextDate(LocalDate.now()));
         recurringTransactionRepository.save(rt);
         log.info("Finished processing recurring transaction with ID: {}. Next scheduled date: {}", rt.getId(), rt.getNextDate());
+        return true;
     }
 
     private InternalState createAndSaveTransaction(RecurringTransactionRequest request) {

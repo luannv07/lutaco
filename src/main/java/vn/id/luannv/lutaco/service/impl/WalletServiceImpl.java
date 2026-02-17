@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
@@ -34,6 +35,9 @@ public class WalletServiceImpl implements WalletService {
     UserRepository userRepository;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+    })
     public Wallet create(WalletCreateRequest request) {
         String userId = SecurityUtils.getCurrentId();
         log.info("Attempting to create wallet for user ID: {}. Request: {}", userId, request.getWalletName());
@@ -44,7 +48,7 @@ public class WalletServiceImpl implements WalletService {
                     return new BusinessException(ErrorCode.UNAUTHORIZED);
                 });
 
-        long count = walletRepository.countByUser_Id(userId);
+        long count = walletRepository.countByUser_IdAndStatus(userId, WalletStatus.ACTIVE);
         if (count >= user.getUserPlan().getMaxWallets()) {
             log.warn("User ID {} has reached maximum wallet limit ({}). Cannot create new wallet.",
                     userId, user.getUserPlan().getMaxWallets());
@@ -93,7 +97,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()")
+    @Caching(evict = {
+            @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()"),
+            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+    })
     public Wallet update(String walletName, WalletUpdateRequest request) {
         log.info("Attempting to update wallet '{}' for current user. Request: {}", walletName, request);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -105,8 +112,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets",
-            key = "#walletName + @securityPermission.getCurrentUserId()")
+    @Caching(evict = {
+            @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()"),
+            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+    })
     public void deleteByUser(String walletName) {
         log.info("Attempting to soft delete wallet '{}' for current user.", walletName);
         Wallet wallet = getMywalletOrThrow(walletName);
@@ -145,11 +154,11 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @Cacheable(value = "wallets", key = "@securityPermission.getCurrentUserId()")
+    @Cacheable(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     public List<Wallet> getMyWallets() {
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("Fetching all wallets for current user ID: {}.", currentUserId);
-        List<Wallet> wallets = walletRepository.findByUser_Id(currentUserId);
+        List<Wallet> wallets = walletRepository.findByUser_IdAndStatus(currentUserId, WalletStatus.ACTIVE);
         log.info("Found {} wallets for user ID {}.", wallets.size(), currentUserId);
         return wallets;
     }
@@ -157,7 +166,7 @@ public class WalletServiceImpl implements WalletService {
     private Wallet getMywalletOrThrow(String walletName) {
         String currentUserId = SecurityUtils.getCurrentId();
         return walletRepository
-                .findByUser_IdAndWalletName(currentUserId, walletName)
+                .findByUser_IdAndWalletNameAndStatus(currentUserId, walletName, WalletStatus.ACTIVE)
                 .orElseThrow(() -> {
                     log.warn("Wallet '{}' not found for current user ID {}.", walletName, currentUserId);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);

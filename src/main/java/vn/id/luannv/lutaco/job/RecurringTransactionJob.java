@@ -23,7 +23,6 @@ public class RecurringTransactionJob {
     RecurringTransactionService recurringTransactionService;
 
     @Scheduled(cron = "0 5 0 * * ?") // 00:05 mỗi ngày
-//    @Scheduled(fixedDelay = 10000) // 00:05 mỗi ngày
     public void processRecurringTransactions() {
         log.info("Starting scheduled job: Processing recurring transactions for today ({}).", LocalDate.now());
         List<RecurringTransaction> transactions = recurringTransactionRepository.findAllByNextDateBefore(LocalDate.now().plusDays(1));
@@ -32,9 +31,10 @@ public class RecurringTransactionJob {
 
         for (RecurringTransaction rt : transactions) {
             try {
-                recurringTransactionService.processOne(rt);
-                processedCount++;
-                log.info("Successfully processed recurring transaction with ID: {}", rt.getId());
+                if (recurringTransactionService.processOne(rt)) {
+                    processedCount++;
+                    log.info("Successfully processed recurring transaction with ID: {}", rt.getId());
+                }
             } catch (Exception e) {
                 log.error("Error processing recurring transaction with ID: {}. This transaction will be rolled back. Error: {}", rt.getId(), e.getMessage(), e);
             }

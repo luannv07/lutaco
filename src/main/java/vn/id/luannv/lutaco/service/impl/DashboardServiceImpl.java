@@ -19,6 +19,7 @@ import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.dto.response.WalletSummaryResponse;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.enumerate.PeriodRange;
+import vn.id.luannv.lutaco.enumerate.WalletStatus;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.export.ExportContainer;
@@ -465,7 +466,7 @@ public class DashboardServiceImpl implements DashboardService {
     private List<WalletSummaryResponse> getWallets(String userId) {
         log.debug("Fetching wallet summaries for user ID: {}.", userId);
         List<WalletSummaryResponse> wallets = walletRepository
-                .findByUser_Id(userId)
+                .findByUser_IdAndStatus(userId, WalletStatus.ACTIVE)
                 .stream().map(wallet -> WalletSummaryResponse.builder()
                         .walletName(wallet.getWalletName())
                         .balance(wallet.getCurrentBalance())

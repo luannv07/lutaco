@@ -1,12 +1,12 @@
 package vn.id.luannv.lutaco.service.impl;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -108,7 +108,11 @@ public class BudgetServiceImpl implements BudgetService {
                     log.warn("Budget with ID {} not found for preventing danger email.", id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
-        budget.setStatus(BudgetStatus.UNKNOWN);
+        if (budget.getStatus() == BudgetStatus.UNKNOWN) {
+            budget.setStatus(BudgetStatus.NORMAL);
+        } else {
+            budget.setStatus(BudgetStatus.UNKNOWN);
+        }
         budgetRepository.save(budget);
         log.info("Budget ID {} status updated to UNKNOWN to prevent danger emails.", id);
         return true;
@@ -130,7 +134,6 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    @Cacheable(value = "budgets", key = "#id + @securityPermission.getCurrentUserId()")
     public BudgetResponse getDetail(Long id) {
         log.info("Fetching details for budget ID: {}", id);
         Budget budget = budgetRepository.findById(id)
@@ -144,7 +147,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public Page<BudgetResponse> search(BudgetFilterRequest request, Integer page, Integer size) {
-        log.info("Searching budgets with filter: {}, page: {}, size: {}.", request, page, size);
         Specification<Budget> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -167,7 +169,6 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    @CacheEvict(value = "budgets", key = "#id + @securityPermission.getCurrentUserId()")
     public BudgetResponse update(Long id, BudgetRequest request) {
         log.info("Updating budget with ID: {} with request: {}", id, request);
         Budget existingBudget = budgetRepository.findById(id)
@@ -175,6 +176,9 @@ public class BudgetServiceImpl implements BudgetService {
                     log.warn("Budget with ID {} not found for update.", id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
+        if (existingBudget.getPercentage() != 0 || existingBudget.getActualAmount() != 0) {
+            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
+        }
 
         budgetMapper.update(existingBudget, request);
 
@@ -198,13 +202,16 @@ public class BudgetServiceImpl implements BudgetService {
         existingBudget.setPercentage(percentage);
         existingBudget.setStatus(updateStatus(percentage));
 
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        existingBudget.setCategory(category);
+
         Budget updatedBudget = budgetRepository.save(existingBudget);
         log.info("Budget with ID {} updated successfully.", updatedBudget.getId());
         return budgetMapper.toDto(updatedBudget);
     }
 
     @Override
-    @CacheEvict(value = "budgets", key = "#id + @securityPermission.getCurrentUserId()")
     public void deleteById(Long id) {
         log.info("Attempting to delete budget with ID: {}", id);
         Budget budget = budgetRepository.findById(id)

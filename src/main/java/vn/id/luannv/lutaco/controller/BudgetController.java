@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.BudgetResponse;
 import vn.id.luannv.lutaco.service.BudgetService;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/budgets")
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class BudgetController {
                 ));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/notification")
     @Operation(summary = "Tắt/Bật email cảnh báo ngân sách")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cập nhật thành công"),
@@ -55,7 +57,7 @@ public class BudgetController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         budgetService.preventDangerEmail(id),
-                        "Ko nhận email cảnh báo cho Budget thành công."
+                        "Cập nhật trạng thái cảnh báo cho Budget thành công."
                 ));
     }
 
@@ -81,14 +83,10 @@ public class BudgetController {
             @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
     })
-    public ResponseEntity<BaseResponse<Page<BudgetResponse>>> search(
-            @ModelAttribute BudgetFilterRequest request,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
-    ) {
+    public ResponseEntity<BaseResponse<Page<BudgetResponse>>> search(@Valid @ModelAttribute BudgetFilterRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        budgetService.search(request, page, size),
+                        budgetService.search(request, request.getPage(), request.getSize()),
                         "Lấy danh sách ngân sách thành công."
                 ));
     }
