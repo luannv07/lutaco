@@ -48,6 +48,9 @@ public class PaymentJob {
             PayOSResponse<PayOSResponse.PayOSDataDetail> detail =
                     payOsClient.getDetail(String.valueOf(payOS.getOrderCode()));
 
+            if (detail == null) continue;
+            if (detail.getData() == null) continue;
+
             PaymentStatus newStatus =
                     PaymentStatus.valueOf(detail.getData().getStatus());
 

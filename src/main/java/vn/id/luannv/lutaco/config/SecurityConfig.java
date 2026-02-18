@@ -30,6 +30,7 @@ public class SecurityConfig {
     JwtAuthenticationFilter jwtAuthenticationFilter;
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    RateLimitingFilter rateLimitingFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,6 +44,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedHandler(jwtAccessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitingFilter, JwtAuthenticationFilter.class)
                 .build();
     }
 

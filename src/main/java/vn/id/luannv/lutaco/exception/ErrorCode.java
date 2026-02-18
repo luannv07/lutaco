@@ -19,6 +19,7 @@ public enum ErrorCode {
     PERSISTENCE_STATE_ERROR("persistence.state.error", HttpStatus.INTERNAL_SERVER_ERROR),
     UNSUPPORTED_YET("system.unsupported", HttpStatus.BAD_REQUEST),
     I18N_NO_MESSAGE_FOUND("i18n.no.message", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOO_MANY_REQUESTS("too.many.request", HttpStatus.TOO_MANY_REQUESTS),
 
     // =====================================================
     // ================= AUTH / SECURITY ==================

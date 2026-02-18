@@ -1,6 +1,8 @@
 package vn.id.luannv.lutaco.config;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.apache.coyote.RequestInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -29,5 +31,13 @@ public class CacheConfig {
                         .maximumSize(maximumSize)
         );
         return cacheManager;
+    }
+
+    @Bean
+    public Cache<String, RateLimitingFilter.RequestInfo> rateLimitCache() {
+        return Caffeine.newBuilder()
+                .expireAfterAccess(expireAfterWriteMinutes, TimeUnit.MINUTES)
+                .maximumSize(maximumSize)
+                .build();
     }
 }
