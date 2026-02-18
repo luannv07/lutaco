@@ -151,32 +151,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthenticateResponse refreshToken(String refreshToken) {
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Attempting to refresh token.", username);
         RefreshToken entity = refreshTokenService.findByToken(refreshToken);
         String tokenUsername = refreshTokenService.getUsernameByToken(refreshToken);
         User user = userRepository.findByUsername(tokenUsername)
-                .orElseThrow(() -> {
-                    log.warn("[{}]: Refresh token failed: User {} not found.", username, tokenUsername);
-                    return new BusinessException(ErrorCode.ENUM_NOT_FOUND);
-                });
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENUM_NOT_FOUND));
 
         if (refreshTokenService.findByTokenWithUser(tokenUsername) != null) {
-            log.debug("[{}]: Existing refresh token found for user {}, deleting it before issuing new one.", username, tokenUsername);
             refreshTokenService.deleteRefreshToken(tokenUsername);
         }
 
         if (entity.getExpiryTime().after(new Date())) {
-            log.debug("[{}]: Invalidating old refresh token for user {}.", username, tokenUsername);
             invalidatedTokenService.addInvalidatedToken(entity.getToken(), entity.getExpiryTime());
         }
 
-        AuthenticateResponse response = AuthenticateResponse.builder()
+        return AuthenticateResponse.builder()
                 .refreshToken(refreshTokenService.createRefreshToken(tokenUsername).getToken())
                 .authenticated(true)
                 .accessToken(jwtAuthenticateService.generateToken(user))
                 .build();
-        log.info("[{}]: Token refreshed successfully for user {}.", username, tokenUsername);
-        return response;
     }
 }
