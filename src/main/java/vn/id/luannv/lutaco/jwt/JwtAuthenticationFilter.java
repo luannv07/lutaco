@@ -50,8 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 log.debug("[system]: Authorization header not found or does not start with 'Bearer ' for request URI: {}", request.getRequestURI());
-                filterChain.doFilter(request, response);
-                return;
+                throw new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
             }
 
             String token = authorizationHeader.substring(7);
