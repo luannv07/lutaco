@@ -19,7 +19,6 @@ import vn.id.luannv.lutaco.jwt.JwtAccessDeniedHandler;
 import vn.id.luannv.lutaco.jwt.JwtAuthenticationEntryPoint;
 import vn.id.luannv.lutaco.jwt.JwtAuthenticationFilter;
 
-import static vn.id.luannv.lutaco.config.SecurityConstants.PUBLIC_URLS;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(PUBLIC_URLS.toArray(new String[0])).permitAll()
+                                .requestMatchers(EndpointSecurityPolicy.ENDPOINT_POLICIES.keySet().toArray(String[]::new)).permitAll()
                                 .anyRequest().authenticated())
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedHandler(jwtAccessDeniedHandler))

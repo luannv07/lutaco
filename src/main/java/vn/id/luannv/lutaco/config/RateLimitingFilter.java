@@ -2,8 +2,6 @@ package vn.id.luannv.lutaco.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,30 +11,23 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
+import vn.id.luannv.lutaco.util.EndpointPolicyMatcherUtils;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
-
-import javax.print.attribute.standard.JobKOctets;
-
-import static vn.id.luannv.lutaco.util.SecurityUtils.*;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import static vn.id.luannv.lutaco.util.SecurityUtils.getCurrentUsername;
+import static vn.id.luannv.lutaco.util.SecurityUtils.resolveClientIp;
 
 @Slf4j
 @Component
@@ -44,16 +35,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RateLimitingFilter extends OncePerRequestFilter {
     LocalizationUtils localizationUtils;
+    Cache<String, RequestInfo> rateLimitCache;
+    ObjectMapper objectMapper;
     @NonFinal
     @Value("${rate.limit.max-attemps-per-second}")
     Long rateLimitMaxAttempts;
-
     @NonFinal
     @Value("${rate.limit.minimum-pending-seconds-each-request}")
     Long rateLimitMiniumPendingSeconds;
 
-    Cache<String, RequestInfo> rateLimitCache;
-    ObjectMapper objectMapper;
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return EndpointPolicyMatcherUtils.getPolicy(request.getRequestURI()) == EndpointSecurityPolicy.Policy.PUBLIC_NO_LIMIT;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -93,18 +87,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
     }
 
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    public static class RequestInfo {
-        Deque<Instant> requests = new ArrayDeque<>();
-        @Builder.Default
-        Instant lastRequest = Instant.now();
-    }
-
     private synchronized RequestInfo getRequestInfo(String key, Instant now) {
         return rateLimitCache.asMap().compute(key, (k, v) -> {
 
@@ -124,5 +106,16 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             v.requests.addLast(now);
             return v;
         });
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class RequestInfo {
+        Deque<Instant> requests = new ArrayDeque<>();
+        @Builder.Default
+        Instant lastRequest = Instant.now();
     }
 }

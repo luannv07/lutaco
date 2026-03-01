@@ -17,7 +17,6 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.RefreshTokenRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.RefreshTokenService;
-import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Date;
 import java.util.UUID;
