@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import vn.id.luannv.lutaco.annotation.validate.PublicAuditValidate;
-import vn.id.luannv.lutaco.config.SecurityConstants;
 import vn.id.luannv.lutaco.event.entity.UserAuditEvent;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
@@ -53,22 +52,20 @@ public class UserActivityLogger {
 
         long executionTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
 
-        if (!SecurityConstants.PUBLIC_URLS_MANUAL_USERNAME.contains(request.getRequestURI())) {
-            applicationEventPublisher.publishEvent(
-                    UserAuditEvent.builder()
-                            .username(username)
-                            .userAgent(request.getHeader("User-Agent"))
-                            .clientIp(SecurityUtils.resolveClientIp(request))
-                            .requestUri(request.getRequestURI())
-                            .methodName(
-                                    joinPoint.getSignature().getDeclaringTypeName()
-                                            + "." + joinPoint.getSignature().getName()
-                            )
-                            .executionTimeMs(executionTime)
-                            .paramContent(request.getQueryString())
-                            .build()
-            );
-        }
+        applicationEventPublisher.publishEvent(
+                UserAuditEvent.builder()
+                        .username(username)
+                        .userAgent(request.getHeader("User-Agent"))
+                        .clientIp(SecurityUtils.resolveClientIp(request))
+                        .requestUri(request.getRequestURI())
+                        .methodName(
+                                joinPoint.getSignature().getDeclaringTypeName()
+                                        + "." + joinPoint.getSignature().getName()
+                        )
+                        .executionTimeMs(executionTime)
+                        .paramContent(request.getQueryString())
+                        .build()
+        );
 
         return result;
     }

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(name = "BudgetFilterRequest", description = "Request for filtering budgets")
-public class BudgetFilterRequest extends BaseFilterRequest{
+public class BudgetFilterRequest extends BaseFilterRequest {
 
     @Schema(description = "Period of the budget", example = "MONTHLY")
     String period;

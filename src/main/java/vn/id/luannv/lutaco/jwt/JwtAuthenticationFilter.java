@@ -15,14 +15,16 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import vn.id.luannv.lutaco.config.SecurityConstants;
+import vn.id.luannv.lutaco.config.EndpointSecurityPolicy;
 import vn.id.luannv.lutaco.entity.CustomUserDetails;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.UserRepository;
+import vn.id.luannv.lutaco.util.EndpointPolicyMatcherUtils;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.io.IOException;
+
 
 @Slf4j
 @Component
@@ -36,8 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return SecurityConstants.PUBLIC_URLS_SHOULD_NOT_AUTH
-                .stream().anyMatch(uri -> request.getRequestURI().endsWith(uri));
+        return EndpointPolicyMatcherUtils.getPolicy(request.getRequestURI()) != EndpointSecurityPolicy.Policy.AUTH_REQUIRED;
     }
 
     @Override

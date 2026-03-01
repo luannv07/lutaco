@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    @Cacheable(value="users", key="#username")
+    @Cacheable(value = "users", key = "#username")
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.ENTITY_NOT_FOUND.getMessage()));
