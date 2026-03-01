@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import vn.id.luannv.lutaco.enumerate.FrequentType;
 
 import java.time.LocalDate;
