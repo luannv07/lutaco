@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4b2fc911-0f4e-4131-b3db-907086276e0b
+      author: luannv
+      changes:
+        - sql:
+            drop table master_dictionary
