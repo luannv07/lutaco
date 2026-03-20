@@ -6,6 +6,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 @Configuration
@@ -14,7 +15,7 @@ public class LanguageConfig {
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:i18n/messages");
+        messageSource.setBasenames("classpath:i18n/messages", "classpath:i18n/configs");
         messageSource.setCacheSeconds(3600); //1 hour
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;

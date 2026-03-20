@@ -1,9 +1,16 @@
 package vn.id.luannv.lutaco.enumerate;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
-@Slf4j
+@Getter
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public enum CategoryType {
-    INCOME,
-    EXPENSE
+    INCOME("config.enum.category.type.income"),
+    EXPENSE("config.enum.category.type.expense")
+    ;
+    String display;
 }
