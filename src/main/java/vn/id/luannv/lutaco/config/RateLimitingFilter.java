@@ -87,7 +87,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
     }
 
-    private synchronized RequestInfo getRequestInfo(String key, Instant now) {
+    private RequestInfo getRequestInfo(String key, Instant now) {
         return rateLimitCache.asMap().compute(key, (k, v) -> {
 
             if (v == null) {
@@ -102,7 +102,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             if (v.requests.size() > rateLimitMaxAttempts) {
                 return v;
             }
-
+            v.lastRequest = now;
             v.requests.addLast(now);
             return v;
         });
