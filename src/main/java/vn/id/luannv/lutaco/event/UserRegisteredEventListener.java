@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import vn.id.luannv.lutaco.enumerate.OtpType;
+import vn.id.luannv.lutaco.event.entity.UserRegisteredEvent;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.service.WalletService;
 
@@ -19,8 +20,8 @@ public class UserRegisteredEventListener {
     WalletService walletService;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void handle(vn.id.luannv.lutaco.event.entity.UserRegisteredEvent event) {
+    public void handle(UserRegisteredEvent event) {
         walletService.createDefaultWallet(event.id());
-        otpService.sendOtp(event.email(), OtpType.REGISTER);
+        otpService.sendOtp(event.email(), OtpType.REGISTER, event.username());
     }
 }

@@ -35,4 +35,13 @@ public class SendOtpRequest {
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     String otpType;
+
+    @NotNull(message = "{validation.required}")
+    @Length(max = 50, message = "{validation.field.too_long}")
+    @Schema(
+            description = "Username",
+            example = "luannv",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    String username;
 }

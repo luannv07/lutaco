@@ -136,7 +136,7 @@ public class AuthController {
             @Valid @RequestBody SendOtpRequest request
     ) {
         OtpType otpType = EnumUtils.from(OtpType.class, request.getOtpType());
-        otpService.sendOtp(request.getEmail(), otpType);
+        otpService.sendOtp(request.getEmail(), otpType, request.getUsername());
         return ResponseEntity.ok(
                 BaseResponse.success("Gửi OTP thành công.")
         );

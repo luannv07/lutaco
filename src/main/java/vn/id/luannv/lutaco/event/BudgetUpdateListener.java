@@ -29,8 +29,6 @@ public class BudgetUpdateListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleTransactionCreatedEvent(TransactionCreatedEvent event) {
         Transaction transaction = event.getTransaction();
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Processing TransactionCreatedEvent for transaction ID: {}", username, transaction.getId());
 
         String userId = transaction.getUserId();
         String categoryId = transaction.getCategory().getId();
@@ -39,7 +37,7 @@ public class BudgetUpdateListener {
         Optional<Budget> budgetOpt = budgetRepository.findActiveBudget(userId, categoryId, transactionDate);
 
         if (budgetOpt.isEmpty()) {
-            log.warn("[{}]: No active budget found for user {} and category {} on date {}. Skipping budget update for transaction ID: {}", username, userId, categoryId, transactionDate, transaction.getId());
+            log.warn("[system]: No active budget found for user {} and category {} on date {}. Skipping budget update for transaction ID: {}", userId, categoryId, transactionDate, transaction.getId());
             return;
         }
 
@@ -63,18 +61,16 @@ public class BudgetUpdateListener {
                     fields.subject(),
                     fields.body()
             );
-            log.info("[{}]: Sent budget alert email for budget ID: {} (status: {})", username, budget.getId(), budget.getStatus());
         }
         budgetRepository.save(budget);
-        log.info("[{}]: Budget ID: {} successfully updated. New actual amount: {}, New percentage: {}",
-                username, budget.getId(), newActualAmount, budget.getPercentage());
+        log.info("[system]: Budget ID: {} successfully updated. New actual amount: {}, New percentage: {}",
+                budget.getId(), newActualAmount, budget.getPercentage());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handleTransactionDeletedEvent(TransactionDeletedEvent event) {
         Transaction transaction = event.getTransaction();
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Processing TransactionDeletedEvent for transaction ID: {}", username, transaction.getId());
+        log.info("[system]: Processing TransactionDeletedEvent for transaction ID: {}", transaction.getId());
 
         String userId = transaction.getUserId();
         String categoryId = transaction.getCategory().getId();
@@ -83,7 +79,7 @@ public class BudgetUpdateListener {
         Optional<Budget> budgetOpt = budgetRepository.findActiveBudget(userId, categoryId, transactionDate);
 
         if (budgetOpt.isEmpty()) {
-            log.warn("[{}]: No active budget found for user {} and category {} on date {}. Skipping budget update after transaction deletion for transaction ID: {}", username, userId, categoryId, transactionDate, transaction.getId());
+            log.warn("[system]: No active budget found for user {} and category {} on date {}. Skipping budget update after transaction deletion for transaction ID: {}", userId, categoryId, transactionDate, transaction.getId());
             return;
         }
 
@@ -103,8 +99,7 @@ public class BudgetUpdateListener {
         budget.setStatus(updateStatus(newPercentage)); // Update status after deletion
 
         budgetRepository.save(budget);
-        log.info("[{}]: Budget ID: {} successfully updated after transaction deletion. New actual amount: {}, New percentage: {}",
-                username, budget.getId(), newActualAmount, newPercentage);
+        log.info("[system]: Budget ID: {} successfully updated after transaction deletion. New actual amount: {}, New percentage: {}", budget.getId(), newActualAmount, newPercentage);
     }
 
     private BudgetStatus updateStatus(float percentage) {

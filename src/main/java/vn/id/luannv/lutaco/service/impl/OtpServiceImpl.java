@@ -69,8 +69,7 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
-    public void sendOtp(String email, OtpType otpType) {
-        String username = SecurityUtils.getCurrentUsername();
+    public void sendOtp(String email, OtpType otpType, String username) {
         log.info("[{}]: Attempting to send OTP of type {} to email: {}", username, otpType, email);
 
         User user = userRepository.findByEmail(email)
