@@ -41,3 +41,5 @@ databaseChangeLog:
       file: db/changelog/0902-2026_create-recurring-transaction-table.yaml
   - include:
       file: db/changelog/2026-0214_create-budget-table.yaml
+  - include:
+      file: db/changelog/2003-2026_drop-master-dict-table.yaml
