@@ -7,10 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
+import vn.id.luannv.lutaco.dto.request.WalletFilterRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
+import vn.id.luannv.lutaco.dto.response.WalletResponse;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.WalletStatus;
@@ -20,9 +24,11 @@ import vn.id.luannv.lutaco.mapper.WalletMapper;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.WalletService;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,12 +39,13 @@ public class WalletServiceImpl implements WalletService {
     WalletRepository walletRepository;
     WalletMapper walletMapper;
     UserRepository userRepository;
+    LocalizationUtils localizationUtils;
 
     @Override
     @Caching(evict = {
             @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     })
-    public Wallet create(WalletCreateRequest request) {
+    public WalletResponse create(WalletCreateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         String userId = SecurityUtils.getCurrentId();
         log.info("[{}]: Attempting to create wallet for user ID: {}. Request: {}", username, userId, request.getWalletName());
@@ -63,7 +70,7 @@ public class WalletServiceImpl implements WalletService {
         Wallet savedWallet = walletRepository.save(wallet);
         log.info("[{}]: Wallet '{}' (ID: {}) created successfully for user ID {}.",
                 username, savedWallet.getWalletName(), savedWallet.getId(), userId);
-        return savedWallet;
+        return convertToResponse(savedWallet);
     }
 
     @Override
@@ -99,29 +106,32 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()"),
+            @CacheEvict(value = "wallets", key = "#id + @securityPermission.getCurrentUserId()"),
             @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     })
-    public Wallet update(String walletName, WalletUpdateRequest request) {
+    public WalletResponse update(String id, WalletCreateRequest request) {
+        // This method is required by BaseService, but the main update logic uses WalletUpdateRequest.
+        // You can delegate to the other update method or throw an exception if this flow is not intended.
+        throw new UnsupportedOperationException("Use update(String, WalletUpdateRequest) instead.");
+    }
+
+    @Override
+    public WalletResponse update(String id, WalletUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Attempting to update wallet '{}' for current user. Request: {}", username, walletName, request);
-        Wallet wallet = getMywalletOrThrow(walletName);
+        log.info("[{}]: Attempting to update wallet with ID '{}' for current user. Request: {}", username, id, request);
+        Wallet wallet = getMyWalletByIdOrThrow(id);
         walletMapper.update(wallet, request);
         Wallet updatedWallet = walletRepository.save(wallet);
         log.info("[{}]: Wallet '{}' (ID: {}) updated successfully.",
                 username, updatedWallet.getWalletName(), updatedWallet.getId());
-        return updatedWallet;
+        return convertToResponse(updatedWallet);
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "wallets", key = "#walletName + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
-    })
-    public void deleteByUser(String walletName) {
+    public void deleteById(String id) {
         String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Attempting to soft delete wallet '{}' for current user.", username, walletName);
-        Wallet wallet = getMywalletOrThrow(walletName);
+        log.info("[{}]: Attempting to soft delete wallet with ID: {} for current user.", username, id);
+        Wallet wallet = getMyWalletByIdOrThrow(id);
         wallet.setStatus(WalletStatus.INACTIVE);
         walletRepository.save(wallet);
         log.info("[{}]: Wallet '{}' (ID: {}) soft deleted successfully.",
@@ -148,35 +158,47 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Cacheable(value = "wallets",
-            key = "#walletName + @securityPermission.getCurrentUserId()")
-    public Wallet getDetail(String walletName) {
+            key = "#id + @securityPermission.getCurrentUserId()")
+    public WalletResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Fetching details for wallet '{}' for current user.", username, walletName);
-        Wallet wallet = getMywalletOrThrow(walletName);
+        log.info("[{}]: Fetching details for wallet with ID '{}' for current user.", username, id);
+        Wallet wallet = getMyWalletByIdOrThrow(id);
         log.info("[{}]: Successfully retrieved details for wallet '{}' (ID: {}).",
                 username, wallet.getWalletName(), wallet.getId());
-        return wallet;
+        return convertToResponse(wallet);
+    }
+
+    @Override
+    public Page<WalletResponse> search(WalletFilterRequest request, Integer page, Integer size) {
+        // This service does not support pagination search yet.
+        return Page.empty();
     }
 
     @Override
     @Cacheable(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
-    public List<Wallet> getMyWallets() {
+    public List<WalletResponse> getMyWallets() {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("[{}]: Fetching all wallets for current user ID: {}.", username, currentUserId);
         List<Wallet> wallets = walletRepository.findByUser_IdAndStatus(currentUserId, WalletStatus.ACTIVE);
         log.info("[{}]: Found {} wallets for user ID {}.", username, wallets.size(), currentUserId);
-        return wallets;
+        return wallets.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
-    private Wallet getMywalletOrThrow(String walletName) {
+    private Wallet getMyWalletByIdOrThrow(String id) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
         return walletRepository
-                .findByUser_IdAndWalletNameAndStatus(currentUserId, walletName, WalletStatus.ACTIVE)
+                .findByUser_IdAndIdAndStatus(currentUserId, id, WalletStatus.ACTIVE)
                 .orElseThrow(() -> {
-                    log.warn("[{}]: Wallet '{}' not found for current user ID {}.", username, walletName, currentUserId);
+                    log.warn("[{}]: Wallet with ID '{}' not found for current user ID {}.", username, id, currentUserId);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
+    }
+
+    private WalletResponse convertToResponse(Wallet wallet) {
+        WalletResponse response = walletMapper.toResponse(wallet);
+        response.setStatus(new EnumDisplay<>(wallet.getStatus(), localizationUtils.getLocalizedMessage(wallet.getStatus().getDisplay())));
+        return response;
     }
 }

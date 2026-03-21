@@ -2,6 +2,7 @@ package vn.id.luannv.lutaco.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.enumerate.FrequentType;
 
 import java.time.LocalDate;
@@ -22,5 +23,5 @@ public class RecurringTransactionResponse {
 
     LocalDate nextDate;
 
-    FrequentType frequentType;
+    EnumDisplay<FrequentType> frequentType;
 }

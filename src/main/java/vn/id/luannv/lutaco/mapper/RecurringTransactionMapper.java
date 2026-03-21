@@ -13,9 +13,11 @@ public interface RecurringTransactionMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "transaction", ignore = true)
     @Mapping(target = "nextDate", ignore = true)
+    @Mapping(target = "frequentType", ignore = true)
     RecurringTransaction toEntity(RecurringTransactionRequest request);
 
     @Mapping(source = "transaction.id", target = "transactionId")
+    @Mapping(target = "frequentType", ignore = true)
     RecurringTransactionResponse toResponse(RecurringTransaction entity);
 
     @Mapping(target = "transaction", ignore = true)
@@ -26,5 +28,6 @@ public interface RecurringTransactionMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "frequentType", ignore = true)
     void updateEntity(@MappingTarget RecurringTransaction entity, RecurringTransactionRequest request);
 }

@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.CategoryDto;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.CategoryOverride;
@@ -20,6 +21,7 @@ import vn.id.luannv.lutaco.repository.CategoryOverrideRepository;
 import vn.id.luannv.lutaco.repository.CategoryRepository;
 import vn.id.luannv.lutaco.service.CategoryService;
 import vn.id.luannv.lutaco.util.EnumUtils;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
@@ -33,14 +35,16 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
     CategoryMapper categoryMapper;
     CategoryOverrideRepository categoryOverrideRepository;
+    LocalizationUtils localizationUtils;
 
     private List<CategoryDto> getChildrenById(String categoryId) {
         return categoryRepository.findByParentId(categoryId)
-                .stream().map(categoryMapper::toDto).toList();
+                .stream().map(this::buildDto).toList();
     }
 
     private CategoryDto buildDto(Category entity) {
         CategoryDto dto = categoryMapper.toDto(entity);
+        dto.setCategoryType(new EnumDisplay<>(entity.getCategoryType(), localizationUtils.getLocalizedMessage(entity.getCategoryType().getDisplay())));
         dto.setChildren(getChildrenById(entity.getId()));
         return dto;
     }
@@ -64,6 +68,9 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         Category entity = categoryMapper.toEntity(request);
+        if (request.getCategoryType() != null) {
+            entity.setCategoryType(request.getCategoryType().getValue());
+        }
         categoryRepository.findById(request.getParentId())
                 .ifPresent(entity::setParent);
         entity.setOwnerUserId(userId);
@@ -104,6 +111,9 @@ public class CategoryServiceImpl implements CategoryService {
                 });
 
         categoryMapper.update(category, request);
+        if (request.getCategoryType() != null) {
+            category.setCategoryType(request.getCategoryType().getValue());
+        }
         categoryRepository.findById(request.getParentId())
                 .ifPresent(category::setParent);
 

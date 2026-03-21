@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.projection.RecurringTransactionProjection;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.TransactionRequest;
@@ -32,6 +33,7 @@ import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.EnumUtils;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDateTime;
@@ -52,6 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
     CategoryRepository categoryRepository;
     WalletRepository walletRepository;
     ApplicationEventPublisher eventPublisher;
+    LocalizationUtils localizationUtils;
 
     @Override
     public TransactionResponse create(TransactionRequest request) {
@@ -91,7 +94,7 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("[{}]: Custom transaction (ID: {}) created successfully for user ID {}. Amount: {}, Category: {}, Wallet: {}.",
                 username, savedTransaction.getId(), userId, savedTransaction.getAmount(), category.getCategoryName(), wallet.getWalletName());
 
-        return transactionMapper.toResponse(savedTransaction);
+        return convertToResponse(savedTransaction);
     }
 
     @Override
@@ -132,7 +135,7 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("[{}]: Successfully created {} bulk transactions for user ID {}.", username, savedTransactions.size(), userId);
 
         return savedTransactions.stream()
-                .map(transactionMapper::toResponse)
+                .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
@@ -232,7 +235,7 @@ public class TransactionServiceImpl implements TransactionService {
                 });
 
         log.info("[{}]: Successfully retrieved details for transaction ID {}.", username, id);
-        return transactionMapper.toResponse(transaction);
+        return convertToResponse(transaction);
     }
 
     @Override
@@ -244,7 +247,7 @@ public class TransactionServiceImpl implements TransactionService {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TransactionResponse> result = transactionRepository
                 .findByFilters(request, currentUserId, pageable)
-                .map(transactionMapper::toResponse);
+                .map(this::convertToResponse);
         log.info("[{}]: Found {} transactions matching the criteria for user ID {}.", username, result.getTotalElements(), currentUserId);
         return result;
     }
@@ -306,7 +309,7 @@ public class TransactionServiceImpl implements TransactionService {
         transactionMapper.updateEntity(transaction, request);
         Transaction updatedTransaction = transactionRepository.save(transaction);
         log.info("[{}]: Transaction ID {} updated successfully for user ID {}.", username, id, currentUserId);
-        return transactionMapper.toResponse(updatedTransaction);
+        return convertToResponse(updatedTransaction);
     }
 
     @Override
@@ -387,5 +390,11 @@ public class TransactionServiceImpl implements TransactionService {
 
         eventPublisher.publishEvent(new TransactionCreatedEvent(this, savedTransaction));
         log.info("[{}]: Transaction ID {} restored successfully for user ID {}. Balance adjusted for wallet ID {}.", username, id, currentUserId, walletId);
+    }
+
+    private TransactionResponse convertToResponse(Transaction transaction) {
+        TransactionResponse response = transactionMapper.toResponse(transaction);
+        response.setCategoryType(new EnumDisplay<>(transaction.getCategory().getCategoryType(), localizationUtils.getLocalizedMessage(transaction.getCategory().getCategoryType().getDisplay())));
+        return response;
     }
 }

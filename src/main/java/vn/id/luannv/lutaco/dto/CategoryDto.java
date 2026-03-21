@@ -42,11 +42,9 @@ public class CategoryDto {
     String parentId;
 
     @Schema(
-            description = "Loại danh mục",
-            example = "EXPENSE"
+            description = "Loại danh mục"
     )
-    @Length(max = 255, message = "{validation.field.too_long}")
-    CategoryType categoryType;
+    EnumDisplay<CategoryType> categoryType;
 
     @Schema(
             description = "Danh sách danh mục con"

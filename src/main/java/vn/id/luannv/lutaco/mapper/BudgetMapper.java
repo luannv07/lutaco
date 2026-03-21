@@ -17,12 +17,15 @@ public interface BudgetMapper {
     @Mapping(target = "endDate", ignore = true)
     @Mapping(target = "percentage", ignore = true)
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "period", ignore = true)
     Budget toEntity(BudgetRequest request);
 
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.username", target = "username")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.categoryName", target = "categoryName")
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "period", ignore = true)
     BudgetResponse toDto(Budget budget);
 
     @Mapping(target = "id", ignore = true)
@@ -33,5 +36,6 @@ public interface BudgetMapper {
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "percentage", ignore = true)
+    @Mapping(target = "period", ignore = true)
     void update(@MappingTarget Budget budget, BudgetRequest request);
 }

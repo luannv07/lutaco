@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.BudgetFilterRequest;
 import vn.id.luannv.lutaco.dto.request.BudgetRequest;
 import vn.id.luannv.lutaco.dto.response.BudgetResponse;
@@ -27,6 +28,7 @@ import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.BudgetService;
 import vn.id.luannv.lutaco.util.CustomizeNumberUtils;
 import vn.id.luannv.lutaco.util.EnumUtils;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
@@ -45,6 +47,7 @@ public class BudgetServiceImpl implements BudgetService {
     UserRepository userRepository;
     CategoryRepository categoryRepository;
     BudgetMapper budgetMapper;
+    LocalizationUtils localizationUtils;
 
     @Override
     public BudgetResponse create(BudgetRequest request) {
@@ -90,13 +93,15 @@ public class BudgetServiceImpl implements BudgetService {
         budget.setPercentage(0F);
         budget.setStatus(BudgetStatus.NORMAL);
 
-        Period period = EnumUtils.from(Period.class, request.getPeriod());
-        budget.setPeriod(period);
-        budget.setEndDate(calculateEndDate(request.getStartDate(), period));
+        if (request.getPeriod() != null) {
+            Period period = request.getPeriod().getValue();
+            budget.setPeriod(period);
+            budget.setEndDate(calculateEndDate(request.getStartDate(), period));
+        }
 
         Budget savedBudget = budgetRepository.save(budget);
         log.info("[{}]: Budget with ID {} created successfully for user ID {} and category ID {}.", username, savedBudget.getId(), userId, category.getId());
-        return budgetMapper.toDto(savedBudget);
+        return convertToResponse(savedBudget);
     }
 
     @Override
@@ -143,7 +148,7 @@ public class BudgetServiceImpl implements BudgetService {
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
         log.info("[{}]: Successfully retrieved details for budget ID {}.", username, id);
-        return budgetMapper.toDto(budget);
+        return convertToResponse(budget);
     }
 
     @Override
@@ -165,7 +170,7 @@ public class BudgetServiceImpl implements BudgetService {
         };
 
         Page<BudgetResponse> result = budgetRepository.findAll(spec, PageRequest.of(page - 1, size))
-                .map(budgetMapper::toDto);
+                .map(this::convertToResponse);
         log.info("[{}]: Found {} budgets matching the search criteria.", username, result.getTotalElements());
         return result;
     }
@@ -187,7 +192,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         Period period = existingBudget.getPeriod();
         if (request.getPeriod() != null) {
-            period = EnumUtils.from(Period.class, request.getPeriod());
+            period = request.getPeriod().getValue();
             existingBudget.setPeriod(period);
             log.debug("[{}]: Budget ID {} period updated to {}.", username, id, period);
         }
@@ -211,7 +216,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         Budget updatedBudget = budgetRepository.save(existingBudget);
         log.info("[{}]: Budget with ID {} updated successfully.", username, updatedBudget.getId());
-        return budgetMapper.toDto(updatedBudget);
+        return convertToResponse(updatedBudget);
     }
 
     @Override
@@ -243,5 +248,12 @@ public class BudgetServiceImpl implements BudgetService {
         }
         log.debug("[{}]: Budget status set to UNKNOWN (percentage: {}).", username, percentage);
         return BudgetStatus.UNKNOWN;
+    }
+
+    private BudgetResponse convertToResponse(Budget budget) {
+        BudgetResponse response = budgetMapper.toDto(budget);
+        response.setStatus(new EnumDisplay<>(budget.getStatus(), localizationUtils.getLocalizedMessage(budget.getStatus().getDisplay())));
+        response.setPeriod(new EnumDisplay<>(budget.getPeriod(), localizationUtils.getLocalizedMessage(budget.getPeriod().getDisplay())));
+        return response;
     }
 }

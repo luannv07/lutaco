@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.RecurringTransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.RecurringTransactionRequest;
 import vn.id.luannv.lutaco.dto.response.RecurringTransactionResponse;
@@ -26,6 +27,7 @@ import vn.id.luannv.lutaco.repository.RecurringTransactionRepository;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
 import vn.id.luannv.lutaco.util.EnumUtils;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
@@ -41,6 +43,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     RecurringTransactionMapper recurringTransactionMapper;
     TransactionRepository transactionRepository;
     ApplicationEventPublisher applicationEventPublisher;
+    LocalizationUtils localizationUtils;
 
     @Override
     @Transactional
@@ -50,7 +53,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         InternalState state = createAndSaveTransaction(request);
         publishEvent(state, RecurringTransactionEvent.RecurringTransactionState.INITIALIZER);
         log.info("[{}]: Successfully created recurring transaction with ID: {}", username, state.recurringTransaction().getId());
-        return recurringTransactionMapper.toResponse(state.recurringTransaction());
+        return convertToResponse(state.recurringTransaction());
     }
 
     @Override
@@ -86,9 +89,11 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         Transaction transaction = transactionRepository.getReferenceById(request.getTransactionId());
         RecurringTransaction recurringTransaction = recurringTransactionMapper.toEntity(request);
         recurringTransaction.setTransaction(transaction);
-        FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
-        recurringTransaction.setFrequentType(frequentType);
-        recurringTransaction.setNextDate(frequentType.calculateNextDate(request.getStartDate()));
+        if (request.getFrequentType() != null) {
+            FrequentType frequentType = request.getFrequentType().getValue();
+            recurringTransaction.setFrequentType(frequentType);
+            recurringTransaction.setNextDate(frequentType.calculateNextDate(request.getStartDate()));
+        }
 
         RecurringTransaction savedTransaction = recurringTransactionRepository.save(recurringTransaction);
         return new InternalState(savedTransaction, recurringUserFields);
@@ -127,7 +132,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         log.info("[{}]: Fetching recurring transaction details for ID: {}", username, id);
 
         return recurringTransactionRepository.findByUserIdAndId(SecurityUtils.getCurrentId(), id)
-                .map(recurringTransactionMapper::toResponse)
+                .map(this::convertToResponse)
                 .orElseThrow(() -> {
                     log.warn("[{}]: Recurring transaction with ID: {} not found for current user.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
@@ -141,7 +146,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<RecurringTransactionResponse> result = recurringTransactionRepository.findByFilters(request, SecurityUtils.getCurrentId(), pageable)
-                .map(recurringTransactionMapper::toResponse);
+                .map(this::convertToResponse);
         log.info("[{}]: Found {} recurring transactions matching the criteria.", username, result.getTotalElements());
         return result;
     }
@@ -160,13 +165,15 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                 });
 
         recurringTransactionMapper.updateEntity(recurringTransaction, request);
-        FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
-        recurringTransaction.setFrequentType(frequentType);
-        recurringTransaction.setNextDate(frequentType.calculateNextDate(recurringTransaction.getStartDate()));
+        if (request.getFrequentType() != null) {
+            FrequentType frequentType = request.getFrequentType().getValue();
+            recurringTransaction.setFrequentType(frequentType);
+            recurringTransaction.setNextDate(frequentType.calculateNextDate(recurringTransaction.getStartDate()));
+        }
 
         RecurringTransaction updatedTransaction = recurringTransactionRepository.save(recurringTransaction);
         log.info("[{}]: Successfully updated recurring transaction with ID: {}", username, updatedTransaction.getId());
-        return recurringTransactionMapper.toResponse(updatedTransaction);
+        return convertToResponse(updatedTransaction);
     }
 
     @Override
@@ -182,6 +189,12 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                 });
         recurringTransactionRepository.deleteById(recurringTransaction.getId());
         log.info("[{}]: Successfully deleted recurring transaction with ID: {}", username, id);
+    }
+
+    private RecurringTransactionResponse convertToResponse(RecurringTransaction recurringTransaction) {
+        RecurringTransactionResponse response = recurringTransactionMapper.toResponse(recurringTransaction);
+        response.setFrequentType(new EnumDisplay<>(recurringTransaction.getFrequentType(), localizationUtils.getLocalizedMessage(recurringTransaction.getFrequentType().getDisplay())));
+        return response;
     }
 
     private record InternalState(

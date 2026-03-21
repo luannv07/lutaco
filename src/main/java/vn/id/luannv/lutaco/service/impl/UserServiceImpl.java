@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.entity.Role;
@@ -28,6 +29,7 @@ import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 import vn.id.luannv.lutaco.service.UserService;
 import vn.id.luannv.lutaco.util.EnumUtils;
+import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.Date;
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
     InvalidatedTokenService invalidatedTokenService;
+    LocalizationUtils localizationUtils;
 
     @Override
     public UserResponse create(UserCreateRequest request) {
@@ -56,7 +59,7 @@ public class UserServiceImpl implements UserService {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for user with ID: {}", username, id);
         return userRepository.findById(id)
-                .map(userMapper::toResponse)
+                .map(this::convertToResponse)
                 .orElseThrow(() -> {
                     log.warn("[{}]: User with ID {} not found.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND,
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Page<UserResponse> result = userRepository.findByFilters(request, pageable)
-                .map(userMapper::toResponse);
+                .map(this::convertToResponse);
         log.info("[{}]: Found {} users matching the criteria.", username, result.getTotalElements());
         return result;
     }
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
         user.setGender(userGender);
         User saved = userRepository.save(user);
         log.info("[{}]: User with ID {} updated successfully.", username, id);
-        return userMapper.toResponse(saved);
+        return convertToResponse(saved);
     }
 
     @Override
@@ -141,8 +144,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(value = "users", key = "#id")
     @Transactional
+    @CacheEvict(value = "users", key = "#id")
     public void updateUserRole(String id, UserRoleRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         User user = userRepository.findById(id)
@@ -176,5 +179,13 @@ public class UserServiceImpl implements UserService {
         }
         log.warn("[{}]: Password update failed for user {}. Operation not allowed.", username, id);
         throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
+    }
+
+    private UserResponse convertToResponse(User user) {
+        UserResponse response = userMapper.toResponse(user);
+        response.setGender(new EnumDisplay<>(user.getGender(), localizationUtils.getLocalizedMessage(user.getGender().getDisplay())));
+        response.setUserStatus(new EnumDisplay<>(user.getUserStatus(), localizationUtils.getLocalizedMessage(user.getUserStatus().getDisplay())));
+        response.setUserPlan(new EnumDisplay<>(user.getUserPlan(), localizationUtils.getLocalizedMessage(user.getUserPlan().getDisplay())));
+        return response;
     }
 }

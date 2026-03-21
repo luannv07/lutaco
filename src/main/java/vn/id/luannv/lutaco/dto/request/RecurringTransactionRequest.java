@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
+import vn.id.luannv.lutaco.enumerate.FrequentType;
 
 import java.time.LocalDate;
 
@@ -28,14 +30,12 @@ public class RecurringTransactionRequest {
     )
     String transactionId;
 
-    @NotBlank(message = "{validation.required}")
+    @NotNull(message = "{validation.required}")
     @Schema(
             description = "The frequency of the recurrence.",
-            example = "MONTHLY",
-            allowableValues = {"DAILY", "WEEKLY", "MONTHLY", "YEARLY"},
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    String frequentType;
+    EnumDisplay<FrequentType> frequentType;
 
     @NotNull(message = "{validation.required}")
     @FutureOrPresent(message = "{validation.field.future_or_present}")

@@ -14,10 +14,12 @@ public interface CategoryMapper {
     @Mapping(target = "isSystem", ignore = true)
     @Mapping(target = "ownerUserId", ignore = true)
     @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "categoryType", ignore = true)
     Category toEntity(CategoryDto request);
 
     @Mapping(target = "children", ignore = true)
     @Mapping(target = "parentId", ignore = true)
+    @Mapping(target = "categoryType", ignore = true)
     CategoryDto toDto(Category entity);
 
     @Mapping(target = "id", ignore = true)
@@ -29,6 +31,7 @@ public interface CategoryMapper {
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
+    @Mapping(target = "categoryType", ignore = true)
     void update(@MappingTarget Category category, CategoryDto request);
 
 }

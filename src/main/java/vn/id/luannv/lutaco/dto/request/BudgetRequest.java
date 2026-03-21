@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
+import vn.id.luannv.lutaco.enumerate.Period;
 
 import java.time.LocalDate;
 
@@ -21,8 +23,8 @@ public class BudgetRequest {
     @Schema(description = "Target amount for the budget", example = "5000000")
     Long targetAmount;
 
-    @Schema(description = "Period of the budget", example = "MONTHLY")
-    String period;
+    @Schema(description = "Period of the budget")
+    EnumDisplay<Period> period;
 
     @Schema(description = "Start date of the budget", example = "2024-01-01")
     LocalDate startDate;

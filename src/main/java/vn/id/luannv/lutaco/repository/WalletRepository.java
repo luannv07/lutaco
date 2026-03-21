@@ -13,40 +13,27 @@ import java.util.Optional;
 
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, String> {
+    long countByUser_IdAndStatus(String userId, WalletStatus status);
 
     long countByUser_Id(String userId);
 
-    List<Wallet> findByUser_IdAndStatus(String userId, WalletStatus walletStatus);
-
-    /**
-     * and :amount > 0
-     * and (
-     * :type = 'INCOME'
-     * or (:type = 'EXPENSE' and w.currentBalance >= :amount)
-     * )
-     * Cho phép trừ âm, nó là app wallet ko phải app ngân hàng
-     */
-    @Modifying
-    @Query("""
-                    update Wallet w
-                    set w.currentBalance =
-                        case 
-                            when :type = 'EXPENSE' then w.currentBalance - :amount
-                            when :type = 'INCOME' then w.currentBalance + :amount
-                        end
-                    where w.id = :walletId
-            """)
-    void updateBalance(
-            @Param("walletId") String walletId,
-            @Param("amount") Long amount,
-            @Param("type") String type
-    );
-
     Optional<Wallet> findByUser_IdAndWalletName(String userId, String walletName);
-
-    Optional<Wallet> findByUser_IdAndId(String userId, String id);
 
     Optional<Wallet> findByUser_IdAndWalletNameAndStatus(String userId, String walletName, WalletStatus status);
 
-    long countByUser_IdAndStatus(String userId, WalletStatus walletStatus);
+    Optional<Wallet> findByUser_IdAndIdAndStatus(String userId, String id, WalletStatus status);
+
+    Optional<Wallet> findByUser_IdAndId(String userId, String id);
+
+    List<Wallet> findByUser_IdAndStatus(String userId, WalletStatus status);
+
+    @Modifying
+    @Query(value = "UPDATE wallets " +
+            "SET current_balance = CASE " +
+            "   WHEN :type = 'INCOME' THEN current_balance + :amount " +
+            "   WHEN :type = 'EXPENSE' THEN current_balance - :amount " +
+            "   ELSE current_balance " +
+            "END " +
+            "WHERE id = :walletId", nativeQuery = true)
+    void updateBalance(@Param("walletId") String walletId, @Param("amount") Long amount, @Param("type") String type);
 }
