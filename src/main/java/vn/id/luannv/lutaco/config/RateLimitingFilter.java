@@ -114,6 +114,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     @Builder
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class RequestInfo {
+        @Builder.Default
         Deque<Instant> requests = new ArrayDeque<>();
         @Builder.Default
         Instant lastRequest = Instant.now();

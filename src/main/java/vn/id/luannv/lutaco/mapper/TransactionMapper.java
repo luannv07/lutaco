@@ -16,7 +16,7 @@ public interface TransactionMapper {
 
     @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "categoryName", source = "category.categoryName")
-    @Mapping(target = "categoryType", source = "category.categoryType")
+    @Mapping(target = "categoryType", ignore = true)
     @Mapping(target = "walletId", source = "wallet.id")
     @Mapping(target = "walletName", source = "wallet.walletName")
     TransactionResponse toResponse(Transaction entity);

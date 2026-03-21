@@ -3,6 +3,10 @@ package vn.id.luannv.lutaco.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.dto.EnumDisplay;
+import vn.id.luannv.lutaco.enumerate.UserGender;
+import vn.id.luannv.lutaco.enumerate.UserPlan;
+import vn.id.luannv.lutaco.enumerate.UserStatus;
 
 import java.time.LocalDateTime;
 
@@ -44,16 +48,14 @@ public class UserResponse {
     String email;
 
     @Schema(
-            description = "Giới tính người dùng",
-            example = "MALE"
+            description = "Giới tính người dùng"
     )
-    String gender;
+    EnumDisplay<UserGender> gender;
 
     @Schema(
-            description = "Trạng thái người dùng",
-            example = "ACTIVE"
+            description = "Trạng thái người dùng"
     )
-    String userStatus;
+    EnumDisplay<UserStatus> userStatus;
 
     @Schema(
             description = "Tên role của người dùng",
@@ -86,8 +88,7 @@ public class UserResponse {
     LocalDateTime updatedDate;
 
     @Schema(
-            description = "Gói người dùng hiện tại",
-            example = "FREE"
+            description = "Gói người dùng hiện tại"
     )
-    String userPlan;
+    EnumDisplay<UserPlan> userPlan;
 }

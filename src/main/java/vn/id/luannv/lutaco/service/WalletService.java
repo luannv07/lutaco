@@ -1,24 +1,19 @@
 package vn.id.luannv.lutaco.service;
 
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
+import vn.id.luannv.lutaco.dto.request.WalletFilterRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
-import vn.id.luannv.lutaco.entity.Wallet;
+import vn.id.luannv.lutaco.dto.response.WalletResponse;
 
 import java.util.List;
 
-public interface WalletService {
+public interface WalletService extends BaseService<WalletFilterRequest, WalletResponse, WalletCreateRequest, String> {
 
-    Wallet create(WalletCreateRequest request);
-
-    Wallet update(String walletName, WalletUpdateRequest request);
-
-    void deleteByUser(String walletName);
+    WalletResponse update(String id, WalletUpdateRequest request);
 
     void archiveByAdmin(String userId, String walletName);
 
-    Wallet getDetail(String walletName);
-
-    List<Wallet> getMyWallets();
+    List<WalletResponse> getMyWallets();
 
     void createDefaultWallet(String userId);
 }

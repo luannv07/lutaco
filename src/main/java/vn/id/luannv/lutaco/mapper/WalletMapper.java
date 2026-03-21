@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
+import vn.id.luannv.lutaco.dto.response.WalletResponse;
 import vn.id.luannv.lutaco.entity.Wallet;
 
 @Mapper(componentModel = "spring")
@@ -31,4 +32,8 @@ public interface WalletMapper {
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
     void update(@MappingTarget Wallet wallet, WalletUpdateRequest request);
+
+    @Mapping(source = "user.id", target = "userId")
+    @Mapping(target = "status", ignore = true)
+    WalletResponse toResponse(Wallet wallet);
 }

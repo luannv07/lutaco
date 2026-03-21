@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
-import vn.id.luannv.lutaco.entity.Wallet;
+import vn.id.luannv.lutaco.dto.response.WalletResponse;
 import vn.id.luannv.lutaco.service.WalletService;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class WalletController {
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
             @ApiResponse(responseCode = "403", description = "Vượt quá giới hạn số lượng ví")
     })
-    public ResponseEntity<BaseResponse<Wallet>> create(
+    public ResponseEntity<BaseResponse<WalletResponse>> create(
             @Valid @RequestBody WalletCreateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -66,7 +66,7 @@ public class WalletController {
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
             @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
     })
-    public ResponseEntity<BaseResponse<Wallet>> update(
+    public ResponseEntity<BaseResponse<WalletResponse>> update(
             @Parameter(
                     description = "Tên wallet cần cập nhật",
                     example = "personal-wallet",
@@ -100,7 +100,7 @@ public class WalletController {
             )
             @PathVariable String walletName
     ) {
-        walletService.deleteByUser(walletName);
+        walletService.deleteById(walletName);
         return ResponseEntity.ok(
                 BaseResponse.success("Xóa ví thành công.")
         );
@@ -116,7 +116,7 @@ public class WalletController {
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
             @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
     })
-    public ResponseEntity<BaseResponse<Wallet>> getDetail(
+    public ResponseEntity<BaseResponse<WalletResponse>> getDetail(
             @Parameter(
                     description = "Tên wallet cần lấy thông tin",
                     example = "personal-wallet",
@@ -140,7 +140,7 @@ public class WalletController {
             @ApiResponse(responseCode = "200", description = "Lấy danh sách ví thành công"),
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
     })
-    public ResponseEntity<BaseResponse<List<Wallet>>> getMyWallets() {
+    public ResponseEntity<BaseResponse<List<WalletResponse>>> getMyWallets() {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         walletService.getMyWallets(),
