@@ -12,9 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.dto.CategoryDto;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
+import vn.id.luannv.lutaco.dto.request.CategoryRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
+import vn.id.luannv.lutaco.dto.response.CategoryResponse;
 import vn.id.luannv.lutaco.service.CategoryService;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
     })
-    public ResponseEntity<BaseResponse<List<CategoryDto>>> search(
+    public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(
             @Valid @ModelAttribute CategoryFilterRequest request
     ) {
         return ResponseEntity.ok(
@@ -65,14 +66,14 @@ public class CategoryController {
             @ApiResponse(responseCode = "409", description = "Danh mục đã tồn tại")
     })
     public ResponseEntity<BaseResponse<Void>> create(
-            @Valid @RequestBody CategoryDto request
+            @Valid @RequestBody CategoryRequest request
     ) {
         categoryService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success("Tạo danh mục thành công."));
     }
 
-    @PutMapping("/{categoryName}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Cập nhật danh mục",
             description = "Cập nhật thông tin danh mục dựa trên tên danh mục"
@@ -84,16 +85,16 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Không tìm thấy danh mục")
     })
     public ResponseEntity<BaseResponse<Void>> update(
-            @PathVariable String categoryName,
-            @Valid @RequestBody CategoryDto request
+            @PathVariable String id,
+            @Valid @RequestBody CategoryRequest request
     ) {
-        categoryService.update(categoryName, request);
+        categoryService.update(id, request);
         return ResponseEntity.ok(
                 BaseResponse.success("Cập nhật danh mục thành công.")
         );
     }
 
-    @PatchMapping("/{categoryName}/disabled")
+    @PatchMapping("/{id}/disabled")
     @Operation(
             summary = "Vô hiệu hoá danh mục",
             description = "Đánh dấu danh mục là không còn hoạt động (disable)"
@@ -104,9 +105,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Không tìm thấy danh mục")
     })
     public ResponseEntity<BaseResponse<Void>> updateStatus(
-            @PathVariable String categoryName
+            @PathVariable String id
     ) {
-        categoryService.deleteById(categoryName);
+        categoryService.deleteById(id);
         return ResponseEntity.ok(
                 BaseResponse.success("Vô hiệu hoá danh mục thành công.")
         );

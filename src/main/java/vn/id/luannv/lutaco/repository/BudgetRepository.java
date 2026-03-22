@@ -34,4 +34,5 @@ public interface BudgetRepository extends JpaRepository<Budget, Long>, JpaSpecif
     );
 
     boolean existsByUserAndCategory(User user, Category category);
+    Optional<Budget> findByIdAndUserId(Long id, String userId);
 }

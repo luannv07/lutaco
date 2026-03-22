@@ -3,7 +3,8 @@ package vn.id.luannv.lutaco.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import vn.id.luannv.lutaco.dto.CategoryDto;
+import vn.id.luannv.lutaco.dto.request.CategoryRequest;
+import vn.id.luannv.lutaco.dto.response.CategoryResponse;
 import vn.id.luannv.lutaco.entity.Category;
 
 @Mapper(componentModel = "spring")
@@ -15,12 +16,12 @@ public interface CategoryMapper {
     @Mapping(target = "ownerUserId", ignore = true)
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "categoryType", ignore = true)
-    Category toEntity(CategoryDto request);
+    Category toEntity(CategoryRequest request);
 
     @Mapping(target = "children", ignore = true)
     @Mapping(target = "parentId", ignore = true)
     @Mapping(target = "categoryType", ignore = true)
-    CategoryDto toDto(Category entity);
+    CategoryResponse toDto(Category entity);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "isSystem", ignore = true)
@@ -32,6 +33,6 @@ public interface CategoryMapper {
     @Mapping(target = "updatedBy", ignore = true)
     @Mapping(target = "updatedDate", ignore = true)
     @Mapping(target = "categoryType", ignore = true)
-    void update(@MappingTarget Category category, CategoryDto request);
+    void update(@MappingTarget Category category, CategoryRequest request);
 
 }

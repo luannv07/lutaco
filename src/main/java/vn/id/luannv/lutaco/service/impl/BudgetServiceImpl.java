@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.BudgetFilterRequest;
@@ -94,7 +95,7 @@ public class BudgetServiceImpl implements BudgetService {
         budget.setStatus(BudgetStatus.NORMAL);
 
         if (request.getPeriod() != null) {
-            Period period = request.getPeriod().getValue();
+            Period period = EnumUtils.from(Period.class, request.getPeriod());
             budget.setPeriod(period);
             budget.setEndDate(calculateEndDate(request.getStartDate(), period));
         }
@@ -105,21 +106,29 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @Transactional
     public Boolean preventDangerEmail(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to prevent danger email for budget ID: {}", username, id);
+
         Budget budget = budgetRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("[{}]: Budget with ID {} not found for preventing danger email.", username, id);
+                    log.warn("[{}]: Budget with ID {} not found or not owned by user.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
+        SecurityUtils.assertOwnerOrAdmin(budget.getUser().getId());
+
+        // toggle status
         if (budget.getStatus() == BudgetStatus.UNKNOWN) {
             budget.setStatus(BudgetStatus.NORMAL);
         } else {
             budget.setStatus(BudgetStatus.UNKNOWN);
         }
+
         budgetRepository.save(budget);
-        log.info("[{}]: Budget ID {} status updated to UNKNOWN to prevent danger emails.", username, id);
+
+        log.info("[{}]: Budget ID {} status toggled.", username, id);
+
         return true;
     }
 
@@ -139,14 +148,18 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BudgetResponse getDetail(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for budget ID: {}", username, id);
+
         Budget budget = budgetRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("[{}]: Budget with ID {} not found for detail retrieval.", username, id);
+                    log.warn("[{}]: Budget with ID {} not found.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
+
+        SecurityUtils.assertOwnerOrAdmin(budget.getUser().getId());
         log.info("[{}]: Successfully retrieved details for budget ID {}.", username, id);
         return convertToResponse(budget);
     }
@@ -166,6 +179,10 @@ public class BudgetServiceImpl implements BudgetService {
                 predicates.add(criteriaBuilder.equal(root.get("period"), period));
             }
 
+            if (!SecurityUtils.isAdmin()) {
+                predicates.add(criteriaBuilder.equal(root.get("user").get("id"), SecurityUtils.getCurrentId()));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
@@ -176,6 +193,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    @Transactional
     public BudgetResponse update(Long id, BudgetRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Updating budget with ID: {} with request: {}", username, id, request);
@@ -184,6 +202,8 @@ public class BudgetServiceImpl implements BudgetService {
                     log.warn("[{}]: Budget with ID {} not found for update.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
+        SecurityUtils.assertOwnerOrAdmin(existingBudget.getUser().getId());
+
         if (existingBudget.getPercentage() != 0 || existingBudget.getActualAmount() != 0) {
             throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
         }
@@ -192,7 +212,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         Period period = existingBudget.getPeriod();
         if (request.getPeriod() != null) {
-            period = request.getPeriod().getValue();
+            period = EnumUtils.from(Period.class, request.getPeriod());
             existingBudget.setPeriod(period);
             log.debug("[{}]: Budget ID {} period updated to {}.", username, id, period);
         }
@@ -204,7 +224,6 @@ public class BudgetServiceImpl implements BudgetService {
             log.debug("[{}]: Budget ID {} start date updated to {}.", username, id, startDate);
         }
 
-        // Recalculate endDate if period or startDate changes
         existingBudget.setEndDate(calculateEndDate(startDate, period));
         float percentage = CustomizeNumberUtils.percentage(existingBudget.getActualAmount(), existingBudget.getTargetAmount());
         existingBudget.setPercentage(percentage);
@@ -228,6 +247,8 @@ public class BudgetServiceImpl implements BudgetService {
                     log.warn("[{}]: Budget with ID {} not found for deletion.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("budgetId", id));
                 });
+
+        SecurityUtils.assertOwnerOrAdmin(budget.getUser().getId());
         budgetRepository.delete(budget);
         log.info("[{}]: Budget with ID {} deleted successfully.", username, id);
     }

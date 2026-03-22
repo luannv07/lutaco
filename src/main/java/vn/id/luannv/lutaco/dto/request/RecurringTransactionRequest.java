@@ -35,7 +35,7 @@ public class RecurringTransactionRequest {
             description = "The frequency of the recurrence.",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    EnumDisplay<FrequentType> frequentType;
+    String frequentType;
 
     @NotNull(message = "{validation.required}")
     @FutureOrPresent(message = "{validation.field.future_or_present}")

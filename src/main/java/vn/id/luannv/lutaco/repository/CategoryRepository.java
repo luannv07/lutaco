@@ -18,19 +18,24 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     Optional<Category> findByCategoryNameAndOwnerUserId(String categoryName, String ownerUserId);
 
     @Query("""
-                select c
+                select distinct c
                 from Category c
                 left join CategoryOverride co
-                       on co.category = c
-                      and co.userId = :userId
+                       on co.category = c and co.userId = :userId
                 where c.deletedAt is null
                   and (co is null or co.disabled = false)
-                  and (:categoryName is null
-                       or lower(c.categoryName) like concat('%', lower(:categoryName), '%'))
-                  and (:categoryType is null
-                       or c.categoryType = :categoryType)
                   and (c.ownerUserId = :userId or c.isSystem = true)
                   and c.parent is null
+                  and (
+                    (:categoryName is null or lower(c.categoryName) like concat('%', lower(:categoryName), '%'))
+                    or
+                    exists (
+                        select 1 from Category child
+                        where child.parent = c
+                        and (:categoryName is null or lower(child.categoryName) like concat('%', lower(:categoryName), '%'))
+                    )
+                  )
+                  and (:categoryType is null or c.categoryType = :categoryType)
             """)
     List<Category> advancedSearch(
             @Param("categoryName") String categoryName,
