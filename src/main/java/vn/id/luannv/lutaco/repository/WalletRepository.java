@@ -26,6 +26,7 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
     Optional<Wallet> findByUser_IdAndId(String userId, String id);
 
     List<Wallet> findByUser_IdAndStatus(String userId, WalletStatus status);
+    List<Wallet> findByUser_Id(String userId);
 
     @Modifying
     @Query(value = "UPDATE wallets " +

@@ -16,4 +16,6 @@ public interface WalletService extends BaseService<WalletFilterRequest, WalletRe
     List<WalletResponse> getMyWallets();
 
     void createDefaultWallet(String userId);
+
+    void toggle(String id);
 }
