@@ -180,7 +180,7 @@ public class WalletServiceImpl implements WalletService {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
         log.info("[{}]: Fetching all wallets for current user ID: {}.", username, currentUserId);
-        List<Wallet> wallets = walletRepository.findByUser_IdAndStatus(currentUserId, WalletStatus.ACTIVE);
+        List<Wallet> wallets = walletRepository.findByUser_Id(currentUserId);
         log.info("[{}]: Found {} wallets for user ID {}.", username, wallets.size(), currentUserId);
         return wallets.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
@@ -200,5 +200,18 @@ public class WalletServiceImpl implements WalletService {
         WalletResponse response = walletMapper.toResponse(wallet);
         response.setStatus(new EnumDisplay<>(wallet.getStatus(), localizationUtils.getLocalizedMessage(wallet.getStatus().getDisplay())));
         return response;
+    }
+
+    @Override
+    public void toggle(String id) {
+        Wallet wallet = walletRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
+        if (wallet.getStatus() == WalletStatus.ACTIVE) {
+            wallet.setStatus(WalletStatus.INACTIVE);
+        } else {
+            wallet.setStatus(WalletStatus.ACTIVE);
+        }
+        walletRepository.save(wallet);
     }
 }
