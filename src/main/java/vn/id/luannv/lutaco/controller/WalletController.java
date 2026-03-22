@@ -55,7 +55,7 @@ public class WalletController {
                 ));
     }
 
-    @PutMapping("/{walletName}")
+    @PutMapping("/{id}")
     @Operation(
             summary = "Cập nhật wallet",
             description = "Cập nhật tên hoặc mô tả wallet của chính người dùng"
@@ -72,17 +72,17 @@ public class WalletController {
                     example = "personal-wallet",
                     required = true
             )
-            @PathVariable String walletName,
+            @PathVariable String id,
             @Valid @RequestBody WalletUpdateRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        walletService.update(walletName, request),
+                        walletService.update(id, request),
                         "Cập nhật ví thành công."
                 ));
     }
 
-    @DeleteMapping("/{walletName}")
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Xoá wallet",
             description = "Người dùng xoá wallet của mình (chuyển trạng thái sang INACTIVE)"
@@ -98,15 +98,15 @@ public class WalletController {
                     example = "personal-wallet",
                     required = true
             )
-            @PathVariable String walletName
+            @PathVariable String id
     ) {
-        walletService.deleteById(walletName);
+        walletService.deleteById(id);
         return ResponseEntity.ok(
                 BaseResponse.success("Xóa ví thành công.")
         );
     }
 
-    @GetMapping("/{walletName}")
+    @GetMapping("/{id}")
     @Operation(
             summary = "Lấy chi tiết wallet",
             description = "Lấy thông tin chi tiết một wallet thuộc quyền sở hữu của user hiện tại"
@@ -122,11 +122,11 @@ public class WalletController {
                     example = "personal-wallet",
                     required = true
             )
-            @PathVariable String walletName
+            @PathVariable String id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        walletService.getDetail(walletName),
+                        walletService.getDetail(id),
                         "Lấy chi tiết ví thành công."
                 ));
     }
