@@ -90,7 +90,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         RecurringTransaction recurringTransaction = recurringTransactionMapper.toEntity(request);
         recurringTransaction.setTransaction(transaction);
         if (request.getFrequentType() != null) {
-            FrequentType frequentType = request.getFrequentType().getValue();
+            FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
             recurringTransaction.setFrequentType(frequentType);
             recurringTransaction.setNextDate(frequentType.calculateNextDate(request.getStartDate()));
         }
@@ -166,7 +166,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
         recurringTransactionMapper.updateEntity(recurringTransaction, request);
         if (request.getFrequentType() != null) {
-            FrequentType frequentType = request.getFrequentType().getValue();
+            FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
             recurringTransaction.setFrequentType(frequentType);
             recurringTransaction.setNextDate(frequentType.calculateNextDate(recurringTransaction.getStartDate()));
         }

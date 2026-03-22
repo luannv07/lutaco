@@ -1,6 +1,7 @@
 package vn.id.luannv.lutaco.service.impl;
 
 import jakarta.transaction.Transactional;
+import liquibase.util.StringUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -8,9 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.dto.CategoryDto;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.resource.CachingResourceResolver;
 import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
+import vn.id.luannv.lutaco.dto.request.CategoryRequest;
+import vn.id.luannv.lutaco.dto.response.CategoryResponse;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.CategoryOverride;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
@@ -24,6 +28,7 @@ import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -37,42 +42,85 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryOverrideRepository categoryOverrideRepository;
     LocalizationUtils localizationUtils;
 
-    private List<CategoryDto> getChildrenById(String categoryId) {
+    private List<CategoryResponse> getChildrenById(String categoryId) {
         return categoryRepository.findByParentId(categoryId)
                 .stream().map(this::buildDto).toList();
     }
 
-    private CategoryDto buildDto(Category entity) {
-        CategoryDto dto = categoryMapper.toDto(entity);
-        dto.setCategoryType(new EnumDisplay<>(entity.getCategoryType(), localizationUtils.getLocalizedMessage(entity.getCategoryType().getDisplay())));
-        dto.setChildren(getChildrenById(entity.getId()));
+    private CategoryResponse buildDto(Category entity) {
+        CategoryResponse dto = categoryMapper.toDto(entity);
+
+        if (entity.getParent() == null) {
+            dto.setCategoryType(new EnumDisplay<>(
+                    entity.getCategoryType(),
+                    localizationUtils.getLocalizedMessage(entity.getCategoryType().getDisplay())
+            ));
+            List<CategoryResponse> children = getChildrenById(entity.getId());
+            dto.setChildren(children.isEmpty() ? null : children);
+        } else {
+            dto.setCategoryType(null);
+            dto.setChildren(null);
+        }
+
         return dto;
     }
 
     @Override
     @Transactional
-    public CategoryDto create(CategoryDto request) {
+    public CategoryResponse create(CategoryRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         String userId = SecurityUtils.getCurrentId();
         log.info("[{}]: Attempting to create category for user ID: {}. Request: {}", username, userId, request.getCategoryName());
 
+        // Nếu đã tồn tại override (system category bị disable) → restore
         if (categoryOverrideRepository.existsByCategory_CategoryNameAndUserId(request.getCategoryName(), userId)) {
-            categoryOverrideRepository.restoreByCategoryName(request.getCategoryName(), userId);
-            log.info("[{}]: Restored previously disabled system category '{}' for user ID {}.", username, request.getCategoryName(), userId);
-            Category entity = categoryRepository.findByCategoryNameAndOwnerUserId(request.getCategoryName(), userId)
+            Category existingCategory = categoryRepository
+                    .findByCategoryNameAndOwnerUserId(request.getCategoryName(), userId)
                     .orElseThrow(() -> {
-                        log.error("[{}]: Restored category '{}' not found after restoration attempt for user ID {}.", username, request.getCategoryName(), userId);
+                        log.error("[{}]: Category '{}' not found during restore attempt.", username, request.getCategoryName());
                         return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                     });
-            return buildDto(entity);
+
+            // Nếu type khác thì không restore được, báo lỗi
+            if (request.getCategoryType() != null) {
+                CategoryType requestedType = EnumUtils.from(CategoryType.class, request.getCategoryType());
+                if (!existingCategory.getCategoryType().equals(requestedType)) {
+                    log.warn("[{}]: Category '{}' exists with type '{}', requested type '{}'.",
+                            username, request.getCategoryName(), existingCategory.getCategoryType(), requestedType);
+                    throw new BusinessException(ErrorCode.FIELD_EXISTED,
+                            Map.of("reason", "Category with same name exists with different type, please use a different name"));
+                }
+            }
+
+            categoryOverrideRepository.restoreByCategoryName(request.getCategoryName(), userId);
+            log.info("[{}]: Restored previously disabled system category '{}' for user ID {}.", username, request.getCategoryName(), userId);
+            return buildDto(existingCategory);
         }
 
         Category entity = categoryMapper.toEntity(request);
-        if (request.getCategoryType() != null) {
-            entity.setCategoryType(request.getCategoryType().getValue());
+
+        // NOTE: categoryType là bất biến sau khi tạo.
+        // Child inherit type từ parent, root category tự chọn khi tạo.
+        // Admin KHÔNG được đổi type của system category
+        // vì sẽ gây inconsistent với toàn bộ custom child và transaction liên quan.
+        if (request.getParentId() != null) {
+            Category parent = categoryRepository.findById(request.getParentId())
+                    .orElseThrow(() -> {
+                        log.warn("[{}]: [create] Parent category ID '{}' not found.", username, request.getParentId());
+                        return new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("parentId", request.getParentId()));
+                    });
+            entity.setParent(parent);
+            entity.setCategoryType(parent.getCategoryType()); // inherit từ parent
+            log.debug("[{}]: Category '{}' inherits type '{}' from parent ID '{}'.",
+                    username, request.getCategoryName(), parent.getCategoryType(), parent.getId());
+        } else {
+            if (request.getCategoryType() == null) {
+                throw new BusinessException(ErrorCode.REQUIRED_FIELD_MISSING,
+                        Map.of("categoryType", "Category type is required for root category"));
+            }
+            entity.setCategoryType(EnumUtils.from(CategoryType.class, request.getCategoryType()));
         }
-        categoryRepository.findById(request.getParentId())
-                .ifPresent(entity::setParent);
+
         entity.setOwnerUserId(userId);
 
         if (categoryRepository.existsByOwnerUserIdAndCategoryName(userId, entity.getCategoryName())) {
@@ -86,75 +134,93 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getDetail(String id) {
-        log.warn("[{}]: Method getDetail(String id) is not implemented for CategoryService. Use searchNoPag for details.", SecurityUtils.getCurrentUsername());
-        return null; // Or throw an UnsupportedOperationException
-    }
-
-    @Override
-    public Page<CategoryDto> search(CategoryFilterRequest request, Integer page, Integer size) {
-        log.warn("[{}]: Method search(CategoryFilterRequest request, Integer page, Integer size) is not implemented for CategoryService. Use searchNoPag for details.", SecurityUtils.getCurrentUsername());
-        return null; // Or throw an UnsupportedOperationException
-    }
-
-    @Override
-    @CacheEvict(value = "categories", key = "#categoryName + @securityPermission.getCurrentUserId()")
-    public CategoryDto update(String categoryName, CategoryDto request) {
+    public CategoryResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
-        String userId = SecurityUtils.getCurrentId();
-        log.info("[{}]: Attempting to update category '{}' for user ID: {}. Request: {}", username, categoryName, userId, request);
-
-        Category category = categoryRepository.findByCategoryNameAndOwnerUserId(categoryName, userId)
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("[{}]: Category with name '{}' not found for user ID {} for update.", username, categoryName, userId);
+                    log.warn("[{}]: Category with ID '{}' not found.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
 
-        categoryMapper.update(category, request);
-        if (request.getCategoryType() != null) {
-            category.setCategoryType(request.getCategoryType().getValue());
-        }
-        categoryRepository.findById(request.getParentId())
-                .ifPresent(category::setParent);
-
-        Category updatedCategory = categoryRepository.save(category);
-        log.info("[{}]: Category '{}' (ID: {}) updated successfully for user ID {}.", username, updatedCategory.getCategoryName(), updatedCategory.getId(), userId);
-        return buildDto(updatedCategory);
+        SecurityUtils.assertOwnerOrAdmin(category.getOwnerUserId());
+        return buildDto(category);
     }
 
     @Override
-    public List<CategoryDto> searchNoPag(CategoryFilterRequest request) {
+    public Page<CategoryResponse> search(CategoryFilterRequest request, Integer page, Integer size) {
+        throw new UnsupportedOperationException("Use searchNoPag instead");
+    }
+
+    @Override
+    public List<CategoryResponse> searchNoPag(CategoryFilterRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         String userId = SecurityUtils.getCurrentId();
         log.info("[{}]: Searching categories for user ID: {} with filter: {}.", username, userId, request);
-        CategoryType categoryType = EnumUtils.from(CategoryType.class, request.getCategoryType());
+        CategoryType categoryType = null;
+        if (StringUtils.hasText(request.getCategoryType())) {
+            categoryType=EnumUtils.from(CategoryType.class, request.getCategoryType());
+        }
 
-        List<Category> categories = categoryRepository
-                .advancedSearch(request.getCategoryName(), categoryType, userId);
+        List<Category> categories = categoryRepository.advancedSearch(request.getCategoryName(), categoryType, userId);
 
         log.info("[{}]: Found {} categories for user ID {} matching the criteria.", username, categories.size(), userId);
         return categories.stream().map(this::buildDto).toList();
     }
 
     @Override
-    @CacheEvict(value = "categories", key = "#categoryName + @securityPermission.getCurrentUserId()")
-    public void deleteById(String categoryName) {
+    @Transactional
+    @CacheEvict(value = "categories", key = "#id + @securityPermission.getCurrentUserId()")
+    public CategoryResponse update(String id, CategoryRequest request) {
         String username = SecurityUtils.getCurrentUsername();
-        String userId = SecurityUtils.getCurrentId();
-        log.info("[{}]: Attempting to soft delete category '{}' for user ID: {}.", username, categoryName, userId);
+        log.info("[{}]: Attempting to update category ID: {}. Request: {}", username, id, request);
 
-        Category category = categoryRepository.findByCategoryNameAndOwnerUserId(categoryName, userId)
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("[{}]: Category with name '{}' not found for user ID {} for deletion.", username, categoryName, userId);
+                    log.warn("[{}]: Category with ID '{}' not found for update.", username, id);
                     return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
                 });
 
-        categoryOverrideRepository
-                .save(CategoryOverride.builder()
-                        .category(category)
-                        .userId(userId)
-                        .disabled(true)
-                        .build());
-        log.info("[{}]: Category '{}' (ID: {}) soft deleted successfully for user ID {}.", username, category.getCategoryName(), category.getId(), userId);
+        if (category.getIsSystem()) {
+            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
+        }
+        SecurityUtils.assertOwnerOrAdmin(category.getOwnerUserId());
+
+        categoryMapper.update(category, request); // mapper đã ignore categoryType
+
+        // ko thể update parent, cate type
+
+        Category updatedCategory = categoryRepository.save(category);
+        log.info("[{}]: Category ID '{}' updated successfully.", username, updatedCategory.getId());
+        return buildDto(updatedCategory);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "categories", key = "#id + @securityPermission.getCurrentUserId()")
+    public void deleteById(String id) {
+        String username = SecurityUtils.getCurrentUsername();
+        log.info("[{}]: Attempting to delete category ID: {}.", username, id);
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("[{}]: Category with ID '{}' not found for deletion.", username, id);
+                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
+                });
+
+        if (category.getIsSystem()) {
+            // System category → disable qua override, giữ lại cho transaction reference
+            categoryOverrideRepository.save(CategoryOverride.builder()
+                    .category(category)
+                    .userId(SecurityUtils.getCurrentId())
+                    .disabled(true)
+                    .build());
+            log.info("[{}]: System category ID '{}' disabled via override.", username, id);
+        } else {
+            // Custom category → soft delete, giữ lại cho transaction reference
+            SecurityUtils.assertOwnerOrAdmin(category.getOwnerUserId());
+            category.setDeletedAt(LocalDateTime.now());
+            categoryRepository.save(category);
+            log.info("[{}]: Custom category ID '{}' soft deleted.", username, id);
+        }
     }
 }
