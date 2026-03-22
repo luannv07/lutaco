@@ -7,11 +7,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import vn.id.luannv.lutaco.entity.CustomUserDetails;
 import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
+import vn.id.luannv.lutaco.enumerate.UserType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 
 @Slf4j
 public class SecurityUtils {
+
+    public static void assertOwnerOrAdmin(String ownerId) {
+        if (!isAdmin() && !getCurrentId().equals(ownerId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+    }
+
+    public static boolean isAdmin() {
+        String currentRoleName = getCurrentRoleName();
+        return currentRoleName.contains(UserType.ADMIN.name()) || currentRoleName.contains(UserType.SYS_ADMIN.name());
+    }
+
     public static String getCurrentUsername() {
         return getCurrentPrincipal().getUsername();
     }

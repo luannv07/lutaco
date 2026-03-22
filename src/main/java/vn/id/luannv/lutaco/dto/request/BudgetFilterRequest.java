@@ -9,9 +9,9 @@ import lombok.EqualsAndHashCode;
 @Schema(name = "BudgetFilterRequest", description = "Request for filtering budgets")
 public class BudgetFilterRequest extends BaseFilterRequest {
 
-    @Schema(description = "Period of the budget", example = "MONTHLY")
+    @Schema(description = "Period of the budget", example = "MONTH")
     String period;
 
-    @Schema(description = "Name of the budget", example = "Food")
+    @Schema(description = "Name of the budget", example = "Ăn uống")
     String name;
 }
