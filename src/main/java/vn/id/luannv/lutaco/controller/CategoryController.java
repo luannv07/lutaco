@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,12 +44,31 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
             @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
     })
-    public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(
+    public ResponseEntity<BaseResponse<Page<CategoryResponse>>> search(
             @Valid @ModelAttribute CategoryFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        categoryService.searchNoPag(request),
+                        categoryService.search(request, request.getPage(), request.getSize()),
+                        "Lấy danh sách danh mục thành công."
+                )
+        );
+    }
+
+    @GetMapping("/{id}/children")
+    @Operation(
+            summary = "Lấy danh sách danh mục con theo id cha",
+            description = "Lấy danh sách danh mục con theo id cha"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lấy danh sách danh mục thành công"),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
+            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
+    })
+    public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(@PathVariable String id) {
+        return ResponseEntity.ok(
+                BaseResponse.success(
+                        categoryService.getChildren(id),
                         "Lấy danh sách danh mục thành công."
                 )
         );
