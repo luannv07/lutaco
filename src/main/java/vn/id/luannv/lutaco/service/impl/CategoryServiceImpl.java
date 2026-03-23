@@ -1,14 +1,20 @@
 package vn.id.luannv.lutaco.service.impl;
 
-import jakarta.transaction.Transactional;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import liquibase.util.StringUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.poifs.property.Child;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.resource.CachingResourceResolver;
 import vn.id.luannv.lutaco.dto.EnumDisplay;
@@ -29,8 +35,8 @@ import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,24 +48,21 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryOverrideRepository categoryOverrideRepository;
     LocalizationUtils localizationUtils;
 
-    private List<CategoryResponse> getChildrenById(String categoryId) {
+    @Override
+    public List<CategoryResponse> getChildren(String categoryId) {
         return categoryRepository.findByParentId(categoryId)
                 .stream().map(this::buildDto).toList();
     }
 
     private CategoryResponse buildDto(Category entity) {
         CategoryResponse dto = categoryMapper.toDto(entity);
-
         if (entity.getParent() == null) {
             dto.setCategoryType(new EnumDisplay<>(
                     entity.getCategoryType(),
                     localizationUtils.getLocalizedMessage(entity.getCategoryType().getDisplay())
             ));
-            List<CategoryResponse> children = getChildrenById(entity.getId());
-            dto.setChildren(children.isEmpty() ? null : children);
         } else {
             dto.setCategoryType(null);
-            dto.setChildren(null);
         }
 
         return dto;
@@ -147,25 +150,119 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<CategoryResponse> search(CategoryFilterRequest request, Integer page, Integer size) {
-        throw new UnsupportedOperationException("Use searchNoPag instead");
-    }
 
-    @Override
-    public List<CategoryResponse> searchNoPag(CategoryFilterRequest request) {
-        String username = SecurityUtils.getCurrentUsername();
-        String userId = SecurityUtils.getCurrentId();
-        log.info("[{}]: Searching categories for user ID: {} with filter: {}.", username, userId, request);
-        CategoryType categoryType = null;
-        if (StringUtils.hasText(request.getCategoryType())) {
-            categoryType=EnumUtils.from(CategoryType.class, request.getCategoryType());
+        boolean hasSearch = StringUtils.hasText(request.getCategoryName())
+                || StringUtils.hasText(request.getCategoryType());
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Category> categories = categoryRepository.findAll((root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.hasText(request.getCategoryName())) {
+                predicates.add(cb.like(
+                        root.get("categoryName"),
+                        "%" + request.getCategoryName() + "%"
+                ));
+            }
+
+            if (StringUtils.hasText(request.getCategoryType())) {
+                predicates.add(cb.equal(root.get("categoryType"), request.getCategoryType()));
+            }
+
+            if (query != null && query.getResultType() != Long.class) {
+                query.orderBy(
+                        cb.desc(root.get("createdDate")),
+                        cb.desc(root.get("id"))
+                );
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        });
+
+        if (!hasSearch) {
+            List<CategoryResponse> roots = categories.stream()
+                    .filter(c -> c.getParent() == null)
+                    .map(this::buildDto)
+                    .toList();
+
+            return new PageImpl<>(roots, pageable, roots.size());
         }
 
-        List<Category> categories = categoryRepository.advancedSearch(request.getCategoryName(), categoryType, userId);
+        // Split roots & children
+        List<Category> roots = categories.stream()
+                .filter(c -> c.getParent() == null)
+                .toList();
 
-        log.info("[{}]: Found {} categories for user ID {} matching the criteria.", username, categories.size(), userId);
-        return categories.stream().map(this::buildDto).toList();
+        List<Category> children = categories.stream()
+                .filter(c -> c.getParent() != null)
+                .toList();
+
+        // Group children by parentId
+        Map<String, List<Category>> childrenByParentId = children.stream()
+                .collect(Collectors.groupingBy(c -> c.getParent().getId()));
+
+        Set<String> rootIds = roots.stream()
+                .map(Category::getId)
+                .collect(Collectors.toSet());
+
+        Set<String> addedIds = new HashSet<>();
+        List<CategoryResponse> responses = new ArrayList<>();
+
+        // 1. Handle roots (with or without children)
+        for (Category root : roots) {
+            CategoryResponse dto = buildDto(root);
+            addedIds.add(root.getId());
+
+            List<Category> childList = childrenByParentId.get(root.getId());
+            if (childList != null) {
+                dto.setChildren(childList.stream()
+                        .map(this::buildDto)
+                        .toList());
+            }
+
+            responses.add(dto);
+        }
+
+        // 2. Handle children whose parents are NOT in roots
+        Set<String> parentIdsFromChildren = children.stream()
+                .map(c -> c.getParent().getId())
+                .collect(Collectors.toSet());
+
+        Set<String> missingParentIds = parentIdsFromChildren.stream()
+                .filter(pid -> !rootIds.contains(pid))
+                .collect(Collectors.toSet());
+
+        if (!missingParentIds.isEmpty()) {
+            List<Category> missingParents = categoryRepository.findAllById(missingParentIds);
+
+            for (Category parent : missingParents) {
+                CategoryResponse dto = buildDto(parent);
+                addedIds.add(parent.getId());
+
+                List<Category> childList = childrenByParentId.get(parent.getId());
+                if (childList != null) {
+                    dto.setChildren(childList.stream()
+                            .map(this::buildDto)
+                            .toList());
+                }
+
+                responses.add(dto);
+            }
+        }
+
+        // 3. Pagination in memory
+        int total = responses.size();
+        int from = Math.min(pageable.getPageNumber() * pageable.getPageSize(), total);
+        int to = Math.min(from + pageable.getPageSize(), total);
+
+        List<CategoryResponse> pageContent = responses.subList(from - 1, to);
+
+        return new PageImpl<>(pageContent, pageable, total);
     }
+
 
     @Override
     @Transactional
