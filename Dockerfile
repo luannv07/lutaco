@@ -16,4 +16,4 @@ COPY --from=build /app/target/*.jar app.jar
 # Mở port mặc định
 EXPOSE 8080
 # Lệnh chạy app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xms128m", "-Xmx256m", "-XX:TieredStopAtLevel=1", "-noverify", "-jar", "app.jar"]
