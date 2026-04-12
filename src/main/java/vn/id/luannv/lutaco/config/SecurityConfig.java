@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(EndpointSecurityPolicy.ENDPOINT_POLICIES.keySet().toArray(String[]::new)).permitAll()
+                                .requestMatchers("/").permitAll()
                                 .requestMatchers("/api/ai/**").permitAll()
                                 .anyRequest().authenticated())
                 .exceptionHandling(exception ->
