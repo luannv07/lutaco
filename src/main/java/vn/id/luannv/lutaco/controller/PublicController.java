@@ -29,14 +29,13 @@ import java.util.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/public")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PublicController {
     LocalizationUtils localizationUtils;
     CacheManager cacheManager;
 
-    @GetMapping("/audit")
+    @GetMapping("/api/v1/public/audit")
     public ResponseEntity<BaseResponse<String>> getClientAuditInfo(HttpServletRequest request) {
         String clientIp = SecurityUtils.resolveClientIp(request);
         String userAgent = request.getHeader("User-Agent");
@@ -45,14 +44,14 @@ public class PublicController {
         return ResponseEntity.ok(BaseResponse.success(recordedInfo, "Client audit information recorded."));
     }
 
-    @GetMapping("/test-locale")
+    @GetMapping("/api/v1/public/test-locale")
     public ResponseEntity<BaseResponse<String>> testLocale(@RequestHeader(value = "Accept-Language", required = false) Locale locale) {
         String message = localizationUtils.getLocalizedMessage("greeting.message", "John");
         log.info("[unknown]: Testing locale with Accept-Language: {}. Localized message: {}", locale, message);
         return ResponseEntity.ok(BaseResponse.success(message, "Localization test successful."));
     }
 
-    @PostMapping("/clear-cache")
+    @PostMapping("/api/v1/public/clear-cache")
     @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Void>> clearAllCaches() {
         String username = SecurityUtils.getCurrentUsername();
@@ -65,7 +64,7 @@ public class PublicController {
         return ResponseEntity.ok(BaseResponse.success("All caches cleared successfully."));
     }
 
-    @GetMapping("/translations")
+    @GetMapping("/api/v1/public/translations")
     @Cacheable("translationCache")
     public ResponseEntity<BaseResponse<Map<String, Map<String, String>>>> getConfigsOnly() {
         Map<String, Map<String, String>> allConfigs = new HashMap<>();
@@ -99,6 +98,11 @@ public class PublicController {
         httpHeaders.add(HttpHeaders.CACHE_CONTROL, "public, max-age=86400");
 
         return ResponseEntity.ok().headers(httpHeaders).body(BaseResponse.success(allConfigs, "Đã tải configs tĩnh."));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Application is running smoothly 36363636366363676767676776!");
     }
 
 }

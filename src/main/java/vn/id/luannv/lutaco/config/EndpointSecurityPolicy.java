@@ -19,7 +19,8 @@ public class EndpointSecurityPolicy {
             Map.entry("/public/**", Policy.PUBLIC_RATE_LIMITED),
 
             Map.entry("/error", Policy.PUBLIC_NO_LIMIT),
-            Map.entry("/api/ai/chat", Policy.PUBLIC_NO_LIMIT)
+            Map.entry("/api/ai/chat", Policy.PUBLIC_NO_LIMIT),
+            Map.entry("/", Policy.PUBLIC_NO_LIMIT)
     );
 
     public enum Policy {
