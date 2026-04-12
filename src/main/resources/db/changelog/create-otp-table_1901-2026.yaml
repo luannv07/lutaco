@@ -31,7 +31,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: user_id
-                  type: char(36)
+                  type: uuid
                   constraints:
                     nullable: false
               - column:

@@ -16,13 +16,13 @@ databaseChangeLog:
 
               - column:
                   name: user_id
-                  type: varchar(36)
+                  type: uuid
                   constraints:
                     nullable: false
 
               - column:
                   name: category_id
-                  type: varchar(36)
+                  type: uuid
                   constraints:
                     nullable: false
 

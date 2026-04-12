@@ -29,7 +29,7 @@ databaseChangeLog:
 
               - column:
                   name: user_id
-                  type: varchar(36)
+                  type: uuid
                   constraints:
                     nullable: false
 
