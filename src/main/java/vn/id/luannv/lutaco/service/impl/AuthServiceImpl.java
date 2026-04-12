@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     ApplicationEventPublisher applicationEventPublisher;
 
     @Override
+    @Transactional
     public AuthenticateResponse login(LoginRequest request) {
         log.info("[unknown]: Attempting to log in user: {}", request.getUsername());
 
@@ -150,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public AuthenticateResponse refreshToken(String refreshToken) {
         RefreshToken entity = refreshTokenService.findByToken(refreshToken);
         String tokenUsername = refreshTokenService.getUsernameByToken(refreshToken);

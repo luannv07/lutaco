@@ -126,7 +126,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     @Override
-    @Cacheable(value = "recurringTransactions", key = "#id + @securityPermission.getCurrentUserId()")
+    @Cacheable(value = "recurringTransactions", key = "#id")
     public RecurringTransactionResponse getDetail(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching recurring transaction details for ID: {}", username, id);
@@ -153,7 +153,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    @CacheEvict(value = "recurringTransactions", key = "#id + @securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "recurringTransactions", key = "#id")
     public RecurringTransactionResponse update(Long id, RecurringTransactionRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Updating recurring transaction with ID: {} using request: {}", username, id, request);
@@ -178,7 +178,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    @CacheEvict(value = "recurringTransactions", key = "#id + @securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "recurringTransactions", key = "#id")
     public void deleteById(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to delete recurring transaction with ID: {}", username, id);

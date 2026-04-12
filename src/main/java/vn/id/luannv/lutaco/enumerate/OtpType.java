@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 public enum OtpType {
     LOGIN("config.enum.otp.type.login"),
     REGISTER("config.enum.otp.type.register"),
-    FORGOT_PASSWORD("config.enum.otp.type.forgot_password")
-    ;
+    FORGOT_PASSWORD("config.enum.otp.type.forgot_password");
     String display;
 }

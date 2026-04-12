@@ -106,7 +106,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "wallets", key = "#id + @securityPermission.getCurrentUserId()"),
+            @CacheEvict(value = "wallets", key = "#id"),
             @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     })
     public WalletResponse update(String id, WalletCreateRequest request) {
@@ -116,6 +116,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @CacheEvict(value = "wallets", key = "#id")
     public WalletResponse update(String id, WalletUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to update wallet with ID '{}' for current user. Request: {}", username, id, request);
@@ -128,6 +129,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @CacheEvict(value = "wallets", key = "#id")
     public void deleteById(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to soft delete wallet with ID: {} for current user.", username, id);
@@ -139,6 +141,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @CacheEvict(value = "wallets", allEntries = true)
     public void archiveByAdmin(String userId, String walletName) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Admin attempting to archive wallet '{}' for user ID: {}.", username, walletName, userId);
@@ -157,8 +160,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @Cacheable(value = "wallets",
-            key = "#id + @securityPermission.getCurrentUserId()")
+    @Cacheable(value = "wallets", key = "#id")
     public WalletResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for wallet with ID '{}' for current user.", username, id);
@@ -203,6 +205,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @CacheEvict(value = "wallets", key = "#id")
     public void toggle(String id) {
         Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));

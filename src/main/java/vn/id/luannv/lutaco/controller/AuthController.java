@@ -33,7 +33,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "Auth", description = "Authentication APIs")
-public class  AuthController {
+public class AuthController {
 
     AuthService authService;
     JwtService jwtService;

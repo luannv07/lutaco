@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 public enum UserGender {
     MALE("config.enum.user.gender.male"),
     FEMALE("config.enum.user.gender.female"),
-    OTHER("config.enum.user.gender.other")
-    ;
+    OTHER("config.enum.user.gender.other");
     String display;
 }

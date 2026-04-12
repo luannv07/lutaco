@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public enum PaymentType {
-    UPGRADE_PREMIUM("config.enum.payment.type.upgrade_premium")
-    ;
+    UPGRADE_PREMIUM("config.enum.payment.type.upgrade_premium");
     String display;
 }

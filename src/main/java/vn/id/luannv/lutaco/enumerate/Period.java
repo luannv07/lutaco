@@ -12,7 +12,6 @@ public enum Period {
     DAY("config.enum.period.day"),
     WEEK("config.enum.period.week"),
     MONTH("config.enum.period.month"),
-    YEAR("config.enum.period.year")
-    ;
+    YEAR("config.enum.period.year");
     String display;
 }

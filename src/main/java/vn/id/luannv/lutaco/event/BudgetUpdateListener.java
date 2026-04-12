@@ -13,7 +13,6 @@ import vn.id.luannv.lutaco.event.entity.TransactionDeletedEvent;
 import vn.id.luannv.lutaco.repository.BudgetRepository;
 import vn.id.luannv.lutaco.service.AsyncEmailService;
 import vn.id.luannv.lutaco.service.EmailTemplateService;
-import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.LocalDate;
 import java.util.Optional;

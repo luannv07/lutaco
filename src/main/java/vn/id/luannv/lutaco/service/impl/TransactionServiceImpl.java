@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.context.ApplicationEventPublisher;
@@ -64,8 +63,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CachePut(value = "wallets", key = "#result.walletId + @securityPermission.getCurrentUserId()")
-    @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     public TransactionResponse customCreate(TransactionRequest request, String userId) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to create a custom transaction for user ID: {}. Request: {}", username, userId, request);
@@ -99,10 +96,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "wallets", allEntries = true),
-            @CacheEvict(value = "walletsList", key = "#userId")
-    })
     public List<TransactionResponse> createBulk(List<TransactionRequest> requests, String userId) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to create {} bulk transactions for user ID: {}.", username, requests.size(), userId);
@@ -141,10 +134,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "wallets", allEntries = true),
-            @CacheEvict(value = "walletsList", key = "#currentId")
-    })
+    @CacheEvict(value = "transactions", allEntries = true)
     public void deleteBulk(List<String> ids, String currentId) {
         String username = SecurityUtils.getCurrentUsername();
         Set<Transaction> transactionsToSave = new HashSet<>();
@@ -161,10 +151,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "wallets", allEntries = true),
-            @CacheEvict(value = "walletsList", key = "#userId")
-    })
     public void autoCreateTransactionWithCronJob(String transactionId, String userId) {
         log.info("[system]: Auto-creating transaction via cron job for recurring transaction ID: {} for user ID: {}.", transactionId, userId);
 
@@ -219,8 +205,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Cacheable(value = "transactions",
-            key = "#id + @securityPermission.getCurrentUserId()")
+    @Cacheable(value = "transactions", key = "#id")
     public TransactionResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
@@ -254,11 +239,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "transactions", key = "#id + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "wallets", key = "#request.walletId + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
-    })
+    @CacheEvict(value = "transactions", key = "#id")
     public TransactionResponse update(String id, TransactionRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
@@ -321,9 +302,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     @Caching(evict = {
-            @CacheEvict(value = "transactions", key = "#transactionId + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "wallets", key = "#walletId + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
+            @CacheEvict(value = "transactions", key = "#transactionId"),
+            @CacheEvict(value = "wallets", key = "#walletId")
     })
     public void deleteByIdAndWalletId(String transactionId, String walletId) {
         String username = SecurityUtils.getCurrentUsername();
@@ -360,11 +340,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "transactions", key = "#id + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "wallets", key = "#walletId + @securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
-    })
+    @CacheEvict(value = "transactions", key = "#id")
     public void restoreTransaction(String id, String walletId) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();

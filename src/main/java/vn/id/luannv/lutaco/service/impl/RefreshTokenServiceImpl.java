@@ -89,7 +89,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Cacheable(value = "refreshTokens", key = "#token")
+    @Cacheable(value = "refreshTokensByToken", key = "#token")
     public RefreshToken findByToken(String token) {
         log.debug("[unknown]: Attempting to find refresh token by token string.");
         RefreshToken foundToken = refreshTokenRepository.findByToken(token)
@@ -103,7 +103,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Cacheable(value = "refreshTokens", key = "#token + 'username'")
+    @Cacheable(value = "refreshTokensUsername", key = "#token")
     public String getUsernameByToken(String token) {
         log.debug("[unknown]: Attempting to get username from refresh token.");
         String username = refreshTokenRepository.findUsernameByToken(token)

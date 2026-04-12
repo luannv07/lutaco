@@ -13,7 +13,6 @@ public enum PeriodRange {
     LAST_1_MONTH("config.enum.period.range.last_1_month"),
     LAST_3_MONTHS("config.enum.period.range.last_3_months"),
     LAST_1_YEAR("config.enum.period.range.last_1_year"),
-    ALL_TIME("config.enum.period.range.all_time")
-    ;
+    ALL_TIME("config.enum.period.range.all_time");
     String display;
 }

@@ -8,8 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
-import vn.id.luannv.lutaco.enumerate.FrequentType;
 
 import java.time.LocalDate;
 

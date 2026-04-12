@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.Length;
 @Schema(
         description = "Request dùng để lọc và phân trang danh mục (Category)"
 )
-public class CategoryFilterRequest extends BaseFilterRequest{
+public class CategoryFilterRequest extends BaseFilterRequest {
 
     @Schema(
             description = "Tên danh mục cần tìm kiếm (tìm gần đúng)",

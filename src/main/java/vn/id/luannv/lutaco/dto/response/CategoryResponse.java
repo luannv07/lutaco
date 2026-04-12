@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Length;
 import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 

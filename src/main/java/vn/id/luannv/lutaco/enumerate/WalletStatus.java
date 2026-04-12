@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 public enum WalletStatus {
     ACTIVE("config.enum.wallet.status.active"),
     INACTIVE("config.enum.wallet.status.inactive"),
-    ARCHIVED("config.enum.wallet.status.archived")
-    ;
+    ARCHIVED("config.enum.wallet.status.archived");
     String display;
 }

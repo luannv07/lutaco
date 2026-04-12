@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 public enum UserType {
     SYS_ADMIN("config.enum.user.type.sys_admin"),
     ADMIN("config.enum.user.type.admin"),
-    USER("config.enum.user.type.user")
-    ;
+    USER("config.enum.user.type.user");
     String display;
 }

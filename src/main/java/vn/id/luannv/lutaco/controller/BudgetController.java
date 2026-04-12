@@ -19,7 +19,6 @@ import vn.id.luannv.lutaco.dto.request.BudgetRequest;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.dto.response.BudgetResponse;
 import vn.id.luannv.lutaco.service.BudgetService;
-import vn.id.luannv.lutaco.util.SecurityUtils;
 
 @Slf4j
 @RestController

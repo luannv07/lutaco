@@ -1,22 +1,19 @@
 package vn.id.luannv.lutaco.service.impl;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import liquibase.util.StringUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.poifs.property.Child;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.resource.CachingResourceResolver;
 import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.CategoryFilterRequest;
 import vn.id.luannv.lutaco.dto.request.CategoryRequest;
@@ -137,6 +134,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "categories", key = "#id")
     public CategoryResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         Category category = categoryRepository.findById(id)
@@ -266,7 +264,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "categories", key = "#id + @securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "categories", key = "#id")
     public CategoryResponse update(String id, CategoryRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to update category ID: {}. Request: {}", username, id, request);
@@ -293,7 +291,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "categories", key = "#id + @securityPermission.getCurrentUserId()")
+    @CacheEvict(value = "categories", key = "#id")
     public void deleteById(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to delete category ID: {}.", username, id);

@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for user with ID: {}", username, id);

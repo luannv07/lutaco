@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 public enum CategoryType {
     INCOME("config.enum.category.type.income"),
-    EXPENSE("config.enum.category.type.expense")
-    ;
+    EXPENSE("config.enum.category.type.expense");
     String display;
 }

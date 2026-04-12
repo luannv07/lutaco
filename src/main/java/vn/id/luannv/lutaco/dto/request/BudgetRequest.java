@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
-import vn.id.luannv.lutaco.enumerate.Period;
 
 import java.time.LocalDate;
 

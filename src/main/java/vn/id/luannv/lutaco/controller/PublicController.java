@@ -1,9 +1,7 @@
 package vn.id.luannv.lutaco.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +13,17 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.sql.BatchUpdateException;
 import java.util.*;
 
 @Slf4j
