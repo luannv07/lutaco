@@ -117,20 +117,21 @@ public class AuthServiceImpl implements AuthService {
         entity.setUserPlan(UserPlan.FREEMIUM);
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         entity.setGender(userGender);
-        entity.setUserStatus(UserStatus.PENDING_VERIFICATION);
+//        entity.setUserStatus(UserStatus.PENDING_VERIFICATION);
+        entity.setUserStatus(UserStatus.ACTIVE);
         entity = userRepository.save(entity);
         log.info("[unknown]: New user {} (ID: {}) registered successfully with status PENDING_VERIFICATION.", entity.getUsername(), entity.getId());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.setAuthenticated(true);
 
-        applicationEventPublisher.publishEvent(
-                new UserRegisteredEvent(
-                        entity.getUsername(),
-                        entity.getEmail(),
-                        entity.getId()
-                )
-        );
+//        applicationEventPublisher.publishEvent(
+//                new UserRegisteredEvent(
+//                        entity.getUsername(),
+//                        entity.getEmail(),
+//                        entity.getId()
+//                )
+//        );
         log.debug("[unknown]: UserRegisteredEvent published for user ID: {}", entity.getId());
 
         return AuthenticateResponse.builder()
