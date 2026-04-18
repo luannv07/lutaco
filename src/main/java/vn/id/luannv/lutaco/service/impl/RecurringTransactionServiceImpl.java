@@ -127,7 +127,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Cacheable(
             value = "recurring_detail",
-            key = "#id + '_' + @securityUtils.getCurrentId() + '_' + @localizationUtils.getCurrentLocaleKey()"
+            key = "#id + '_' + @securityPermission.getCurrentUserId() + '_' + @localizationUtils.getCurrentLocaleKey()"
     )
     @Override
     public RecurringTransactionResponse getDetail(Long id) {
@@ -155,7 +155,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
     @CacheEvict(
             value = "recurring_detail",
-            key = "#id + '_' + @securityUtils.getCurrentId() + '_' + @localizationUtils.getCurrentLocaleKey()"
+            allEntries = true
     )
     @Override
     @Transactional
@@ -182,7 +182,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
     @CacheEvict(
             value = "recurring_detail",
-            key = "#id + '_' + @securityUtils.getCurrentId() + '_' + @localizationUtils.getCurrentLocaleKey()"
+            allEntries = true
     )
     @Override
     @Transactional

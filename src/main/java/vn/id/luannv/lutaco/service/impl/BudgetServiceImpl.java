@@ -200,7 +200,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @CacheEvict(
             value = "budget_detail",
-            key = "#id + '_' + @localizationUtils.getCurrentLocaleKey()"
+            allEntries = true
     )
     @Override
     @Transactional
@@ -250,7 +250,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @CacheEvict(
             value = "budget_detail",
-            key = "#id + '_' + @localizationUtils.getCurrentLocaleKey()"
+            allEntries = true
     )
     @Override
     public void deleteById(Long id) {

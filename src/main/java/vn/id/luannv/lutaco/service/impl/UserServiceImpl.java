@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         log.warn("[system]: Attempted to create user via create method, which is not supported. Use AuthServiceImpl.register instead.");
         return null;
     }
-    @Cacheable(value = "user_detail", key = "#id")
+    @Cacheable(value = "user_detail", key = "#id + '_' + @localizationUtils.getCurrentLocaleKey()")
     @Override
     public UserResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
         log.warn("[system]: Attempted to update user via update method, which is not supported. Use updateUser instead.");
         return null;
     }
-    @CacheEvict(value = "user_detail", key = "#id")
+    @CacheEvict(value = "user_detail", allEntries = true)
     @Override
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
         log.info("[{}]: User with ID {} updated successfully.", username, id);
         return convertToResponse(saved);
     }
-    @CacheEvict(value = "user_detail", key = "#id")
+    @CacheEvict(value = "user_detail", allEntries = true)
     @Override
     public void updateStatus(String id, UserStatusSetRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -133,13 +133,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("[{}]: User status updated to: {}", username, user.getUserStatus());
     }
-    @CacheEvict(value = "user_detail", key = "#id")
+    @CacheEvict(value = "user_detail", allEntries = true)
     @Override
     public void deleteById(String id) {
         log.warn("[system]: Attempted to delete user by ID {}, which is not supported. Use updateStatus to disable/ban.", id);
         throw new UnsupportedOperationException("Direct deletion of users is not supported. Use updateStatus to disable or ban.");
     }
-    @CacheEvict(value = "user_detail", key = "#id")
+    @CacheEvict(value = "user_detail", allEntries = true)
     @Override
     @Transactional
     public void updateUserRole(String id, UserRoleRequest request) {
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("[{}]: Updated role for user {} to {}", username, id, request.getRoleName());
     }
-    @CacheEvict(value = "user_detail", key = "#id")
+    @CacheEvict(value = "user_detail", allEntries = true)
     @Override
     @Transactional
     public void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime) {

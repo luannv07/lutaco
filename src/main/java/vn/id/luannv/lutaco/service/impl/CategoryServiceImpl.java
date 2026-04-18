@@ -135,7 +135,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
     @Cacheable(
             value = "category_detail",
-            key = "#id + '_' + @securityUtils.getCurrentId() + '_' + @localizationUtils.getCurrentLocaleKey()"
+            key = "#id + '_' + @securityPermission.getCurrentUserId() + '_' + @localizationUtils.getCurrentLocaleKey()"
     )
     @Override
     public CategoryResponse getDetail(String id) {

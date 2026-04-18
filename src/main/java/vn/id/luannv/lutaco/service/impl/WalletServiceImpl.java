@@ -44,7 +44,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Caching(evict = {
             @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", key = "@securityPermission.getCurrentUserId()")
+            @CacheEvict(value = "user_wallets", allEntries = true)
     })
     public WalletResponse create(WalletCreateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -75,7 +75,7 @@ public class WalletServiceImpl implements WalletService {
     }
     @Caching(evict = {
             @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", key = "@securityPermission.getCurrentUserId()")
+            @CacheEvict(value = "user_wallets", allEntries = true)
     })
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
@@ -116,8 +116,8 @@ public class WalletServiceImpl implements WalletService {
     }
     @Caching(evict = {
             @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", key = "@securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "wallet_detail", key = "#id")
+            @CacheEvict(value = "user_wallets", allEntries = true),
+            @CacheEvict(value = "wallet_detail", allEntries = true)
     })
     @Override
     public WalletResponse update(String id, WalletUpdateRequest request) {
@@ -132,8 +132,8 @@ public class WalletServiceImpl implements WalletService {
     }
     @Caching(evict = {
             @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", key = "@securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "wallet_detail", key = "#id")
+            @CacheEvict(value = "user_wallets", allEntries = true),
+            @CacheEvict(value = "wallet_detail", allEntries = true)
     })
     @Override
     public void deleteById(String id) {
@@ -147,7 +147,7 @@ public class WalletServiceImpl implements WalletService {
     }
     @Caching(evict = {
             @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", key = "@securityPermission.getCurrentUserId()")
+            @CacheEvict(value = "user_wallets", allEntries = true)
     })
     @Override
     public void archiveByAdmin(String userId, String walletName) {
@@ -166,7 +166,7 @@ public class WalletServiceImpl implements WalletService {
         log.info("[{}]: Wallet '{}' (ID: {}) archived successfully for user ID {}.",
                 username, wallet.getWalletName(), wallet.getId(), userId);
     }
-    @Cacheable(value = "wallet_detail", key = "#id")
+    @Cacheable(value = "wallet_detail", key = "#id + '_' + @localizationUtils.getCurrentLocaleKey()")
     @Override
     public WalletResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -182,7 +182,7 @@ public class WalletServiceImpl implements WalletService {
         // This service does not support pagination search yet.
         return Page.empty();
     }
-    @Cacheable(value = "user_wallets", key = "@securityPermission.getCurrentUserId()")
+    @Cacheable(value = "user_wallets", key = "@securityPermission.getCurrentUserId() + '_' + @localizationUtils.getCurrentLocaleKey()")
     @Override
     public List<WalletResponse> getMyWallets() {
         String username = SecurityUtils.getCurrentUsername();
@@ -211,8 +211,8 @@ public class WalletServiceImpl implements WalletService {
     }
     @Caching(evict = {
             @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", key = "@securityPermission.getCurrentUserId()"),
-            @CacheEvict(value = "wallet_detail", key = "#id")
+            @CacheEvict(value = "user_wallets", allEntries = true),
+            @CacheEvict(value = "wallet_detail", allEntries = true)
     })
     @Transactional
     @Override
