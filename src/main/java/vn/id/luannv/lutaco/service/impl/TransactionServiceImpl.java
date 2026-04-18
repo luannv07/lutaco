@@ -5,9 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -134,7 +131,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "transactions", allEntries = true)
     public void deleteBulk(List<String> ids, String currentId) {
         String username = SecurityUtils.getCurrentUsername();
         Set<Transaction> transactionsToSave = new HashSet<>();
@@ -205,7 +201,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Cacheable(value = "transactions", key = "#id")
     public TransactionResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
@@ -239,7 +234,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "transactions", key = "#id")
     public TransactionResponse update(String id, TransactionRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
@@ -301,10 +295,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "transactions", key = "#transactionId"),
-            @CacheEvict(value = "wallets", key = "#walletId")
-    })
     public void deleteByIdAndWalletId(String transactionId, String walletId) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
@@ -340,7 +330,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "transactions", key = "#id")
     public void restoreTransaction(String id, String walletId) {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();

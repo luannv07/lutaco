@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -126,7 +124,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
     }
 
     @Override
-    @Cacheable(value = "recurringTransactions", key = "#id")
     public RecurringTransactionResponse getDetail(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching recurring transaction details for ID: {}", username, id);
@@ -153,7 +150,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    @CacheEvict(value = "recurringTransactions", key = "#id")
     public RecurringTransactionResponse update(Long id, RecurringTransactionRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Updating recurring transaction with ID: {} using request: {}", username, id, request);
@@ -178,7 +174,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional
-    @CacheEvict(value = "recurringTransactions", key = "#id")
     public void deleteById(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to delete recurring transaction with ID: {}", username, id);

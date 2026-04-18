@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.response.PayOSResponse;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
@@ -22,7 +21,6 @@ public class PayOsServiceImpl implements PayOsService {
     }
 
     @Override
-    @Cacheable(value = "payos", key = "#id")
     public PayOSResponse<PayOSResponse.PayOSDataDetail> getDetailPayment(String id) {
         return payOsClient.getDetail(id);
     }

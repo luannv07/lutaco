@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -105,10 +104,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "wallets", key = "#id"),
-            @CacheEvict(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
-    })
     public WalletResponse update(String id, WalletCreateRequest request) {
         // This method is required by BaseService, but the main update logic uses WalletUpdateRequest.
         // You can delegate to the other update method or throw an exception if this flow is not intended.
@@ -116,7 +111,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets", key = "#id")
     public WalletResponse update(String id, WalletUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to update wallet with ID '{}' for current user. Request: {}", username, id, request);
@@ -129,7 +123,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets", key = "#id")
     public void deleteById(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to soft delete wallet with ID: {} for current user.", username, id);
@@ -141,7 +134,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets", allEntries = true)
     public void archiveByAdmin(String userId, String walletName) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Admin attempting to archive wallet '{}' for user ID: {}.", username, walletName, userId);
@@ -160,7 +152,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @Cacheable(value = "wallets", key = "#id")
     public WalletResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for wallet with ID '{}' for current user.", username, id);
@@ -177,7 +168,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @Cacheable(value = "walletsList", key = "@securityPermission.getCurrentUserId()")
     public List<WalletResponse> getMyWallets() {
         String username = SecurityUtils.getCurrentUsername();
         String currentUserId = SecurityUtils.getCurrentId();
@@ -205,7 +195,6 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    @CacheEvict(value = "wallets", key = "#id")
     public void toggle(String id) {
         Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));

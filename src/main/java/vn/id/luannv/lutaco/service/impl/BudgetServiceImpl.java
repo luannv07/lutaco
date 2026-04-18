@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -151,7 +149,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "budgets", key = "#id")
     public BudgetResponse getDetail(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for budget ID: {}", username, id);
@@ -197,7 +194,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "budgets", key = "#id")
     public BudgetResponse update(Long id, BudgetRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Updating budget with ID: {} with request: {}", username, id, request);
@@ -243,7 +239,6 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    @CacheEvict(value = "budgets", key = "#id")
     public void deleteById(Long id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to delete budget with ID: {}", username, id);

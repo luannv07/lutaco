@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +32,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "roles", key = "#id")
     public Role getDetail(Integer id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for role with ID: {}", username, id);
@@ -66,14 +63,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CacheEvict(value = "roles", key = "#id")
     public Role update(Integer id, Role request) {
         log.warn("[{}]: Attempted to update a role via update method, which is not supported. ID: {}, Request: {}", SecurityUtils.getCurrentUsername(), id, request);
         throw new BusinessException(ErrorCode.SYSTEM_ERROR); // Or a more specific error if role updates are not allowed
     }
 
     @Override
-    @CacheEvict(value = "roles", key = "#id")
     public void deleteById(Integer id) {
         log.warn("[{}]: Attempted to delete a role via deleteById method, which is not supported. ID: {}", SecurityUtils.getCurrentUsername(), id);
         throw new BusinessException(ErrorCode.SYSTEM_ERROR);

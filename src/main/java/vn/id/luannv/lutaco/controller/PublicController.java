@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -64,7 +63,6 @@ public class PublicController {
     }
 
     @GetMapping("/api/v1/public/translations")
-    @Cacheable("translationCache")
     public ResponseEntity<BaseResponse<Map<String, Map<String, String>>>> getConfigsOnly() {
         Map<String, Map<String, String>> allConfigs = new HashMap<>();
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();

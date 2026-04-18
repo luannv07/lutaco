@@ -6,8 +6,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.entity.RefreshToken;
@@ -34,7 +32,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     Long expirationTime;
 
     @Override
-    @CacheEvict(value = "refreshTokens", key = "#username")
     public RefreshToken createRefreshToken(String username) {
         log.info("[{}]: Creating refresh token for user: {}", username, username);
         User user = userRepository.findByUsername(username)
@@ -55,7 +52,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Cacheable(value = "refreshTokens", key = "#username")
     public RefreshToken findByTokenWithUser(String username) {
         log.debug("[{}]: Attempting to find refresh token for user: {}", username, username);
         User user = userRepository.findByUsername(username)
@@ -75,7 +71,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "refreshTokens", key = "#username")
     public void deleteRefreshToken(String username) {
         log.info("[{}]: Deleting refresh token for user: {}", username, username);
         User user = userRepository.findByUsername(username)
@@ -89,7 +84,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Cacheable(value = "refreshTokensByToken", key = "#token")
     public RefreshToken findByToken(String token) {
         log.debug("[unknown]: Attempting to find refresh token by token string.");
         RefreshToken foundToken = refreshTokenRepository.findByToken(token)
@@ -103,7 +97,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Cacheable(value = "refreshTokensUsername", key = "#token")
     public String getUsernameByToken(String token) {
         log.debug("[unknown]: Attempting to get username from refresh token.");
         String username = refreshTokenRepository.findUsernameByToken(token)

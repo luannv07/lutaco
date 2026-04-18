@@ -20,7 +20,6 @@ import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
-import vn.id.luannv.lutaco.event.entity.UserRegisteredEvent;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.jwt.JwtService;

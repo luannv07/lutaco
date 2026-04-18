@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +52,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "#id")
     public UserResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Fetching details for user with ID: {}", username, id);
@@ -95,7 +92,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(value = "users", key = "#id")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Updating user with ID: {} with data: {}", username, id, request);
@@ -122,7 +118,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(value = "users", key = "#id")
     public void updateStatus(String id, UserStatusSetRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         User user = userRepository.findById(id)
@@ -145,7 +140,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "users", key = "#id")
     public void updateUserRole(String id, UserRoleRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         User user = userRepository.findById(id)
@@ -159,7 +153,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "users", key = "#id")
     public void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime) {
         String username = SecurityUtils.getCurrentUsername();
         if (!request.getNewPassword().equals(request.getConfirmNewPassword()))
