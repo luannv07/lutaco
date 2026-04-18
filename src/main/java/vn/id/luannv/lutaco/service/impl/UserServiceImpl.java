@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
         log.warn("[system]: Attempted to create user via create method, which is not supported. Use AuthServiceImpl.register instead.");
         return null;
     }
-
+    @Cacheable(value = "user_detail", key = "#id")
     @Override
     public UserResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
         log.warn("[system]: Attempted to update user via update method, which is not supported. Use updateUser instead.");
         return null;
     }
-
+    @CacheEvict(value = "user_detail", key = "#id")
     @Override
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService {
         log.info("[{}]: User with ID {} updated successfully.", username, id);
         return convertToResponse(saved);
     }
-
+    @CacheEvict(value = "user_detail", key = "#id")
     @Override
     public void updateStatus(String id, UserStatusSetRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -125,19 +127,19 @@ public class UserServiceImpl implements UserService {
         log.info("[{}]: {}, {}", username, SecurityUtils.getCurrentRoleName(), UserType.USER.name());
         if (SecurityUtils.getCurrentRoleName().equals(UserType.USER.name())) {
             user.setUserStatus(UserStatus.DISABLED_BY_USER);
-            return;
+        } else {
+            user.setUserStatus(EnumUtils.from(UserStatus.class, request.getStatus()));
         }
-        user.setUserStatus(EnumUtils.from(UserStatus.class, request.getStatus()));
         userRepository.save(user);
         log.info("[{}]: User status updated to: {}", username, user.getUserStatus());
     }
-
+    @CacheEvict(value = "user_detail", key = "#id")
     @Override
     public void deleteById(String id) {
         log.warn("[system]: Attempted to delete user by ID {}, which is not supported. Use updateStatus to disable/ban.", id);
         throw new UnsupportedOperationException("Direct deletion of users is not supported. Use updateStatus to disable or ban.");
     }
-
+    @CacheEvict(value = "user_detail", key = "#id")
     @Override
     @Transactional
     public void updateUserRole(String id, UserRoleRequest request) {
@@ -150,7 +152,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("[{}]: Updated role for user {} to {}", username, id, request.getRoleName());
     }
-
+    @CacheEvict(value = "user_detail", key = "#id")
     @Override
     @Transactional
     public void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime) {

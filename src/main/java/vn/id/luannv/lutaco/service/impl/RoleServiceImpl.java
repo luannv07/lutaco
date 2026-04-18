@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ public class RoleServiceImpl implements RoleService {
         throw new BusinessException(ErrorCode.SYSTEM_ERROR);
     }
 
+    @Cacheable(value = "roles", key = "#id")
     @Override
     public Role getDetail(Integer id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -45,6 +47,7 @@ public class RoleServiceImpl implements RoleService {
                 });
     }
 
+    @Cacheable(value = "roles", key = "'search_' + #name + '_' + #page + '_' + #size")
     @Override
     public Page<Role> search(String name, Integer page, Integer size) {
         String username = SecurityUtils.getCurrentUsername();

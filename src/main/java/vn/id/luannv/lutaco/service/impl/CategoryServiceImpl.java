@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -63,6 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
         return dto;
     }
 
+    @CacheEvict(value = "category_detail", allEntries = true)
     @Override
     @Transactional
     public CategoryResponse create(CategoryRequest request) {
@@ -130,7 +133,10 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("[{}]: New category '{}' (ID: {}) created successfully for user ID {}.", username, savedCategory.getCategoryName(), savedCategory.getId(), userId);
         return buildDto(savedCategory);
     }
-
+    @Cacheable(
+            value = "category_detail",
+            key = "#id + '_' + @securityUtils.getCurrentId() + '_' + @localizationUtils.getCurrentLocaleKey()"
+    )
     @Override
     public CategoryResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -253,12 +259,12 @@ public class CategoryServiceImpl implements CategoryService {
         int from = Math.min(pageable.getPageNumber() * pageable.getPageSize(), total);
         int to = Math.min(from + pageable.getPageSize(), total);
 
-        List<CategoryResponse> pageContent = responses.subList(from - 1, to);
+        List<CategoryResponse> pageContent = responses.subList(Math.max(from - 1, 0), to);
 
         return new PageImpl<>(pageContent, pageable, total);
     }
 
-
+    @CacheEvict(value = "category_detail", allEntries = true)
     @Override
     @Transactional
     public CategoryResponse update(String id, CategoryRequest request) {
@@ -284,7 +290,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("[{}]: Category ID '{}' updated successfully.", username, updatedCategory.getId());
         return buildDto(updatedCategory);
     }
-
+    @CacheEvict(value = "category_detail", allEntries = true)
     @Override
     @Transactional
     public void deleteById(String id) {
