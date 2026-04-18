@@ -4,9 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +39,6 @@ public class WalletServiceImpl implements WalletService {
     LocalizationUtils localizationUtils;
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", allEntries = true)
-    })
     public WalletResponse create(WalletCreateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
         String userId = SecurityUtils.getCurrentId();
@@ -73,10 +66,6 @@ public class WalletServiceImpl implements WalletService {
                 username, savedWallet.getWalletName(), savedWallet.getId(), userId);
         return convertToResponse(savedWallet);
     }
-    @Caching(evict = {
-            @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", allEntries = true)
-    })
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void createDefaultWallet(String userId) {
@@ -114,11 +103,6 @@ public class WalletServiceImpl implements WalletService {
         // You can delegate to the other update method or throw an exception if this flow is not intended.
         throw new UnsupportedOperationException("Use update(String, WalletUpdateRequest) instead.");
     }
-    @Caching(evict = {
-            @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", allEntries = true),
-            @CacheEvict(value = "wallet_detail", allEntries = true)
-    })
     @Override
     public WalletResponse update(String id, WalletUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -130,11 +114,6 @@ public class WalletServiceImpl implements WalletService {
                 username, updatedWallet.getWalletName(), updatedWallet.getId());
         return convertToResponse(updatedWallet);
     }
-    @Caching(evict = {
-            @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", allEntries = true),
-            @CacheEvict(value = "wallet_detail", allEntries = true)
-    })
     @Override
     public void deleteById(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -145,10 +124,6 @@ public class WalletServiceImpl implements WalletService {
         log.info("[{}]: Wallet '{}' (ID: {}) soft deleted successfully.",
                 username, wallet.getWalletName(), wallet.getId());
     }
-    @Caching(evict = {
-            @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", allEntries = true)
-    })
     @Override
     public void archiveByAdmin(String userId, String walletName) {
         String username = SecurityUtils.getCurrentUsername();
@@ -166,7 +141,6 @@ public class WalletServiceImpl implements WalletService {
         log.info("[{}]: Wallet '{}' (ID: {}) archived successfully for user ID {}.",
                 username, wallet.getWalletName(), wallet.getId(), userId);
     }
-    @Cacheable(value = "wallet_detail", key = "#id + '_' + @localizationUtils.getCurrentLocaleKey()")
     @Override
     public WalletResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -182,7 +156,6 @@ public class WalletServiceImpl implements WalletService {
         // This service does not support pagination search yet.
         return Page.empty();
     }
-    @Cacheable(value = "user_wallets", key = "@securityPermission.getCurrentUserId() + '_' + @localizationUtils.getCurrentLocaleKey()")
     @Override
     public List<WalletResponse> getMyWallets() {
         String username = SecurityUtils.getCurrentUsername();
@@ -209,11 +182,6 @@ public class WalletServiceImpl implements WalletService {
         response.setStatus(new EnumDisplay<>(wallet.getStatus(), localizationUtils.getLocalizedMessage(wallet.getStatus().getDisplay())));
         return response;
     }
-    @Caching(evict = {
-            @CacheEvict(value = "dashboard_summary", allEntries = true),
-            @CacheEvict(value = "user_wallets", allEntries = true),
-            @CacheEvict(value = "wallet_detail", allEntries = true)
-    })
     @Transactional
     @Override
     public void toggle(String id) {

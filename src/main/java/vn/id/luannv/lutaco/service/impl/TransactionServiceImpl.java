@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,7 +58,6 @@ public class TransactionServiceImpl implements TransactionService {
         return null; // Or throw an UnsupportedOperationException
     }
 
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public TransactionResponse customCreate(TransactionRequest request, String userId) {
@@ -93,7 +91,6 @@ public class TransactionServiceImpl implements TransactionService {
         return convertToResponse(savedTransaction);
     }
 
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public List<TransactionResponse> createBulk(List<TransactionRequest> requests, String userId) {
@@ -131,7 +128,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public void deleteBulk(List<String> ids, String currentId) {
@@ -148,7 +144,6 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("[{}]: Successfully deleted {} bulk transactions.", username, transactionsToSave.size());
     }
 
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public void autoCreateTransactionWithCronJob(String transactionId, String userId) {
@@ -235,7 +230,6 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("[{}]: Found {} transactions matching the criteria for user ID {}.", username, result.getTotalElements(), currentUserId);
         return result;
     }
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public TransactionResponse update(String id, TransactionRequest request) {
@@ -297,7 +291,6 @@ public class TransactionServiceImpl implements TransactionService {
         throw new UnsupportedOperationException(ErrorCode.UNSUPPORTED_YET.getMessage());
     }
 
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public void deleteByIdAndWalletId(String transactionId, String walletId) {
@@ -333,7 +326,6 @@ public class TransactionServiceImpl implements TransactionService {
                 ? CategoryType.INCOME : CategoryType.EXPENSE;
     }
 
-    @CacheEvict(value = "dashboard_summary", allEntries = true)
     @Override
     @Transactional
     public void restoreTransaction(String id, String walletId) {

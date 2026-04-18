@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -125,10 +123,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         log.debug("[{}]: Published event {} for recurring transaction ID: {}", username, eventState, recurringTransaction.getId());
     }
 
-    @Cacheable(
-            value = "recurring_detail",
-            key = "#id + '_' + @securityPermission.getCurrentUserId() + '_' + @localizationUtils.getCurrentLocaleKey()"
-    )
     @Override
     public RecurringTransactionResponse getDetail(Long id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -153,10 +147,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         log.info("[{}]: Found {} recurring transactions matching the criteria.", username, result.getTotalElements());
         return result;
     }
-    @CacheEvict(
-            value = "recurring_detail",
-            allEntries = true
-    )
     @Override
     @Transactional
     public RecurringTransactionResponse update(Long id, RecurringTransactionRequest request) {
@@ -180,10 +170,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         log.info("[{}]: Successfully updated recurring transaction with ID: {}", username, updatedTransaction.getId());
         return convertToResponse(updatedTransaction);
     }
-    @CacheEvict(
-            value = "recurring_detail",
-            allEntries = true
-    )
     @Override
     @Transactional
     public void deleteById(Long id) {

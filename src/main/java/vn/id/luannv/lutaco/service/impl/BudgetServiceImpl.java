@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -149,10 +147,6 @@ public class BudgetServiceImpl implements BudgetService {
         return endDate;
     }
 
-    @Cacheable(
-            value = "budget_detail",
-            key = "#id + '_' + @localizationUtils.getCurrentLocaleKey()"
-    )
     @Override
     @Transactional(readOnly = true)
     public BudgetResponse getDetail(Long id) {
@@ -198,10 +192,6 @@ public class BudgetServiceImpl implements BudgetService {
         return result;
     }
 
-    @CacheEvict(
-            value = "budget_detail",
-            allEntries = true
-    )
     @Override
     @Transactional
     public BudgetResponse update(Long id, BudgetRequest request) {
@@ -248,10 +238,6 @@ public class BudgetServiceImpl implements BudgetService {
         return convertToResponse(updatedBudget);
     }
 
-    @CacheEvict(
-            value = "budget_detail",
-            allEntries = true
-    )
     @Override
     public void deleteById(Long id) {
         String username = SecurityUtils.getCurrentUsername();
