@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -146,5 +147,44 @@ public class PayOSResponse<T> {
                 description = "Danh sách giao dịch liên quan đến payment link"
         )
         List<Object> transactions;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    @Schema(
+            name = "PayOSDataByUser",
+            description = "List of PayOS transactions for one user"
+    )
+    public static class PayOSDataByUser {
+
+        @Schema(example = "123456")
+        Integer orderCode;
+
+        @Schema(example = "payos_abc123")
+        String paymentLinkId;
+
+        @Schema(example = "100000")
+        Integer amount;
+
+        @Schema(example = "VND")
+        String currency;
+
+        @Schema(example = "premium plan AB12CD34EF")
+        String description;
+
+        @Schema(example = "PENDING")
+        String status;
+
+        @Schema(example = "UPGRADE_PREMIUM")
+        String type;
+
+        @Schema(example = "2026-04-18T14:30:00")
+        LocalDateTime createdDate;
+
+        @Schema(example = "2026-04-18T14:35:00")
+        LocalDateTime paidAt;
     }
 }

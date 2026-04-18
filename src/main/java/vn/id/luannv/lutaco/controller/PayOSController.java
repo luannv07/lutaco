@@ -16,6 +16,8 @@ import vn.id.luannv.lutaco.dto.response.PayOSResponse;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
 import vn.id.luannv.lutaco.service.PayOsService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
@@ -75,6 +77,34 @@ public class PayOSController {
                         BaseResponse.success(
                                 payOsService.getDetailPayment(id),
                                 "Lấy chi tiết thanh toán thành công."
+                        )
+                );
+    }
+
+    @GetMapping("/users/{userId}")
+    @PreAuthorize("#userId == authentication.principal.id")
+    @Operation(
+            summary = "Get PayOS transactions by userId",
+            description = "Allow users to query only their own PayOS transactions"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get transaction list successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
+    public ResponseEntity<BaseResponse<List<PayOSResponse.PayOSDataByUser>>> getByUserId(
+            @Parameter(
+                    description = "User ID",
+                    example = "USR_123456",
+                    required = true
+            )
+            @PathVariable String userId
+    ) {
+        return ResponseEntity.ok()
+                .body(
+                        BaseResponse.success(
+                                payOsService.getPaymentsByUserId(userId),
+                                "Get payment transactions successfully."
                         )
                 );
     }

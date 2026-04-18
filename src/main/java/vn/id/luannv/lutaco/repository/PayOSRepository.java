@@ -30,4 +30,6 @@ public interface PayOSRepository extends JpaRepository<PayOS, Long> {
                           @Param("statusSource") PaymentStatus source);
 
     List<PayOS> findByStatusAndPaidAtIsNullAndCreatedDateIsLessThan(PaymentStatus paymentStatus, LocalDateTime localDateTime);
+
+    List<PayOS> findByUser_IdOrderByCreatedDateDesc(String userId);
 }
