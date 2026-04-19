@@ -65,4 +65,5 @@ public class CategoryResponse {
             example = "system"
     )
     String createdBy;
+    Boolean hasChildren = Boolean.FALSE;
 }

@@ -45,11 +45,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> getChildren(String categoryId) {
-        return categoryRepository.findByParentId(categoryId)
-                .stream().map(this::buildDto).toList();
+        List<Category> categories = categoryRepository.findByParentId(categoryId);
+        Set<String> categoryIdsWithChildren = findCategoryIdsHavingChildren(categories);
+        return categories.stream()
+                .map(category -> buildDto(category, categoryIdsWithChildren.contains(category.getId())))
+                .toList();
     }
 
     private CategoryResponse buildDto(Category entity) {
+        boolean hasChildren = !findCategoryIdsHavingChildren(List.of(entity)).isEmpty();
+        return buildDto(entity, hasChildren);
+    }
+
+    private CategoryResponse buildDto(Category entity, boolean hasChildren) {
         CategoryResponse dto = categoryMapper.toDto(entity);
         if (entity.getParent() == null) {
             dto.setCategoryType(new EnumDisplay<>(
@@ -59,8 +67,27 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             dto.setCategoryType(null);
         }
+        dto.setHasChildren(hasChildren);
 
         return dto;
+    }
+
+    private Set<String> findCategoryIdsHavingChildren(Collection<Category> categories) {
+        if (categories == null || categories.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        Set<String> categoryIds = categories.stream()
+                .map(Category::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (categoryIds.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        String currentUserId = SecurityUtils.getCurrentId();
+        return new HashSet<>(categoryRepository.findParentIdsHavingVisibleChildren(categoryIds, currentUserId));
     }
 
     @Override
@@ -177,9 +204,10 @@ public class CategoryServiceImpl implements CategoryService {
         });
 
         if (!hasSearch) {
+            Set<String> categoryIdsWithChildren = findCategoryIdsHavingChildren(categories);
             List<CategoryResponse> roots = categories.stream()
                     .filter(c -> c.getParent() == null)
-                    .map(this::buildDto)
+                    .map(c -> buildDto(c, categoryIdsWithChildren.contains(c.getId())))
                     .toList();
 
             return new PageImpl<>(roots, pageable, roots.size());
@@ -204,16 +232,17 @@ public class CategoryServiceImpl implements CategoryService {
 
         Set<String> addedIds = new HashSet<>();
         List<CategoryResponse> responses = new ArrayList<>();
+        Set<String> categoryIdsWithChildren = findCategoryIdsHavingChildren(categories);
 
         // 1. Handle roots (with or without children)
         for (Category root : roots) {
-            CategoryResponse dto = buildDto(root);
+            CategoryResponse dto = buildDto(root, categoryIdsWithChildren.contains(root.getId()));
             addedIds.add(root.getId());
 
             List<Category> childList = childrenByParentId.get(root.getId());
             if (childList != null) {
                 dto.setChildren(childList.stream()
-                        .map(this::buildDto)
+                        .map(c -> buildDto(c, categoryIdsWithChildren.contains(c.getId())))
                         .toList());
             }
 
@@ -231,15 +260,16 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (!missingParentIds.isEmpty()) {
             List<Category> missingParents = categoryRepository.findAllById(missingParentIds);
+            Set<String> missingParentIdsWithChildren = findCategoryIdsHavingChildren(missingParents);
 
             for (Category parent : missingParents) {
-                CategoryResponse dto = buildDto(parent);
+                CategoryResponse dto = buildDto(parent, missingParentIdsWithChildren.contains(parent.getId()));
                 addedIds.add(parent.getId());
 
                 List<Category> childList = childrenByParentId.get(parent.getId());
                 if (childList != null) {
                     dto.setChildren(childList.stream()
-                            .map(this::buildDto)
+                            .map(c -> buildDto(c, categoryIdsWithChildren.contains(c.getId())))
                             .toList());
                 }
 

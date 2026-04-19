@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +54,21 @@ public interface CategoryRepository extends JpaRepository<Category, String>, Jpa
     String findParentIdByCategoryNameAndOwnerUserId(
             @Param("categoryName") String categoryName,
             @Param("ownerUserId") String ownerUserId
+    );
+
+    @Query("""
+                select distinct c.parent.id
+                from Category c
+                left join CategoryOverride co
+                       on co.category = c and co.userId = :userId
+                where c.deletedAt is null
+                  and c.parent.id in :parentIds
+                  and (co is null or co.disabled = false)
+                  and (c.ownerUserId = :userId or c.isSystem = true)
+            """)
+    List<String> findParentIdsHavingVisibleChildren(
+            @Param("parentIds") Collection<String> parentIds,
+            @Param("userId") String userId
     );
 
     boolean existsByOwnerUserIdAndCategoryName(String ownerUserId, String categoryName);
