@@ -30,7 +30,7 @@ public class SecurityUtils {
     }
 
     public static String getCurrentId() {
-        return getCurrentPrincipal().getId();
+        return "";
     }
 
     public static UserPlan getCurrentUserPlan() {

@@ -15,10 +15,6 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Transaction extends BaseEntity {
 
-    @Id
-    @Column(length = 36)
-    String id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     User user;

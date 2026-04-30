@@ -12,6 +12,7 @@ import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.event.entity.RecurringTransactionEvent;
 import vn.id.luannv.lutaco.util.TimeUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -62,7 +63,7 @@ public class EmailTemplateService {
     }
 
     public static EmailFields sendAttentionBudget(Budget budget) {
-        float percentage = budget.getPercentage();
+        BigDecimal percentage = budget.getPercentage();
         BudgetStatus status = budget.getStatus();
 
         String title;
