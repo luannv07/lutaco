@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 09b78c6e-787a-4e20-9f1d-5731ae0fbf29
+      author: luannv
+      changes:
+        - addColumn:
+            tableName: REFRESH_TOKENS
+            columns:
+              - column:
+                  name: used
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: active_flg
+                  type: boolean
+                  defaultValueBoolean: true

@@ -56,8 +56,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        log.info("isAccountNonLocked called: {} {} {}", status, UserStatus.BANNED, UserStatus.BANNED == status);
-        return status != UserStatus.BANNED;
+        log.info("isAccountNonLocked called: {} {} {}", status, UserStatus.SUSPENDED, UserStatus.SUSPENDED == status);
+        return status != UserStatus.SUSPENDED;
     }
 
     @Override

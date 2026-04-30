@@ -3,7 +3,7 @@ package vn.id.luannv.lutaco.service;
 import vn.id.luannv.lutaco.entity.RefreshToken;
 
 public interface RefreshTokenService {
-    RefreshToken createRefreshToken(String username);
+    RefreshToken createRefreshToken(Long id);
 
     RefreshToken findByTokenWithUser(String username);
 
@@ -13,4 +13,10 @@ public interface RefreshTokenService {
     String getUsernameByToken(String token);
 
     void deleteRefreshToken(String username);
+
+    void deleteAllByUsername(String username);
+
+    void deleteById(Long id);
+
+    int updateStatusUsedByRefToken(String refToken);
 }

@@ -112,7 +112,7 @@ databaseChangeLog:
             tableName: users
             columns:
               - column: { name: username, value: system }
-              - column: { name: password, value: $2a$10$wHcC0zXz3qk0R2cH9Qp5xONzZ9pQn9y7F5zYpZlY9mZk2p5lQxY8K } # "system"
+              - column: { name: password, value: $2a$10$EAzhv6hsEDuen5Fei44vLuuVvnJpFcFOihvqHHMK6ceqIFHguC5x2 } # "system"
               - column: { name: full_name, value: "System" }
               - column: { name: email, value: "system@local" }
 

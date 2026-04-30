@@ -17,15 +17,15 @@ import java.time.Instant;
 @Table(
         name = "invalidated_tokens",
         indexes = {
-                @Index(name = "idx_invalidated_tokens_ref_token", columnList = "ref_token"),
+                @Index(name = "idx_invalidated_tokens_jti", columnList = "jti"),
                 @Index(name = "idx_invalidated_tokens_expiry_time", columnList = "expiry_time")
         }
 )
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvalidatedToken extends BaseEntity {
 
-    @Column(name = "ref_token", nullable = false, unique = true, length = 36)
-    String refToken;
+    @Column(name = "jti", nullable = false, unique = true, length = 36)
+    String jti;
 
     @Column(name = "expiry_time", nullable = false)
     Instant expiryTime;
