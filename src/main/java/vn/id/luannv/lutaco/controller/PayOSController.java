@@ -1,10 +1,5 @@
 package vn.id.luannv.lutaco.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,26 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
-@Tag(
-        name = "PayOS",
-        description = "API thanh toán tích hợp PayOS (nâng cấp tài khoản, truy vấn giao dịch)"
-)
 public class PayOSController {
 
     PayOsService payOsService;
 
     @PostMapping("/premium-user")
-    @Operation(
-            summary = "Tạo giao dịch nâng cấp Premium",
-            description = "Khởi tạo giao dịch thanh toán PayOS để nâng cấp tài khoản người dùng lên Premium"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tạo thanh toán thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "403", description = "Tài khoản đã là Premium")
-    })
-    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
+            public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success(
@@ -54,23 +35,8 @@ public class PayOSController {
 
     @GetMapping("/{id}")
     @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN'))")
-    @Operation(
-            summary = "Lấy chi tiết giao dịch PayOS",
-            description = "Truy vấn thông tin chi tiết của một giao dịch PayOS theo mã giao dịch"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lấy chi tiết thanh toán thành công"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy giao dịch")
-    })
-    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
-            @Parameter(
-                    description = "Mã giao dịch PayOS",
-                    example = "PAYOS_123456",
-                    required = true
-            )
-            @PathVariable String id
+            public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
+                        @PathVariable String id
     ) {
         return ResponseEntity.ok()
                 .body(
@@ -83,22 +49,8 @@ public class PayOSController {
 
     @GetMapping("/users/{userId}")
     @PreAuthorize("#userId == authentication.principal.id")
-    @Operation(
-            summary = "Get PayOS transactions by userId",
-            description = "Allow users to query only their own PayOS transactions"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get transaction list successfully"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden")
-    })
-    public ResponseEntity<BaseResponse<List<PayOSResponse.PayOSDataByUser>>> getByUserId(
-            @Parameter(
-                    description = "User ID",
-                    example = "USR_123456",
-                    required = true
-            )
-            @PathVariable String userId
+            public ResponseEntity<BaseResponse<List<PayOSResponse.PayOSDataByUser>>> getByUserId(
+                        @PathVariable String userId
     ) {
         return ResponseEntity.ok()
                 .body(

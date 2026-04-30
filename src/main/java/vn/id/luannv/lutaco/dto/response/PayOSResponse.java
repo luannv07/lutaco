@@ -1,6 +1,5 @@
 package vn.id.luannv.lutaco.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,87 +12,44 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(
-        name = "PayOSResponse",
-        description = "Response chuẩn trả về từ PayOS"
-)
 public class PayOSResponse<T> {
 
-    @Schema(
-            description = "Mã trạng thái phản hồi từ PayOS",
-            example = "00"
-    )
-    String code;
+        String code;
 
-    @Schema(
-            description = "Mô tả trạng thái phản hồi từ PayOS",
-            example = "Success"
-    )
-    String desc;
+        String desc;
 
-    @Schema(
-            description = "Dữ liệu chi tiết trả về từ PayOS (phụ thuộc từng API)"
-    )
-    T data;
+        T data;
 
-    @Schema(
-            description = "Chữ ký xác thực dữ liệu từ PayOS",
-            example = "f3b9c2e1..."
-    )
-    String signature;
+        String signature;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Schema(
-            name = "PayOSDataCreated",
-            description = "Dữ liệu trả về khi tạo payment link thành công"
-    )
-    public static class PayOSDataCreated {
+        public static class PayOSDataCreated {
 
-        @Schema(example = "970418")
-        String bin;
+                String bin;
 
-        @Schema(example = "123456789")
-        String accountNumber;
+                String accountNumber;
 
-        @Schema(example = "NGUYEN VAN A")
-        String accountName;
+                String accountName;
 
-        @Schema(example = "100000")
-        Long amount;
+                Long amount;
 
-        @Schema(example = "Thanh toán đơn hàng #123")
-        String description;
+                String description;
 
-        @Schema(example = "123456")
-        Integer orderCode;
+                Integer orderCode;
 
-        @Schema(example = "VND")
-        String currency;
+                String currency;
 
-        @Schema(example = "payos_abc123")
-        String paymentLinkId;
+                String paymentLinkId;
 
-        @Schema(
-                description = "Trạng thái payment link",
-                example = "PENDING"
-        )
-        String status;
+                String status;
 
-        @Schema(
-                description = "URL checkout để người dùng thực hiện thanh toán",
-                example = "https://checkout.payos.vn/..."
-        )
-        String checkoutUrl;
+                String checkoutUrl;
 
-        @Schema(
-                description = "QR code thanh toán (dạng text/base64)",
-                example = "000201010212..."
-        )
-        String qrCode;
+                String qrCode;
     }
 
     @Data
@@ -101,52 +57,23 @@ public class PayOSResponse<T> {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Schema(
-            name = "PayOSDataDetail",
-            description = "Chi tiết trạng thái thanh toán của đơn hàng hoặc payment link"
-    )
-    public static class PayOSDataDetail {
+        public static class PayOSDataDetail {
 
-        @Schema(
-                description = "ID truy vấn (có thể là orderCode hoặc paymentLinkId)",
-                example = "123456"
-        )
-        String id;
+                String id;
 
-        @Schema(example = "123456")
-        int orderCode;
+                int orderCode;
 
-        @Schema(example = "100000")
-        int amount;
+                int amount;
 
-        @Schema(
-                description = "Số tiền đã thanh toán",
-                example = "50000"
-        )
-        int amountPaid;
+                int amountPaid;
 
-        @Schema(
-                description = "Số tiền còn lại cần thanh toán",
-                example = "50000"
-        )
-        int amountRemaining;
+                int amountRemaining;
 
-        @Schema(
-                description = "Trạng thái thanh toán",
-                example = "PARTIAL"
-        )
-        String status;
+                String status;
 
-        @Schema(
-                description = "Thời điểm tạo payment link",
-                example = "2024-01-01T10:00:00Z"
-        )
-        Instant createdAt;
+                Instant createdAt;
 
-        @Schema(
-                description = "Danh sách giao dịch liên quan đến payment link"
-        )
-        List<Object> transactions;
+                List<Object> transactions;
     }
 
     @Data
@@ -154,37 +81,24 @@ public class PayOSResponse<T> {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    @Schema(
-            name = "PayOSDataByUser",
-            description = "List of PayOS transactions for one user"
-    )
-    public static class PayOSDataByUser {
+        public static class PayOSDataByUser {
 
-        @Schema(example = "123456")
-        Integer orderCode;
+                Integer orderCode;
 
-        @Schema(example = "payos_abc123")
-        String paymentLinkId;
+                String paymentLinkId;
 
-        @Schema(example = "100000")
-        Integer amount;
+                Integer amount;
 
-        @Schema(example = "VND")
-        String currency;
+                String currency;
 
-        @Schema(example = "premium plan AB12CD34EF")
-        String description;
+                String description;
 
-        @Schema(example = "PENDING")
-        String status;
+                String status;
 
-        @Schema(example = "UPGRADE_PREMIUM")
-        String type;
+                String type;
 
-        @Schema(example = "2026-04-18T14:30:00")
-        LocalDateTime createdDate;
+                LocalDateTime createdDate;
 
-        @Schema(example = "2026-04-18T14:35:00")
-        LocalDateTime paidAt;
+                LocalDateTime paidAt;
     }
 }

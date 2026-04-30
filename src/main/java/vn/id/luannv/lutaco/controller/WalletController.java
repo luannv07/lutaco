@@ -1,10 +1,5 @@
 package vn.id.luannv.lutaco.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +20,13 @@ import java.util.List;
 @RequestMapping("/api/v1/wallets")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(
-        name = "Wallet",
-        description = "API quản lý wallet/ngân sách cá nhân của người dùng"
-)
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
 public class WalletController {
 
     WalletService walletService;
 
     @PostMapping
-    @Operation(
-            summary = "Tạo wallet mới",
-            description = "Người dùng tạo wallet mới theo giới hạn của gói dịch vụ"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Tạo ví thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "403", description = "Vượt quá giới hạn số lượng ví")
-    })
-    public ResponseEntity<BaseResponse<WalletResponse>> create(
+            public ResponseEntity<BaseResponse<WalletResponse>> create(
             @Valid @RequestBody WalletCreateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -56,23 +37,8 @@ public class WalletController {
     }
 
     @PutMapping("/{id}")
-    @Operation(
-            summary = "Cập nhật wallet",
-            description = "Cập nhật tên hoặc mô tả wallet của chính người dùng"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cập nhật ví thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
-    })
-    public ResponseEntity<BaseResponse<WalletResponse>> update(
-            @Parameter(
-                    description = "Tên wallet cần cập nhật",
-                    example = "personal-wallet",
-                    required = true
-            )
-            @PathVariable String id,
+            public ResponseEntity<BaseResponse<WalletResponse>> update(
+                        @PathVariable String id,
             @Valid @RequestBody WalletUpdateRequest request
     ) {
         return ResponseEntity.ok(
@@ -83,22 +49,8 @@ public class WalletController {
     }
 
     @PatchMapping("/{id}/toggle-status")
-    @Operation(
-            summary = "toggle wallet",
-            description = "Người dùng toggle wallet của mình (chuyển trạng thái)"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Xóa ví thành công"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
-    })
-    public ResponseEntity<BaseResponse<Void>> toggle(
-            @Parameter(
-                    description = "Tên wallet cần toggle",
-                    example = "personal-wallet",
-                    required = true
-            )
-            @PathVariable String id
+            public ResponseEntity<BaseResponse<Void>> toggle(
+                        @PathVariable String id
     ) {
         walletService.toggle(id);
         return ResponseEntity.ok(
@@ -107,22 +59,8 @@ public class WalletController {
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Lấy chi tiết wallet",
-            description = "Lấy thông tin chi tiết một wallet thuộc quyền sở hữu của user hiện tại"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lấy chi tiết ví thành công"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy ví")
-    })
-    public ResponseEntity<BaseResponse<WalletResponse>> getDetail(
-            @Parameter(
-                    description = "Tên wallet cần lấy thông tin",
-                    example = "personal-wallet",
-                    required = true
-            )
-            @PathVariable String id
+            public ResponseEntity<BaseResponse<WalletResponse>> getDetail(
+                        @PathVariable String id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -132,15 +70,7 @@ public class WalletController {
     }
 
     @GetMapping
-    @Operation(
-            summary = "Lấy danh sách wallet của tôi",
-            description = "Lấy toàn bộ wallet của user đang đăng nhập"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lấy danh sách ví thành công"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
-    })
-    public ResponseEntity<BaseResponse<List<WalletResponse>>> getMyWallets() {
+            public ResponseEntity<BaseResponse<List<WalletResponse>>> getMyWallets() {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         walletService.getMyWallets(),
