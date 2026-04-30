@@ -15,10 +15,17 @@
     <name>lutaco</name>
     <description>lutaco</description>
     <url/>
-    <licenses><license/></licenses>
-    <developers><developer/></developers>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
     <scm>
-        <connection/><developerConnection/><tag/><url/>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
     </scm>
 
     <properties>

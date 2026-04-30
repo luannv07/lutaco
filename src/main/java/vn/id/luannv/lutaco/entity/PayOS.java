@@ -7,7 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import vn.id.luannv.lutaco.enumerate.PaymentStatus;
 import vn.id.luannv.lutaco.enumerate.PaymentType;
 
-import java.time.LocalDateTime;
+import java.math.BigInteger;
+import java.time.Instant;
 
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
@@ -20,10 +21,6 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class PayOS extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", updatable = false, nullable = false)
-    Long id;
 
     @Column(name = "ORDER_CODE", nullable = false, unique = true)
     Integer orderCode;
@@ -36,7 +33,7 @@ public class PayOS extends BaseEntity {
     User user;
 
     @Column(name = "AMOUNT", nullable = false)
-    Integer amount;
+    BigInteger amount;
 
     @Column(name = "CURRENCY", nullable = false)
     String currency;
@@ -53,13 +50,13 @@ public class PayOS extends BaseEntity {
     PaymentType type;
 
     @Column(name = "PAID_AT")
-    LocalDateTime paidAt;
+    Instant paidAt;
 
     @PreUpdate
     public void preUpdate() {
         if (this.status == PaymentStatus.PAID) {
-            LocalDateTime now = LocalDateTime.now();
-            log.info("PayOsClient preUpdate Payment request: {} at {}", this.status, now);
+            Instant now = Instant.now();
+            log.info("PayOS preUpdate Payment request: {} at {}", this.status, now);
             this.paidAt = now;
         }
     }

@@ -147,6 +147,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         log.info("[{}]: Found {} recurring transactions matching the criteria.", username, result.getTotalElements());
         return result;
     }
+
     @Override
     @Transactional
     public RecurringTransactionResponse update(Long id, RecurringTransactionRequest request) {
@@ -170,6 +171,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         log.info("[{}]: Successfully updated recurring transaction with ID: {}", username, updatedTransaction.getId());
         return convertToResponse(updatedTransaction);
     }
+
     @Override
     @Transactional
     public void deleteById(Long id) {

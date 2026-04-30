@@ -66,6 +66,7 @@ public class WalletServiceImpl implements WalletService {
                 username, savedWallet.getWalletName(), savedWallet.getId(), userId);
         return convertToResponse(savedWallet);
     }
+
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void createDefaultWallet(String userId) {
@@ -103,6 +104,7 @@ public class WalletServiceImpl implements WalletService {
         // You can delegate to the other update method or throw an exception if this flow is not intended.
         throw new UnsupportedOperationException("Use update(String, WalletUpdateRequest) instead.");
     }
+
     @Override
     public WalletResponse update(String id, WalletUpdateRequest request) {
         String username = SecurityUtils.getCurrentUsername();
@@ -114,6 +116,7 @@ public class WalletServiceImpl implements WalletService {
                 username, updatedWallet.getWalletName(), updatedWallet.getId());
         return convertToResponse(updatedWallet);
     }
+
     @Override
     public void deleteById(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -124,6 +127,7 @@ public class WalletServiceImpl implements WalletService {
         log.info("[{}]: Wallet '{}' (ID: {}) soft deleted successfully.",
                 username, wallet.getWalletName(), wallet.getId());
     }
+
     @Override
     public void archiveByAdmin(String userId, String walletName) {
         String username = SecurityUtils.getCurrentUsername();
@@ -141,6 +145,7 @@ public class WalletServiceImpl implements WalletService {
         log.info("[{}]: Wallet '{}' (ID: {}) archived successfully for user ID {}.",
                 username, wallet.getWalletName(), wallet.getId(), userId);
     }
+
     @Override
     public WalletResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -156,6 +161,7 @@ public class WalletServiceImpl implements WalletService {
         // This service does not support pagination search yet.
         return Page.empty();
     }
+
     @Override
     public List<WalletResponse> getMyWallets() {
         String username = SecurityUtils.getCurrentUsername();
@@ -182,6 +188,7 @@ public class WalletServiceImpl implements WalletService {
         response.setStatus(new EnumDisplay<>(wallet.getStatus(), localizationUtils.getLocalizedMessage(wallet.getStatus().getDisplay())));
         return response;
     }
+
     @Transactional
     @Override
     public void toggle(String id) {

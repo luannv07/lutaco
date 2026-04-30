@@ -1,41 +1,36 @@
 package vn.id.luannv.lutaco.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity {
 
-    @CreatedBy
-    @Column(name = "CREATED_BY")
-    String createdBy;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    @CreatedDate
-    @Column(name = "CREATED_DATE")
+    @CreationTimestamp
+    @Column(name = "created_date", updatable = false, nullable = false)
     Instant createdDate;
 
-    @LastModifiedBy
-    @Column(name = "UPDATED_BY")
-    String updatedBy;
-
-    @LastModifiedDate
-    @Column(name = "UPDATED_DATE")
+    @UpdateTimestamp
+    @Column(name = "updated_date", nullable = false)
     Instant updatedDate;
 
+    @Column(name = "created_by", updatable = false, length = 50)
+    String createdBy;
+
+    @Column(name = "updated_by", length = 50)
+    String updatedBy;
 }

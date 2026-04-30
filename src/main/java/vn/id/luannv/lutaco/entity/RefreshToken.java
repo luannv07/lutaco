@@ -1,34 +1,30 @@
 package vn.id.luannv.lutaco.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
-import java.util.Date;
 
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Table(name = "Refresh_Tokens")
+@Entity
+@Table(name = "refresh_tokens")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-public class RefreshToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", updatable = false, nullable = false)
-    Long id;
+public class RefreshToken extends BaseEntity {
 
-    @Column(name = "token", unique = true, nullable = false)
-    String token;
+    @Column(name = "ref_token", nullable = false, unique = true, length = 36)
+    String refToken;
 
-    @Column(name = "expiry_time")
+    @Column(name = "expiry_time", nullable = false)
     Instant expiryTime;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     User user;
+
+    @Column(name = "device_info", length = 255)
+    String deviceInfo;
 }

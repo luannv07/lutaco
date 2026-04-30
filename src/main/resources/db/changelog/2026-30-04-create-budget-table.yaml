@@ -10,7 +10,7 @@ databaseChangeLog:
 
               - column:
                   name: id
-                  type: bigint
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -19,81 +19,82 @@ databaseChangeLog:
               # ===== FK USER =====
               - column:
                   name: user_id
-                  type: bigint
+                  type: BIGINT
                   constraints:
                     nullable: false
 
               # ===== FK CATEGORY =====
               - column:
                   name: category_id
-                  type: bigint
+                  type: BIGINT
                   constraints:
                     nullable: false
 
               - column:
                   name: name
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
 
-              # ===== MONEY (IMPORTANT) =====
+              # ===== MONEY =====
               - column:
                   name: target_amount
-                  type: decimal(19,2)
+                  type: BIGINT
                   constraints:
                     nullable: false
 
               - column:
                   name: actual_amount
-                  type: decimal(19,2)
+                  type: BIGINT
                   constraints:
                     nullable: false
 
-              # ===== ENUM (store code, i18n via master_dictionary) =====
+              # ===== ENUM =====
               - column:
                   name: period
-                  type: varchar(50)
+                  type: VARCHAR(50)
                   constraints:
                     nullable: false
 
               - column:
                   name: status
-                  type: varchar(50)
+                  type: VARCHAR(50)
 
               # ===== DATE RANGE =====
               - column:
                   name: start_date
-                  type: date
+                  type: DATE
 
               - column:
                   name: end_date
-                  type: date
+                  type: DATE
 
               # ===== PERCENTAGE =====
               - column:
                   name: percentage
-                  type: float
+                  type: DECIMAL(5,2)
 
-              # ===== AUDIT =====
+              # ===== AUDIT (BaseEntity align) =====
               - column:
                   name: created_by
-                  type: varchar(50)
+                  type: VARCHAR(50)
                   defaultValue: system
 
               - column:
                   name: created_date
-                  type: timestamp
+                  type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
 
               - column:
                   name: updated_by
-                  type: varchar(50)
+                  type: VARCHAR(50)
                   defaultValue: system
 
               - column:
                   name: updated_date
-                  type: timestamp
+                  type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
+
         # ===== FK USER =====
         - addForeignKeyConstraint:
             baseTableName: budgets
@@ -101,7 +102,7 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_budgets_user
-            onDelete: cascade
+            onDelete: CASCADE
 
         # ===== FK CATEGORY =====
         - addForeignKeyConstraint:
@@ -110,7 +111,7 @@ databaseChangeLog:
             referencedTableName: categories
             referencedColumnNames: id
             constraintName: fk_budgets_category
-            onDelete: restrict
+            onDelete: RESTRICT
 
         # ===== UNIQUE =====
         - addUniqueConstraint:

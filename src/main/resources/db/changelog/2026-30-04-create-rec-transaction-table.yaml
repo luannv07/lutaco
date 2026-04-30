@@ -1,6 +1,7 @@
 databaseChangeLog:
+
   - changeSet:
-      id: r1c2u3r4-0001
+      id: 3a7c9e11-4f2b-4c8d-9a10-7d2f1b6c8890
       author: luannv
       changes:
 
@@ -19,7 +20,7 @@ databaseChangeLog:
               # ===== FK TRANSACTION =====
               - column:
                   name: transaction_id
-                  type: varchar(36)
+                  type: bigint
                   constraints:
                     nullable: false
                     unique: true
@@ -70,6 +71,7 @@ databaseChangeLog:
                   name: updated_date
                   type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
+
         # FK transaction
         - addForeignKeyConstraint:
             baseTableName: recurring_transactions
@@ -79,7 +81,7 @@ databaseChangeLog:
             constraintName: fk_recurring_transactions_transaction
             onDelete: cascade
 
-        # INDEX next_date (scheduler cực quan trọng)
+        # INDEX next_date
         - createIndex:
             tableName: recurring_transactions
             indexName: idx_recurring_next_date
