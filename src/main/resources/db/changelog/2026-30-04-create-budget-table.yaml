@@ -1,62 +1,66 @@
 databaseChangeLog:
   - changeSet:
-      id: f65638ec-a5ae-4e3e-a8f4-30a88e44dbcd
+      id: f1a2b3c4-budget-001
       author: luannv
       changes:
+
         - createTable:
             tableName: budgets
             columns:
+
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
 
+              # ===== FK USER =====
               - column:
                   name: user_id
-                  type: uuid
+                  type: bigint
                   constraints:
                     nullable: false
 
+              # ===== FK CATEGORY =====
               - column:
                   name: category_id
-                  type: uuid
+                  type: bigint
                   constraints:
                     nullable: false
 
               - column:
                   name: name
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
                     nullable: false
 
+              # ===== MONEY (IMPORTANT) =====
               - column:
                   name: target_amount
-                  type: bigint
+                  type: decimal(19,2)
                   constraints:
                     nullable: false
 
               - column:
                   name: actual_amount
-                  type: bigint
+                  type: decimal(19,2)
                   constraints:
                     nullable: false
 
-              - column:
-                  name: percentage
-                  type: float
-                  defaultValueNumeric: 0
-                  constraints:
-                    nullable: false
-
+              # ===== ENUM (store code, i18n via master_dictionary) =====
               - column:
                   name: period
                   type: varchar(50)
                   constraints:
                     nullable: false
 
+              - column:
+                  name: status
+                  type: varchar(50)
+
+              # ===== DATE RANGE =====
               - column:
                   name: start_date
                   type: date
@@ -65,49 +69,73 @@ databaseChangeLog:
                   name: end_date
                   type: date
 
+              # ===== PERCENTAGE =====
               - column:
-                  name: status
-                  type: varchar(50)
-                  defaultValue: NORMAL
+                  name: percentage
+                  type: float
 
+              # ===== AUDIT =====
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        # ===== FK USER =====
         - addForeignKeyConstraint:
             baseTableName: budgets
             baseColumnNames: user_id
             referencedTableName: users
             referencedColumnNames: id
-            onDelete: cascade
-            onUpdate: cascade
             constraintName: fk_budgets_user
+            onDelete: cascade
 
+        # ===== FK CATEGORY =====
         - addForeignKeyConstraint:
             baseTableName: budgets
             baseColumnNames: category_id
             referencedTableName: categories
             referencedColumnNames: id
-            onDelete: cascade
-            onUpdate: cascade
             constraintName: fk_budgets_category
+            onDelete: restrict
 
-        # index chính cho query user/category + ignore deleted
-        - createIndex:
-            tableName: budgets
-            indexName: idx_budgets_user_category
-            columns:
-              - column:
-                  name: user_id
-              - column:
-                  name: category_id
-
-        # giữ index category để query độc lập
-        - createIndex:
-            tableName: budgets
-            indexName: idx_budgets_category_id
-            columns:
-              - column:
-                  name: category_id
-
-        # unique logic
+        # ===== UNIQUE =====
         - addUniqueConstraint:
             tableName: budgets
             columnNames: user_id, category_id
             constraintName: uk_budget_user_category
+
+        # ===== INDEX =====
+        - createIndex:
+            tableName: budgets
+            indexName: idx_budget_user
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: budgets
+            indexName: idx_budget_category
+            columns:
+              - column:
+                  name: category_id
+
+        - createIndex:
+            tableName: budgets
+            indexName: idx_budget_status
+            columns:
+              - column:
+                  name: status

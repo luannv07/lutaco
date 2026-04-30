@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,6 +45,6 @@ public class UserAuditLog {
 
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime createdDate;
+    Instant createdDate;
 }
 

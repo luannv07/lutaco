@@ -1,45 +1,25 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/create-role-table_1701-2026.yaml
+      file: db/changelog/2026-30-04-create-master-dictionary-table.yaml
   - include:
-      file: db/changelog/create-user-table_1701-2026.yaml
+      file: db/changelog/2026-30-04-create-role-table.yaml
   - include:
-      file: db/changelog/create-master-dictionary-table_1701-2026.yaml
+      file: db/changelog/2026-30-04-create-user-table.yaml
   - include:
-      file: db/changelog/create-constraint-user_1701-2026.yaml
+      file: db/changelog/2026-30-04-create-refresh-token-table.yaml
   - include:
-      file: db/changelog/create-invalidated-token-table_1701-2026.yaml
+      file: db/changelog/2026-30-04-create-invalidated-token-table.yaml
   - include:
-      file: db/changelog/create-refresh-token-table_1801-2026.yaml
+      file: db/changelog/2026-30-04-create-category-table.yaml
   - include:
-      file: db/changelog/create-otp-table_1901-2026.yaml
+      file: db/changelog/2026-05-01-create-wallet-table.yaml
   - include:
-      file: db/changelog/create-pay-os-table_2401-2026.yaml
+      file: db/changelog/2026-30-04-create-budget-table.yaml
   - include:
-      file: db/changelog/alter-need-actions-for-master-dictionary_2601-2026.yaml
+      file: db/changelog/2026-30-04-create-pay-os-table.yaml
   - include:
-      file: db/changelog/2601-2026_create-budget.yaml
+      file: db/changelog/2026-30-04-create-transaction-table.yaml
   - include:
-      file: db/changelog/3001-2026_create-category.yaml
+      file: db/changelog/2026-30-04-create-user-audit-log-table.yaml
   - include:
-      file: db/changelog/3001-2026_create-category_overrides.yaml
-  - include:
-      file: db/changelog/3101-2026_rename-budget-to-wallet.yaml
-  - include:
-      file: db/changelog/3101-2026_create-transaction.yaml
-  - include:
-      file: db/changelog/3101-2026_create-user-audit-log.yaml
-  - include:
-      file: db/changelog/0402-2026_alter-add-wallet-column-transaction.yaml
-  - include:
-      file: db/changelog/0402-2026_alter-remove-fk-user-transaction.yaml
-  - include:
-      file: db/changelog/0702-2026_alter-transaction-table.yaml
-  - include:
-      file: db/changelog/0802-2026_alter-user-audit-log.yaml
-  - include:
-      file: db/changelog/0902-2026_create-recurring-transaction-table.yaml
-  - include:
-      file: db/changelog/2026-0214_create-budget-table.yaml
-  - include:
-      file: db/changelog/2003-2026_drop-master-dict-table.yaml
+      file: db/changelog/2026-30-04-create-rec-transaction-table.yaml

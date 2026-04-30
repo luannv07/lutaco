@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: b2c3d4e5-f6a7-4abc-9def-334455667788
+      author: luannv
+      changes:
+        - createTable:
+            tableName: invalidated_tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: ref_token
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: expiry_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - createIndex:
+            tableName: invalidated_tokens
+            indexName: idx_invalidated_tokens_jti
+            columns:
+              - column:
+                  name: ref_token
+
+        - createIndex:
+            tableName: invalidated_tokens
+            indexName: idx_invalidated_tokens_expiry
+            columns:
+              - column:
+                  name: expiry_time

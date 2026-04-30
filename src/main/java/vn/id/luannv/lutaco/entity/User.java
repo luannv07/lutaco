@@ -19,9 +19,9 @@ import vn.id.luannv.lutaco.enumerate.UserStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false)
-    String id;
+    Long id;
     @Column(name = "USERNAME", unique = true, nullable = false)
     String username;
     @Column(name = "PASSWORD", nullable = false)

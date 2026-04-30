@@ -1,0 +1,493 @@
+databaseChangeLog:
+
+  # =============================
+  # 1. CREATE TABLE
+  # =============================
+  - changeSet:
+      id: 9f3b2c1e-7a4d-4c6a-8b1e-2d5f9a7c1234
+      author: luannv
+      changes:
+        - createTable:
+            tableName: master_dictionary
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: dict_group
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                  remarks: "Ví dụ: GENDER, USER_STATUS"
+
+              - column:
+                  name: code
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                  remarks: "Ví dụ: MALE, FEMALE, ACTIVE"
+
+              - column:
+                  name: value_vi
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: value_en
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: active_flg
+                  type: boolean
+                  defaultValueBoolean: true
+
+              - column:
+                  name: display_order
+                  type: int
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+        - addUniqueConstraint:
+            tableName: master_dictionary
+            columnNames: dict_group, code
+            constraintName: uk_master_dictionary_group_code
+
+
+  # =============================
+  # 2. SEED DATA
+  # =============================
+  - changeSet:
+      id: b1c2d3e4-f5a6-47b8-9c0d-223344556677
+      author: luannv
+      changes:
+
+        # ===== GENDER =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: GENDER }
+              - column: { name: code, value: MALE }
+              - column: { name: value_vi, value: "Nam" }
+              - column: { name: value_en, value: "Male" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: GENDER }
+              - column: { name: code, value: FEMALE }
+              - column: { name: value_vi, value: "Nữ" }
+              - column: { name: value_en, value: "Female" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: GENDER }
+              - column: { name: code, value: OTHER }
+              - column: { name: value_vi, value: "Khác" }
+              - column: { name: value_en, value: "Other" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+
+        # ===== USER_STATUS =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_STATUS }
+              - column: { name: code, value: PENDING }
+              - column: { name: value_vi, value: "Chờ xác nhận" }
+              - column: { name: value_en, value: "Pending" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_STATUS }
+              - column: { name: code, value: ACTIVE }
+              - column: { name: value_vi, value: "Hoạt động" }
+              - column: { name: value_en, value: "Active" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_STATUS }
+              - column: { name: code, value: INACTIVE }
+              - column: { name: value_vi, value: "Ngưng hoạt động" }
+              - column: { name: value_en, value: "Inactive" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_STATUS }
+              - column: { name: code, value: SUSPENDED }
+              - column: { name: value_vi, value: "Bị khóa" }
+              - column: { name: value_en, value: "Suspended" }
+              - column: { name: display_order, valueNumeric: 4 }
+        # ===== USER_PLAN =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_PLAN }
+              - column: { name: code, value: PREMIUM }
+              - column: { name: value_vi, value: "Gói cao cấp" }
+              - column: { name: value_en, value: "Premium" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_PLAN }
+              - column: { name: code, value: FREEMIUM }
+              - column: { name: value_vi, value: "Gói miễn phí" }
+              - column: { name: value_en, value: "Freemium" }
+              - column: { name: display_order, valueNumeric: 2 }
+        # ===== BUDGET_STATUS =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: BUDGET_STATUS }
+              - column: { name: code, value: NORMAL }
+              - column: { name: value_vi, value: "Bình thường" }
+              - column: { name: value_en, value: "Normal" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: BUDGET_STATUS }
+              - column: { name: code, value: WARNING }
+              - column: { name: value_vi, value: "Cảnh báo" }
+              - column: { name: value_en, value: "Warning" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: BUDGET_STATUS }
+              - column: { name: code, value: DANGER }
+              - column: { name: value_vi, value: "Nguy hiểm" }
+              - column: { name: value_en, value: "Danger" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: BUDGET_STATUS }
+              - column: { name: code, value: UNKNOWN }
+              - column: { name: value_vi, value: "Không xác định" }
+              - column: { name: value_en, value: "Unknown" }
+              - column: { name: display_order, valueNumeric: 4 }
+        # ===== CATEGORY_TYPE =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY_TYPE }
+              - column: { name: code, value: INCOME }
+              - column: { name: value_vi, value: "Thu nhập" }
+              - column: { name: value_en, value: "Income" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY_TYPE }
+              - column: { name: code, value: EXPENSE }
+              - column: { name: value_vi, value: "Chi tiêu" }
+              - column: { name: value_en, value: "Expense" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+
+        # ===== FREQUENT_TYPE =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: FREQUENT_TYPE }
+              - column: { name: code, value: DAILY }
+              - column: { name: value_vi, value: "Hàng ngày" }
+              - column: { name: value_en, value: "Daily" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: FREQUENT_TYPE }
+              - column: { name: code, value: WEEKLY }
+              - column: { name: value_vi, value: "Hàng tuần" }
+              - column: { name: value_en, value: "Weekly" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: FREQUENT_TYPE }
+              - column: { name: code, value: MONTHLY }
+              - column: { name: value_vi, value: "Hàng tháng" }
+              - column: { name: value_en, value: "Monthly" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: FREQUENT_TYPE }
+              - column: { name: code, value: YEARLY }
+              - column: { name: value_vi, value: "Hàng năm" }
+              - column: { name: value_en, value: "Yearly" }
+              - column: { name: display_order, valueNumeric: 4 }
+
+
+        # ===== OTP_TYPE =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: OTP_TYPE }
+              - column: { name: code, value: LOGIN }
+              - column: { name: value_vi, value: "Đăng nhập" }
+              - column: { name: value_en, value: "Login" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: OTP_TYPE }
+              - column: { name: code, value: REGISTER }
+              - column: { name: value_vi, value: "Đăng ký" }
+              - column: { name: value_en, value: "Register" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: OTP_TYPE }
+              - column: { name: code, value: FORGOT_PASSWORD }
+              - column: { name: value_vi, value: "Quên mật khẩu" }
+              - column: { name: value_en, value: "Forgot Password" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+
+        # ===== PAYMENT_STATUS =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_STATUS }
+              - column: { name: code, value: PENDING }
+              - column: { name: value_vi, value: "Chờ thanh toán" }
+              - column: { name: value_en, value: "Pending" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_STATUS }
+              - column: { name: code, value: PAID }
+              - column: { name: value_vi, value: "Đã thanh toán" }
+              - column: { name: value_en, value: "Paid" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_STATUS }
+              - column: { name: code, value: CANCELLED }
+              - column: { name: value_vi, value: "Đã hủy" }
+              - column: { name: value_en, value: "Cancelled" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_STATUS }
+              - column: { name: code, value: FAILED }
+              - column: { name: value_vi, value: "Thất bại" }
+              - column: { name: value_en, value: "Failed" }
+              - column: { name: display_order, valueNumeric: 4 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_STATUS }
+              - column: { name: code, value: EXPIRED }
+              - column: { name: value_vi, value: "Hết hạn" }
+              - column: { name: value_en, value: "Expired" }
+              - column: { name: display_order, valueNumeric: 5 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_STATUS }
+              - column: { name: code, value: UNKNOWN }
+              - column: { name: value_vi, value: "Không xác định" }
+              - column: { name: value_en, value: "Unknown" }
+              - column: { name: display_order, valueNumeric: 6 }
+
+
+        # ===== PAYMENT_TYPE =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PAYMENT_TYPE }
+              - column: { name: code, value: UPGRADE_PREMIUM }
+              - column: { name: value_vi, value: "Nâng cấp Premium" }
+              - column: { name: value_en, value: "Upgrade Premium" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+
+        # ===== PERIOD =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD }
+              - column: { name: code, value: DAY }
+              - column: { name: value_vi, value: "Ngày" }
+              - column: { name: value_en, value: "Day" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD }
+              - column: { name: code, value: WEEK }
+              - column: { name: value_vi, value: "Tuần" }
+              - column: { name: value_en, value: "Week" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD }
+              - column: { name: code, value: MONTH }
+              - column: { name: value_vi, value: "Tháng" }
+              - column: { name: value_en, value: "Month" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD }
+              - column: { name: code, value: YEAR }
+              - column: { name: value_vi, value: "Năm" }
+              - column: { name: value_en, value: "Year" }
+              - column: { name: display_order, valueNumeric: 4 }
+
+
+        # ===== PERIOD_RANGE =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD_RANGE }
+              - column: { name: code, value: LAST_7_DAYS }
+              - column: { name: value_vi, value: "7 ngày qua" }
+              - column: { name: value_en, value: "Last 7 days" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD_RANGE }
+              - column: { name: code, value: LAST_1_MONTH }
+              - column: { name: value_vi, value: "1 tháng qua" }
+              - column: { name: value_en, value: "Last 1 month" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD_RANGE }
+              - column: { name: code, value: LAST_3_MONTHS }
+              - column: { name: value_vi, value: "3 tháng qua" }
+              - column: { name: value_en, value: "Last 3 months" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD_RANGE }
+              - column: { name: code, value: LAST_1_YEAR }
+              - column: { name: value_vi, value: "1 năm qua" }
+              - column: { name: value_en, value: "Last 1 year" }
+              - column: { name: display_order, valueNumeric: 4 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: PERIOD_RANGE }
+              - column: { name: code, value: ALL_TIME }
+              - column: { name: value_vi, value: "Tất cả thời gian" }
+              - column: { name: value_en, value: "All time" }
+              - column: { name: display_order, valueNumeric: 5 }
+
+
+        # ===== USER_TYPE =====
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_TYPE }
+              - column: { name: code, value: SYS_ADMIN }
+              - column: { name: value_vi, value: "Quản trị hệ thống" }
+              - column: { name: value_en, value: "System Admin" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_TYPE }
+              - column: { name: code, value: ADMIN }
+              - column: { name: value_vi, value: "Quản trị viên" }
+              - column: { name: value_en, value: "Admin" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: USER_TYPE }
+              - column: { name: code, value: USER }
+              - column: { name: value_vi, value: "Người dùng" }
+              - column: { name: value_en, value: "User" }
+              - column: { name: display_order, valueNumeric: 3 }
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: group, value: ACTIVE_FLG }
+              - column: { name: code, value: 1 }
+              - column: { name: value_vi, value: "Đang hoạt động" }
+              - column: { name: value_en, value: "Active" }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: group, value: ACTIVE_FLG }
+              - column: { name: code, value: 0 }
+              - column: { name: value_vi, value: "Dừng hoạt động" }
+              - column: { name: value_en, value: "Inactive" }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: display_order, valueNumeric: 2 }

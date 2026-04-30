@@ -1,0 +1,87 @@
+databaseChangeLog:
+  - changeSet:
+      id: a1b2c3d4-e5f6-4abc-9def-223344556677
+      author: luannv
+      changes:
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: ref_token
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: expiry_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: device_info
+                  type: varchar(255)
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: refresh_tokens
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_refresh_tokens_user
+            onDelete: cascade
+
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_user
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_token
+            columns:
+              - column:
+                  name: ref_token
+
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_expiry
+            columns:
+              - column:
+                  name: expiry_time

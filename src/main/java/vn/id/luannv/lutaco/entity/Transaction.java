@@ -48,6 +48,6 @@ public class Transaction extends BaseEntity {
     @Column(length = 255)
     String note;
 
-    @Column(name = "deleted_at")
-    LocalDateTime deletedAt;
+    @Column(name = "active_flg")
+    LocalDateTime active_flg;
 }

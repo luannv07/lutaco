@@ -33,10 +33,6 @@ public class Wallet extends BaseEntity {
     @Column(name = "DESCRIPTION")
     String description;
 
-    @Column(name = "STATUS", nullable = false)
-    @Enumerated(EnumType.STRING)
-    WalletStatus status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     @JsonIgnore

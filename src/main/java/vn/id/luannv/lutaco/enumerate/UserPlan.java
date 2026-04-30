@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.enumerate;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +10,10 @@ import org.springframework.stereotype.Component;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
-@RequiredArgsConstructor
 public enum UserPlan {
-    PREMIUM("config.enum.user.plan.premium"),
-    FREEMIUM("config.enum.user.plan.freemium");
+    PREMIUM,
+    FREEMIUM;
 
-    String display;
     @NonFinal
     int maxWallets;
     @NonFinal
