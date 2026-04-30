@@ -12,9 +12,4 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface RoleRepository extends JpaRepository<Role, Integer> {
-    Page<Role> findByNameContainingIgnoreCase(String name, Pageable pageable);
-
-    Integer id(Integer id);
-
-    Optional<Role> findByName(String name);
 }

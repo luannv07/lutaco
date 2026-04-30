@@ -34,39 +34,6 @@ public class PaymentJob {
     public void reconcilePendingPayments() {
 
         log.info("[system]: Starting scheduled job: Reconciling pending payments.");
-
-        List<PayOS> pendings =
-                payOSRepository.findByStatusAndPaidAtIsNullAndCreatedDateIsLessThan(
-                        PaymentStatus.PENDING,
-                        LocalDateTime.now().minusSeconds(expirationTime)
-                );
-
-        log.debug("[system]: Found {} pending payments to reconcile.", pendings.size());
-
-        for (PayOS payOS : pendings) {
-            log.info("[system]: Reconciling payment for order code: {}", payOS.getOrderCode());
-            PayOSResponse<PayOSResponse.PayOSDataDetail> detail =
-                    payOsClient.getDetail(String.valueOf(payOS.getOrderCode()));
-
-            if (detail == null) continue;
-            if (detail.getData() == null) continue;
-
-            PaymentStatus newStatus =
-                    PaymentStatus.valueOf(detail.getData().getStatus());
-
-            if (newStatus != payOS.getStatus()) {
-                payOS.setStatus(newStatus);
-
-                if (newStatus == PaymentStatus.PAID && payOS.getPaidAt() == null) {
-                    log.info("[system]: Payment for order code {} is now PAID. Paid at: {}", payOS.getOrderCode(), payOS.getPaidAt());
-                } else {
-                    log.info("[system]: Payment for order code {} status updated from {} to {}.", payOS.getOrderCode(), payOS.getStatus(), newStatus);
-                }
-            } else {
-                log.debug("[system]: Payment for order code {} status remains {}.", payOS.getOrderCode(), payOS.getStatus());
-            }
-        }
-
-        log.info("[system]: Finished scheduled job: Reconciled {} pending payments.", pendings.size());
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 }
