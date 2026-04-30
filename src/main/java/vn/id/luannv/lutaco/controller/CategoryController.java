@@ -1,9 +1,5 @@
 package vn.id.luannv.lutaco.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,26 +21,13 @@ import java.util.List;
 @RequestMapping("/api/v1/categories")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(
-        name = "Category",
-        description = "API quản lý danh mục của người dùng, chỉ thao tác trên dữ liệu cá nhân"
-)
 @PreAuthorize("isAuthenticated() and @securityPermission.isActive()")
 public class CategoryController {
 
     CategoryService categoryService;
 
     @GetMapping
-    @Operation(
-            summary = "Lấy danh sách danh mục",
-            description = "Lấy danh sách danh mục của người dùng hiện tại, hỗ trợ lọc và phân trang"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lấy danh sách danh mục thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
-    })
-    public ResponseEntity<BaseResponse<Page<CategoryResponse>>> search(
+            public ResponseEntity<BaseResponse<Page<CategoryResponse>>> search(
             @Valid @ModelAttribute CategoryFilterRequest request
     ) {
         return ResponseEntity.ok(
@@ -56,16 +39,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/children")
-    @Operation(
-            summary = "Lấy danh sách danh mục con theo id cha",
-            description = "Lấy danh sách danh mục con theo id cha"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lấy danh sách danh mục thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập")
-    })
-    public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(@PathVariable String id) {
+            public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(@PathVariable String id) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         categoryService.getChildren(id),
@@ -75,17 +49,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    @Operation(
-            summary = "Thêm danh mục mới",
-            description = "Tạo mới một danh mục cho người dùng hiện tại"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Tạo danh mục thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "409", description = "Danh mục đã tồn tại")
-    })
-    public ResponseEntity<BaseResponse<Void>> create(
+            public ResponseEntity<BaseResponse<Void>> create(
             @Valid @RequestBody CategoryRequest request
     ) {
         categoryService.create(request);
@@ -94,17 +58,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    @Operation(
-            summary = "Cập nhật danh mục",
-            description = "Cập nhật thông tin danh mục dựa trên tên danh mục"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cập nhật danh mục thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy danh mục")
-    })
-    public ResponseEntity<BaseResponse<Void>> update(
+            public ResponseEntity<BaseResponse<Void>> update(
             @PathVariable String id,
             @Valid @RequestBody CategoryRequest request
     ) {
@@ -115,16 +69,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{id}/disabled")
-    @Operation(
-            summary = "Vô hiệu hoá danh mục",
-            description = "Đánh dấu danh mục là không còn hoạt động (disable)"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Vô hiệu hoá danh mục thành công"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy danh mục")
-    })
-    public ResponseEntity<BaseResponse<Void>> updateStatus(
+            public ResponseEntity<BaseResponse<Void>> updateStatus(
             @PathVariable String id
     ) {
         categoryService.deleteById(id);

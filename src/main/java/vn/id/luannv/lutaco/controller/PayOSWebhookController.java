@@ -1,12 +1,5 @@
 package vn.id.luannv.lutaco.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,32 +22,14 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Tag(
-        name = "PayOS Webhook",
-        description = "API webhook nhận kết quả thanh toán từ PayOS và xác nhận webhook với PayOS"
-)
 public class PayOSWebhookController {
 
     PayOsWebhookService payOsWebhookService;
     PayOsClient payOsClient;
 
     @PostMapping("/webhook/payos")
-    @Operation(
-            summary = "Nhận webhook thanh toán PayOS",
-            description = "Hứng kết quả thanh toán PayOS sau khi chuyển khoản hoàn tất. " +
-                    "API sẽ validate chữ ký (signature) và xử lý trạng thái giao dịch."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Xử lý webhook thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ hoặc chữ ký không hợp lệ")
-    })
-    public ResponseEntity<BaseResponse<Void>> handleWebhook(
-            @Parameter(
-                    description = "Payload webhook do PayOS gửi về",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = PayOsWebhookRequest.class))
-            )
-            @Valid @RequestBody PayOsWebhookRequest request
+            public ResponseEntity<BaseResponse<Void>> handleWebhook(
+                        @Valid @RequestBody PayOsWebhookRequest request
     ) {
         log.info("[system]: Received PayOS webhook request: {}", request);
         try {
@@ -71,24 +46,8 @@ public class PayOSWebhookController {
 
     @PostMapping("/api/v1/confirm-webhook")
     @PreAuthorize("hasRole('SYS_ADMIN')")
-    @Operation(
-            summary = "Xác nhận webhook PayOS",
-            description = "API trung gian dùng để gọi PayOS confirm webhook URL. " +
-                    "Chỉ tài khoản có quyền SYS_ADMIN mới được phép sử dụng."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Xác nhận webhook thành công"),
-            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ"),
-            @ApiResponse(responseCode = "401", description = "Chưa đăng nhập"),
-            @ApiResponse(responseCode = "403", description = "Không có quyền truy cập")
-    })
-    public ResponseEntity<BaseResponse<Void>> handleConfirmWebhook(
-            @Parameter(
-                    description = "Body chứa webhookUrl cần đăng ký với PayOS",
-                    example = "{ \"webhookUrl\": \"https://example.com/webhook/payos\" }",
-                    required = true
-            )
-            @Valid @RequestBody Map<String, Object> confirm
+            public ResponseEntity<BaseResponse<Void>> handleConfirmWebhook(
+                        @Valid @RequestBody Map<String, Object> confirm
     ) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to confirm PayOS webhook URL with request: {}", username, confirm);
