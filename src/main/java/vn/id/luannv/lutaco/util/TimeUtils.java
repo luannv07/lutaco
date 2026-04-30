@@ -2,17 +2,18 @@ package vn.id.luannv.lutaco.util;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Slf4j
 public class TimeUtils {
     public static final LocalDateTime SAFE_MIN_DATE = LocalDateTime.of(1970, 1, 1, 0, 0, 0);
     public static final LocalDateTime SAFE_MAX_DATE = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
 
-    // Mặc định nếu không tìm thấy timezone của user thì dùng cái này (Client chủ yếu ở VN)
     public static final String DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh";
 
     private static String format(LocalDateTime dateTime, String pattern) {
@@ -64,5 +65,13 @@ public class TimeUtils {
             log.warn("[system]: Error converting timezone for UTC date '{}' to zone '{}' with pattern '{}'. Falling back to default format. Error: {}", utcDateTime, zoneId, pattern, e.getMessage());
             return format(utcDateTime, pattern);
         }
+    }
+    public static Date toDate(Instant instant) {
+        if (instant == null) return new Date();
+        return Date.from(instant);
+    }
+    public static Instant toInstant(Date date) {
+        if (date == null) return Instant.now();
+        return date.toInstant();
     }
 }

@@ -15,24 +15,21 @@ public class UserCreateRequest {
 
     @NotBlank(message = "{validation.required}")
     @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
-        String username;
+    String username;
 
     @NotBlank(message = "{validation.required}")
     @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
-        String password;
+    String password;
 
     @NotBlank(message = "{validation.required}")
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
-        String fullName;
-
-    @Size(max = 255, message = "{validation.field.too_long}")
-        String address;
+    String fullName;
 
     @NotBlank(message = "{validation.required}")
     @Email(message = "{validation.invalid.email}")
     @Size(max = 255, message = "{validation.field.too_long}")
-        String email;
+    String email;
 
     @NotBlank(message = "{validation.required}")
-        String gender;
+    String gender;
 }

@@ -1,8 +1,8 @@
 package vn.id.luannv.lutaco.enumerate;
 
 public enum UserStatus {
-    PENDING_VERIFICATION,
+    PENDING,
     ACTIVE,
-    DISABLED_BY_USER,
-    BANNED;
+    INACTIVE,
+    SUSPENDED
 }

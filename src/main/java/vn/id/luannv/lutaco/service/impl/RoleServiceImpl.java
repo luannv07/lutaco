@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.entity.Role;
+import vn.id.luannv.lutaco.enumerate.UserType;
+import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.service.RoleService;
 
 @Slf4j
@@ -14,6 +16,8 @@ import vn.id.luannv.lutaco.service.RoleService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
+
+    RoleRepository roleRepository;
 
     @Override
     public Role create(Role request) {
@@ -38,5 +42,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteById(Integer id) {
         throw new UnsupportedOperationException("This service is temporarily disabled.");
+    }
+
+    @Override
+    public Role getByRoleCode(UserType userType) {
+        return roleRepository.findByCode(userType);
     }
 }

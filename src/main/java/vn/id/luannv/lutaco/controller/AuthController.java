@@ -5,13 +5,11 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
@@ -21,9 +19,13 @@ import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.JwtUtils;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
+import javax.swing.table.TableModel;
+import java.time.Instant;
 import java.util.Date;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class AuthController {
     OtpService otpService;
 
     @PostMapping("/login")
-            public ResponseEntity<BaseResponse<AuthenticateResponse>> login(
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> login(
             @Valid @RequestBody LoginRequest request
     ) {
         return ResponseEntity.ok(
@@ -47,7 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-            public ResponseEntity<BaseResponse<AuthenticateResponse>> create(
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> create(
             @Valid @RequestBody UserCreateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -59,11 +61,11 @@ public class AuthController {
 
     @PostMapping("/logout")
     @PreAuthorize("@securityPermission.isLoggedIn()")
-            public ResponseEntity<BaseResponse<Void>> logout(HttpServletRequest req) {
+    public ResponseEntity<BaseResponse<Void>> logout(HttpServletRequest req) {
         String token = JwtUtils.resolveToken(req);
         String jti = jwtService.getJtiFromToken(token);
         Date expiryTime = jwtService.getExpiryTimeFromToken(token);
-        authService.logout(jti, expiryTime);
+        authService.logout(jti, TimeUtils.toInstant(expiryTime));
 
         return ResponseEntity.ok(
                 BaseResponse.success("Đăng xuất thành công.")
@@ -71,10 +73,20 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-            public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshToken) {
+    public ResponseEntity<BaseResponse<AuthenticateResponse>> refreshToken(
+            @Valid @RequestBody RefreshTokenRequest refreshToken, HttpServletRequest req) {
+        String jti = null;
+        Date expiryTime = null;
+        try {
+            String token = JwtUtils.resolveToken(req);
+            jti = jwtService.getJtiFromToken(token);
+            expiryTime = jwtService.getExpiryTimeFromToken(token);
+        } catch (Exception e) {
+            log.info("Token invalidated");
+        }
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        authService.refreshToken(refreshToken.getRefreshToken()),
+                        authService.refreshToken(refreshToken, jti, TimeUtils.toInstant(expiryTime)),
                         "Làm mới token thành công."
                 )
         );
@@ -82,7 +94,7 @@ public class AuthController {
 
     @PostMapping("/send-otp")
     @PreAuthorize("@securityPermission.isPendingVerification()")
-            public ResponseEntity<BaseResponse<Void>> resendOtp(
+    public ResponseEntity<BaseResponse<Void>> resendOtp(
             @Valid @RequestBody SendOtpRequest request
     ) {
         OtpType otpType = EnumUtils.from(OtpType.class, request.getOtpType());
@@ -94,7 +106,7 @@ public class AuthController {
 
     @PostMapping("/verify-otp")
     @PreAuthorize("@securityPermission.isLoggedIn()")
-            public ResponseEntity<BaseResponse<Void>> verifyOtp(
+    public ResponseEntity<BaseResponse<Void>> verifyOtp(
             @Valid @RequestBody VerifyOtpRequest request
     ) {
         otpService.verifyOtp(request);

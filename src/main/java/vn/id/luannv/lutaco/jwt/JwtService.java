@@ -16,8 +16,10 @@ import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -41,16 +43,19 @@ public class JwtService {
     @Value("role")
     String roleClaim;
 
-    public String generateToken(User user) {
+    public String generateToken(String username, String roleCode) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
+        Instant now = Instant.now();
 
+        Date issuedAt = TimeUtils.toDate(now);
+        Date expiresAt = TimeUtils.toDate(now.plusMillis(expirationTime));
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .jwtID(UUID.randomUUID().toString())
-                .subject(user.getUsername())
+                .subject(username)
                 .issuer("lutaco")
-                .issueTime(new Date())
-                .expirationTime(new Date(System.currentTimeMillis() + expirationTime))
-                .claim(roleClaim, "ROLE_" + user.getRole().getCode())
+                .issueTime(issuedAt)
+                .expirationTime(expiresAt)
+                .claim(roleClaim, "ROLE_" + roleCode)
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -61,13 +66,14 @@ public class JwtService {
             jwsObject.sign(new MACSigner(secretKey.getBytes()));
         } catch (JOSEException e) {
             log.error("[system]: Failed to generate JWT token: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to generate JWT token", e);
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
 
         return jwsObject.serialize();
     }
 
     private JWTClaimsSet jwtClaimsSet(String token) {
+        Instant now = Instant.now();
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -79,8 +85,8 @@ public class JwtService {
 
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
-
-            if (expirationTime == null || expirationTime.before(new Date()) || invalidatedTokenService.existByJti(jti)) {
+            log.info(jti);
+            if (expirationTime == null || expirationTime.before(TimeUtils.toDate(now)) || invalidatedTokenService.existByJti(jti)) {
                 log.warn("[system]: JWT token is expired or invalidated. JTI: {}", jti);
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);
             }
@@ -93,10 +99,6 @@ public class JwtService {
             log.error("[system]: JWT verification failed due to JOSEException: {}", e.getMessage(), e);
             throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
-    }
-
-    public Map<String, Object> getClaimsFromToken(String token) {
-        return jwtClaimsSet(token).getClaims();
     }
 
     public boolean isValidToken(String token) {
@@ -135,4 +137,5 @@ public class JwtService {
 
         return String.valueOf(val);
     }
+
 }

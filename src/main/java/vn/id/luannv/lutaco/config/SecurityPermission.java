@@ -15,7 +15,7 @@ public class SecurityPermission {
     }
 
     public boolean isPendingVerification() {
-        return SecurityUtils.getCurrentUserStatus() == UserStatus.PENDING_VERIFICATION;
+        return SecurityUtils.getCurrentUserStatus() == UserStatus.PENDING;
     }
 
     public boolean isLoggedIn() {
