@@ -1,11 +1,13 @@
 databaseChangeLog:
   - changeSet:
-      id: c8a6d26d-1cdf-40af-9a2b-fe7f707c975f
+      id: p1a2y3o4-0001
       author: luannv
       changes:
+
         - createTable:
             tableName: pay_os
             columns:
+
               - column:
                   name: id
                   type: bigint
@@ -14,90 +16,113 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
 
+              # ===== ORDER CODE =====
               - column:
                   name: order_code
-                  type: integer
+                  type: bigint
                   constraints:
                     nullable: false
                     unique: true
 
+              # ===== PAYMENT LINK =====
               - column:
                   name: payment_link_id
-                  type: varchar(64)
+                  type: varchar(255)
                   constraints:
                     unique: true
 
+              # ===== FK USER =====
               - column:
                   name: user_id
-                  type: uuid
+                  type: bigint
                   constraints:
                     nullable: false
 
+              # ===== MONEY =====
               - column:
                   name: amount
-                  type: integer
+                  type: bigint
                   constraints:
                     nullable: false
 
               - column:
                   name: currency
                   type: varchar(10)
-                  defaultValue: VND
                   constraints:
                     nullable: false
 
+              # ===== DESCRIPTION =====
               - column:
                   name: description
                   type: varchar(255)
 
+              # ===== ENUMS =====
               - column:
                   name: status
-                  type: varchar(20)
+                  type: varchar(50)
                   constraints:
                     nullable: false
 
               - column:
                   name: type
-                  type: varchar(30)
+                  type: varchar(50)
                   constraints:
                     nullable: false
 
-              # ===== base entity fields =====
+              # ===== PAYMENT TIME =====
+              - column:
+                  name: paid_at
+                  type: timestamp
+
+              # ===== AUDIT =====
               - column:
                   name: created_by
-                  type: varchar(100)
+                  type: varchar(50)
+                  defaultValue: system
 
               - column:
                   name: created_date
-                  type: datetime
+                  type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
-                  constraints:
-                    nullable: false
 
               - column:
                   name: updated_by
-                  type: varchar(100)
+                  type: varchar(50)
+                  defaultValue: system
 
               - column:
                   name: updated_date
-                  type: datetime
-
-              - column:
-                  name: paid_at
-                  type: datetime
-
-        # ===== indexes =====
-        - createIndex:
-            tableName: pay_os
-            indexName: idx_pay_os_user
-            columns:
-              - column:
-                  name: user_id
-
-        # ===== foreign key =====
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        # FK USER
         - addForeignKeyConstraint:
             baseTableName: pay_os
             baseColumnNames: user_id
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_pay_os_user
+            onDelete: cascade
+
+        # INDEX USER
+        - createIndex:
+            tableName: pay_os
+            indexName: idx_pay_user
+            columns:
+              - column:
+                  name: user_id
+
+        # INDEX STATUS
+        - createIndex:
+            tableName: pay_os
+            indexName: idx_pay_status
+            columns:
+              - column:
+                  name: status
+
+        # INDEX ORDER CODE
+        - createIndex:
+            tableName: pay_os
+            indexName: idx_pay_order_code
+            columns:
+              - column:
+                  name: order_code

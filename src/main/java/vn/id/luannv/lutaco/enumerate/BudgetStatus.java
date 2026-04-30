@@ -13,12 +13,11 @@ import org.springframework.stereotype.Component;
 @Getter
 @RequiredArgsConstructor
 public enum BudgetStatus {
-    NORMAL("config.enum.budget.status.normal"),
-    WARNING("config.enum.budget.status.warning"),
-    DANGER("config.enum.budget.status.danger"),
-    UNKNOWN("config.enum.budget.status.unknown"); // tu choi gui mail
+    NORMAL,
+    WARNING,
+    DANGER,
+    UNKNOWN; // tu choi gui mail
 
-    String display;
     @NonFinal
     int percentage;
 

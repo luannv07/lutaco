@@ -27,8 +27,8 @@ import java.time.LocalDateTime;
 public class Category extends BaseEntity {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @Column(name = "category_name", nullable = false, length = 100)
     String categoryName;
@@ -40,17 +40,10 @@ public class Category extends BaseEntity {
     )
     Category parent;
 
-    @Column(name = "is_system", nullable = false)
-    @Builder.Default
-    Boolean isSystem = false;
-
-    @Column(name = "owner_user_id")
-    String ownerUserId;
-
     @Column(name = "category_type", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     CategoryType categoryType;
 
-    @Column(name = "deleted_at")
-    LocalDateTime deletedAt;
+    @Column(name = "deleted_FLG")
+    Boolean deletedFlg;
 }

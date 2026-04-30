@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - changeSet:
+      id: t1x2n3s4-0001
+      author: luannv
+      changes:
+
+        - createTable:
+            tableName: transactions
+            columns:
+
+              - column:
+                  name: id
+                  type: varchar(36)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              # ===== FK USER =====
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              # ===== FK CATEGORY =====
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              # ===== FK WALLET =====
+              - column:
+                  name: wallet_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              # ===== MONEY (VND - BIGINT) =====
+              - column:
+                  name: amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              # ===== DATE =====
+              - column:
+                  name: transaction_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              # ===== NOTE =====
+              - column:
+                  name: note
+                  type: varchar(255)
+
+              # ===== STATUS FLAG =====
+              - column:
+                  name: active_flg
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              # ===== AUDIT =====
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        # USER FK
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_transactions_user
+            onDelete: cascade
+
+        # CATEGORY FK
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            constraintName: fk_transactions_category
+
+        # WALLET FK
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: wallet_id
+            referencedTableName: wallets
+            referencedColumnNames: id
+            constraintName: fk_transactions_wallet
+
+        # INDEX USER
+        - createIndex:
+            tableName: transactions
+            indexName: idx_txn_user
+            columns:
+              - column:
+                  name: user_id
+
+        # INDEX CATEGORY
+        - createIndex:
+            tableName: transactions
+            indexName: idx_txn_category
+            columns:
+              - column:
+                  name: category_id
+
+        # INDEX DATE (IMPORTANT FOR REPORT)
+        - createIndex:
+            tableName: transactions
+            indexName: idx_txn_date
+            columns:
+              - column:
+                  name: transaction_date

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -19,13 +20,13 @@ public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false)
-    Integer id;
+    Long id;
 
     @Column(name = "token", unique = true, nullable = false)
     String token;
 
     @Column(name = "expiry_time")
-    Date expiryTime;
+    Instant expiryTime;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

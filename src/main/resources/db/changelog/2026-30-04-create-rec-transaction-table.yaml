@@ -1,58 +1,76 @@
 databaseChangeLog:
   - changeSet:
-      id: 90a162f6-5843-43be-aa7a-6ffc1f7561d4
+      id: r1c2u3r4-0001
       author: luannv
       changes:
+
         - createTable:
             tableName: recurring_transactions
             columns:
+
               - column:
                   name: id
                   type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-
-              - column:
-                  name: transaction_id
-                  type: uuid
-                  constraints:
                     nullable: false
 
+              # ===== FK TRANSACTION =====
+              - column:
+                  name: transaction_id
+                  type: varchar(36)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              # ===== DATE RANGE =====
               - column:
                   name: start_date
                   type: date
                   constraints:
                     nullable: false
-                  remarks: ngày bắt đầu thời gian chạy định kì
 
               - column:
                   name: next_date
                   type: date
-                  remarks: thời điểm chạy đầu tiên sau khi được khởi tạo
 
+              # ===== ENUM (i18n via master_dictionary) =====
               - column:
                   name: frequent_type
                   type: varchar(50)
                   constraints:
                     nullable: false
 
+              # ===== STATUS =====
+              - column:
+                  name: active_flg
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              # ===== AUDIT =====
               - column:
                   name: created_by
                   type: varchar(50)
+                  defaultValue: system
 
               - column:
                   name: created_date
-                  type: datetime
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
               - column:
                   name: updated_by
                   type: varchar(50)
+                  defaultValue: system
 
               - column:
                   name: updated_date
-                  type: datetime
-
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        # FK transaction
         - addForeignKeyConstraint:
             baseTableName: recurring_transactions
             baseColumnNames: transaction_id
@@ -60,3 +78,19 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_recurring_transactions_transaction
             onDelete: cascade
+
+        # INDEX next_date (scheduler cực quan trọng)
+        - createIndex:
+            tableName: recurring_transactions
+            indexName: idx_recurring_next_date
+            columns:
+              - column:
+                  name: next_date
+
+        # INDEX frequent_type
+        - createIndex:
+            tableName: recurring_transactions
+            indexName: idx_recurring_type
+            columns:
+              - column:
+                  name: frequent_type

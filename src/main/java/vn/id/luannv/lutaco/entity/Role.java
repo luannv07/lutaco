@@ -19,7 +19,7 @@ public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", updatable = false, nullable = false)
-    Integer id;
+    Long id;
     @Column(name = "NAME", unique = true, nullable = false)
     String name;
     @OneToMany(mappedBy = "role")

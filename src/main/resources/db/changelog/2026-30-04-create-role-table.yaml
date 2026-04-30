@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1c2d3e4f-5678-4abc-9def-112233445500
+      author: luannv
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: "SYS_ADMIN, ADMIN, USER"
+
+              - column:
+                  name: active_flg
+                  type: boolean
+                  defaultValueBoolean: true
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+        - addUniqueConstraint:
+            tableName: roles
+            columnNames: code
+            constraintName: uk_roles_code
+  - changeSet:
+      id: 5f6a7b8c-9012-4abc-9def-778899001122
+      author: luannv
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: code, value: SYS_ADMIN }
+
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: code, value: ADMIN }
+
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: code, value: USER }

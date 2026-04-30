@@ -1,0 +1,126 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8a1b2c3d-4e5f-4abc-9def-998877665544
+      author: luannv
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: full_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              # ===== ENUM (STORE AS CODE) =====
+              - column:
+                  name: gender
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: "MASTER_DICTIONARY.GENDER"
+
+              - column:
+                  name: user_status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: "MASTER_DICTIONARY.USER_STATUS"
+
+              - column:
+                  name: user_plan
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                  remarks: "MASTER_DICTIONARY.USER_PLAN"
+
+              # ===== FK ROLE =====
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              # ===== AUDIT =====
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        # ===== FK CONSTRAINT =====
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_users_role
+
+        - createIndex:
+            tableName: users
+            indexName: idx_users_role
+            columns:
+              - column:
+                  name: role_id
+  - changeSet:
+      id: 9b8c7d6e-5f4a-4abc-9def-112244668899
+      author: luannv
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: system }
+              - column: { name: password, value: $2a$10$wHcC0zXz3qk0R2cH9Qp5xONzZ9pQn9y7F5zYpZlY9mZk2p5lQxY8K } # "system"
+              - column: { name: full_name, value: "System" }
+              - column: { name: email, value: "system@local" }
+
+              - column: { name: gender, value: MALE }
+              - column: { name: user_status, value: ACTIVE }
+              - column: { name: user_plan, value: PREMIUM }
+
+              - column: { name: role_id, valueNumeric: 1 } # SYS_ADMIN
+
+              - column: { name: created_by, value: system }
+              - column: { name: updated_by, value: system }

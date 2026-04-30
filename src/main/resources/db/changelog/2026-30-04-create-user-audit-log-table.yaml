@@ -1,14 +1,16 @@
 databaseChangeLog:
   - changeSet:
-      id: 70ff79c4-4e89-4d0e-b05c-e854ef11d522
+      id: a9b8c7d6-1111-4aaa-bbbb-222233334444
       author: luannv
       changes:
+
         - createTable:
             tableName: user_audit_logs
             columns:
+
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -22,41 +24,49 @@ databaseChangeLog:
 
               - column:
                   name: user_agent
-                  type: TEXT
+                  type: text
 
               - column:
                   name: client_ip
-                  type: VARCHAR(45)
+                  type: varchar(45)
 
               - column:
                   name: request_uri
-                  type: VARCHAR(255)
+                  type: varchar(255)
 
               - column:
                   name: method_name
-                  type: VARCHAR(255)
+                  type: varchar(255)
 
               - column:
                   name: execution_time_ms
-                  type: BIGINT
+                  type: bigint
+
+              - column:
+                  name: param_content
+                  type: text
 
               - column:
                   name: created_date
-                  type: DATETIME
-                  defaultValueDate: CURRENT_TIMESTAMP
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
-
         - createIndex:
             tableName: user_audit_logs
-            indexName: idx_user_audit_logs_username
+            indexName: idx_audit_username
             columns:
               - column:
                   name: username
-
         - createIndex:
             tableName: user_audit_logs
-            indexName: idx_user_audit_logs_method_name
+            indexName: idx_audit_created_date
             columns:
               - column:
-                  name: method_name
+                  name: created_date
+        - createIndex:
+            tableName: user_audit_logs
+            indexName: idx_audit_uri
+            columns:
+              - column:
+                  name: request_uri
