@@ -50,7 +50,7 @@ public class JwtService {
                 .issuer("lutaco")
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + expirationTime))
-                .claim(roleClaim, "ROLE_" + user.getRole().getName())
+                .claim(roleClaim, "ROLE_" + user.getRole().getCode())
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());

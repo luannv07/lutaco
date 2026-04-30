@@ -6,28 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.entity.Wallet;
-import vn.id.luannv.lutaco.enumerate.WalletStatus;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, String> {
-    long countByUser_IdAndStatus(String userId, WalletStatus status);
 
-    long countByUser_Id(String userId);
-
-    Optional<Wallet> findByUser_IdAndWalletName(String userId, String walletName);
-
-    Optional<Wallet> findByUser_IdAndWalletNameAndStatus(String userId, String walletName, WalletStatus status);
-
-    Optional<Wallet> findByUser_IdAndIdAndStatus(String userId, String id, WalletStatus status);
-
-    Optional<Wallet> findByUser_IdAndId(String userId, String id);
-
-    List<Wallet> findByUser_IdAndStatus(String userId, WalletStatus status);
-
-    List<Wallet> findByUser_Id(String userId);
 
     @Modifying
     @Query(value = "UPDATE wallets " +

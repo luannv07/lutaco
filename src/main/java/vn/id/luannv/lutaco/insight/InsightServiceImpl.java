@@ -8,15 +8,12 @@ import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.config.InsightThresholdConfig;
 import vn.id.luannv.lutaco.dto.InsightDto;
 import vn.id.luannv.lutaco.dto.response.CategoryExpenseResponse;
-import vn.id.luannv.lutaco.util.CustomizeNumberUtils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static vn.id.luannv.lutaco.service.impl.DashboardServiceImpl.bigDecimalScale;
 
 @Slf4j
 @Service
@@ -43,14 +40,7 @@ public class InsightServiceImpl implements InsightService {
             Double value,
             String unit
     ) {
-        return InsightDto.builder()
-                .level(level)
-                .code(code)
-                .value(CustomizeNumberUtils.formatDecimal(value, bigDecimalScale).multiply(BigDecimal.valueOf(100)).doubleValue())
-                .unit(unit)
-                .colorTone(level.getColorTone())
-                .defaultColor(level.getColor())
-                .build();
+        return null;
     }
 
     private Optional<InsightDto> expenseInsight(Long thisMonth, Long lastMonth) {

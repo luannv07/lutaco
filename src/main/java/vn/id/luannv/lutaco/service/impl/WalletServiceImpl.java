@@ -7,25 +7,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
 import vn.id.luannv.lutaco.dto.request.WalletFilterRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.WalletResponse;
-import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.entity.Wallet;
-import vn.id.luannv.lutaco.enumerate.WalletStatus;
 import vn.id.luannv.lutaco.exception.BusinessException;
-import vn.id.luannv.lutaco.exception.ErrorCode;
-import vn.id.luannv.lutaco.mapper.WalletMapper;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.WalletService;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
-import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,68 +27,18 @@ import java.util.stream.Collectors;
 public class WalletServiceImpl implements WalletService {
 
     WalletRepository walletRepository;
-    WalletMapper walletMapper;
     UserRepository userRepository;
     LocalizationUtils localizationUtils;
 
     @Override
     public WalletResponse create(WalletCreateRequest request) {
-        String username = SecurityUtils.getCurrentUsername();
-        String userId = SecurityUtils.getCurrentId();
-        log.info("[{}]: Attempting to create wallet for user ID: {}. Request: {}", username, userId, request.getWalletName());
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.warn("[{}]: User with ID {} not found during wallet creation.", username, userId);
-                    return new BusinessException(ErrorCode.UNAUTHORIZED);
-                });
-
-        long count = walletRepository.countByUser_IdAndStatus(userId, WalletStatus.ACTIVE);
-        if (count >= user.getUserPlan().getMaxWallets()) {
-            log.warn("[{}]: User ID {} has reached maximum wallet limit ({}). Cannot create new wallet.",
-                    username, userId, user.getUserPlan().getMaxWallets());
-            throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
-        }
-
-        Wallet wallet = walletMapper.toEntity(request);
-        wallet.setUser(user);
-        wallet.setStatus(WalletStatus.ACTIVE);
-
-        Wallet savedWallet = walletRepository.save(wallet);
-        log.info("[{}]: Wallet '{}' (ID: {}) created successfully for user ID {}.",
-                username, savedWallet.getWalletName(), savedWallet.getId(), userId);
-        return convertToResponse(savedWallet);
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
     public void createDefaultWallet(String userId) {
-        log.info("[system]: Attempting to create default wallet for user ID: {}.", userId);
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.warn("[system]: User with ID {} not found during default wallet creation.", userId);
-                    return new BusinessException(ErrorCode.UNAUTHORIZED);
-                });
-
-        long count = walletRepository.countByUser_Id(userId);
-        if (count >= user.getUserPlan().getMaxWallets()) {
-            log.warn("[system]: User ID {} has reached maximum wallet limit ({}). Cannot create default wallet.",
-                    userId, user.getUserPlan().getMaxWallets());
-            throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
-        }
-
-        Wallet wallet = new Wallet();
-        wallet.setUser(user);
-        wallet.setWalletName("Ví mặc định");
-        wallet.setInitialBalance(0L);
-        wallet.setCurrentBalance(0L);
-        wallet.setDescription("Ví mặc định do hệ thống tạo.");
-        wallet.setStatus(WalletStatus.ACTIVE);
-
-        Wallet savedWallet = walletRepository.save(wallet);
-        log.info("[system]: Default wallet '{}' (ID: {}) created successfully for user ID {}.",
-                savedWallet.getWalletName(), savedWallet.getId(), userId);
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Override
@@ -107,53 +50,22 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletResponse update(String id, WalletUpdateRequest request) {
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Attempting to update wallet with ID '{}' for current user. Request: {}", username, id, request);
-        Wallet wallet = getMyWalletByIdOrThrow(id);
-        walletMapper.update(wallet, request);
-        Wallet updatedWallet = walletRepository.save(wallet);
-        log.info("[{}]: Wallet '{}' (ID: {}) updated successfully.",
-                username, updatedWallet.getWalletName(), updatedWallet.getId());
-        return convertToResponse(updatedWallet);
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Override
     public void deleteById(String id) {
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Attempting to soft delete wallet with ID: {} for current user.", username, id);
-        Wallet wallet = getMyWalletByIdOrThrow(id);
-        wallet.setStatus(WalletStatus.INACTIVE);
-        walletRepository.save(wallet);
-        log.info("[{}]: Wallet '{}' (ID: {}) soft deleted successfully.",
-                username, wallet.getWalletName(), wallet.getId());
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Override
     public void archiveByAdmin(String userId, String walletName) {
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Admin attempting to archive wallet '{}' for user ID: {}.", username, walletName, userId);
-
-        Wallet wallet = walletRepository
-                .findByUser_IdAndWalletName(userId, walletName)
-                .orElseThrow(() -> {
-                    log.warn("[{}]: Wallet '{}' not found for user ID {} for archiving.", username, walletName, userId);
-                    return new BusinessException(ErrorCode.ENUM_NOT_FOUND);
-                });
-
-        wallet.setStatus(WalletStatus.ARCHIVED);
-        walletRepository.save(wallet);
-        log.info("[{}]: Wallet '{}' (ID: {}) archived successfully for user ID {}.",
-                username, wallet.getWalletName(), wallet.getId(), userId);
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Override
     public WalletResponse getDetail(String id) {
-        String username = SecurityUtils.getCurrentUsername();
-        log.info("[{}]: Fetching details for wallet with ID '{}' for current user.", username, id);
-        Wallet wallet = getMyWalletByIdOrThrow(id);
-        log.info("[{}]: Successfully retrieved details for wallet '{}' (ID: {}).",
-                username, wallet.getWalletName(), wallet.getId());
-        return convertToResponse(wallet);
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Override
@@ -164,42 +76,20 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletResponse> getMyWallets() {
-        String username = SecurityUtils.getCurrentUsername();
-        String currentUserId = SecurityUtils.getCurrentId();
-        log.info("[{}]: Fetching all wallets for current user ID: {}.", username, currentUserId);
-        List<Wallet> wallets = walletRepository.findByUser_Id(currentUserId);
-        log.info("[{}]: Found {} wallets for user ID {}.", username, wallets.size(), currentUserId);
-        return wallets.stream().map(this::convertToResponse).collect(Collectors.toList());
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     private Wallet getMyWalletByIdOrThrow(String id) {
-        String username = SecurityUtils.getCurrentUsername();
-        String currentUserId = SecurityUtils.getCurrentId();
-        return walletRepository
-                .findByUser_IdAndIdAndStatus(currentUserId, id, WalletStatus.ACTIVE)
-                .orElseThrow(() -> {
-                    log.warn("[{}]: Wallet with ID '{}' not found for current user ID {}.", username, id, currentUserId);
-                    return new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
-                });
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     private WalletResponse convertToResponse(Wallet wallet) {
-        WalletResponse response = walletMapper.toResponse(wallet);
-        response.setStatus(new EnumDisplay<>(wallet.getStatus(), localizationUtils.getLocalizedMessage(wallet.getStatus().getDisplay())));
-        return response;
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
     @Transactional
     @Override
     public void toggle(String id) {
-        Wallet wallet = walletRepository.findByUser_IdAndId(SecurityUtils.getCurrentId(), id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
-
-        if (wallet.getStatus() == WalletStatus.ACTIVE) {
-            wallet.setStatus(WalletStatus.INACTIVE);
-        } else {
-            wallet.setStatus(WalletStatus.ACTIVE);
-        }
-        walletRepository.save(wallet);
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 }

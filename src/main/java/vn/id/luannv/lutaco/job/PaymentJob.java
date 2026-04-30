@@ -58,7 +58,6 @@ public class PaymentJob {
                 payOS.setStatus(newStatus);
 
                 if (newStatus == PaymentStatus.PAID && payOS.getPaidAt() == null) {
-                    payOS.setPaidAt(LocalDateTime.now());
                     log.info("[system]: Payment for order code {} is now PAID. Paid at: {}", payOS.getOrderCode(), payOS.getPaidAt());
                 } else {
                     log.info("[system]: Payment for order code {} status updated from {} to {}.", payOS.getOrderCode(), payOS.getStatus(), newStatus);

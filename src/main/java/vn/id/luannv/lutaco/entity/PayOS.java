@@ -17,7 +17,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Pay_OS")
+@Table(name = "pay_os")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class PayOS extends BaseEntity {

@@ -1,25 +1,56 @@
 databaseChangeLog:
+
+  # =====================================================
+  # 1. CORE CONFIG
+  # =====================================================
   - include:
       file: db/changelog/2026-30-04-create-master-dictionary-table.yaml
+
   - include:
       file: db/changelog/2026-30-04-create-role-table.yaml
+
+
+  # =====================================================
+  # 2. IDENTITY / AUTH
+  # =====================================================
   - include:
       file: db/changelog/2026-30-04-create-user-table.yaml
+
   - include:
       file: db/changelog/2026-30-04-create-refresh-token-table.yaml
+
   - include:
       file: db/changelog/2026-30-04-create-invalidated-token-table.yaml
-  - include:
-      file: db/changelog/2026-30-04-create-category-table.yaml
-  - include:
-      file: db/changelog/2026-05-01-create-wallet-table.yaml
-  - include:
-      file: db/changelog/2026-30-04-create-budget-table.yaml
-  - include:
-      file: db/changelog/2026-30-04-create-pay-os-table.yaml
-  - include:
-      file: db/changelog/2026-30-04-create-transaction-table.yaml
+
   - include:
       file: db/changelog/2026-30-04-create-user-audit-log-table.yaml
+
+
+  # =====================================================
+  # 3. FINANCE CORE STRUCTURE
+  # =====================================================
+  - include:
+      file: db/changelog/2026-30-04-create-category-table.yaml
+
+  - include:
+      file: db/changelog/2026-30-04-create-wallet-table.yaml
+
+
+  # =====================================================
+  # 4. BUSINESS CORE
+  # =====================================================
+  - include:
+      file: db/changelog/2026-30-04-create-transaction-table.yaml
+
+  - include:
+      file: db/changelog/2026-30-04-create-budget-table.yaml
+
+  - include:
+      file: db/changelog/2026-30-04-create-pay-os-table.yaml
+
+
+  # =====================================================
+  # 5. SCHEDULING / DERIVED DATA
+  # =====================================================
   - include:
       file: db/changelog/2026-30-04-create-rec-transaction-table.yaml

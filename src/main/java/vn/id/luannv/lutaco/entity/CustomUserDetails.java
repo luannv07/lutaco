@@ -23,7 +23,7 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
     String username;
     String role;
-    String id;
+    Long id;
     UserStatus status;
     UserPlan userPlan;
 
