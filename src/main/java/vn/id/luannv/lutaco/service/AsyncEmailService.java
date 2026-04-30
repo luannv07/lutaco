@@ -19,26 +19,6 @@ public class AsyncEmailService {
 
     @Async
     public void sendEmail(String to, String subject, String body) {
-        log.info("[system]: Attempting to send email to '{}' with subject '{}'.", to, subject);
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(
-                    mimeMessage,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                    "UTF-8"
-            );
-
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(body, true); // true = HTML
-
-            long startTime = System.currentTimeMillis();
-            mailSender.send(mimeMessage);
-            long endTime = System.currentTimeMillis();
-            log.info("[system]: Successfully sent email to '{}'. Time taken: {}ms.", to, (endTime - startTime));
-
-        } catch (Exception e) {
-            log.error("[system]: Failed to send email to '{}' with subject '{}'. Error: {}", to, subject, e.getMessage(), e);
-        }
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 }

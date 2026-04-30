@@ -25,7 +25,6 @@ import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.io.IOException;
 
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -38,52 +37,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return EndpointPolicyMatcherUtils.getPolicy(request.getRequestURI()) != EndpointSecurityPolicy.Policy.AUTH_REQUIRED;
+        return EndpointPolicyMatcherUtils
+                .getPolicy(request.getRequestURI()) != EndpointSecurityPolicy.Policy.AUTH_REQUIRED;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         try {
             String authorizationHeader = request.getHeader("Authorization");
 
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                log.debug("[system]: Authorization header not found or does not start with 'Bearer ' for request URI: {}", request.getRequestURI());
-                throw new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
+                log.debug(
+                        "[system]: Authorization header not found or does not start with 'Bearer ' for request URI: {}",
+                        request.getRequestURI());
+                throw new BadCredentialsException(
+                        localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
             }
 
             String token = authorizationHeader.substring(7);
             if (!jwtService.isValidToken(token)) {
                 log.warn("[system]: Invalid or expired JWT token for request URI: {}", request.getRequestURI());
-                throw new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
+                throw new BadCredentialsException(
+                        localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
             }
 
-            String username = jwtService.getUsernameFromToken(token);
-            String role = jwtService.getRoleFromToken(token);
-            User entity = userRepository
-                    .findByUsername(username).orElseThrow(() -> {
-                        log.warn("[system]: User not found for username extracted from token: {}", username);
-                        return new BadCredentialsException(localizationUtils.getLocalizedMessage(ErrorCode.UNAUTHORIZED.getMessage()));
-                    });
-
-            CustomUserDetails customUserDetails = CustomUserDetails.builder()
-                    .username(username)
-                    .role(role)
-                    .status(entity.getUserStatus())
-                    .id(entity.getId())
-                    .userPlan(entity.getUserPlan())
-                    .build();
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    customUserDetails,
-                    null,
-                    customUserDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            filterChain.doFilter(request, response);
+            throw new UnsupportedOperationException("This service is temporarily disabled.");
         } catch (AuthenticationException ae) {
             SecurityContextHolder.clearContext();
-            log.error("[system]: Authentication failed during JWT filter for request URI: {}. Error: {}", request.getRequestURI(), ae.getMessage());
+            log.error("[system]: Authentication failed during JWT filter for request URI: {}. Error: {}",
+                    request.getRequestURI(), ae.getMessage());
             jwtAuthenticationEntryPoint.commence(request, response, ae);
         }
     }

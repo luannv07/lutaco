@@ -20,14 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.ENTITY_NOT_FOUND.getMessage()));
-
-        return CustomUserDetails.builder()
-                .username(user.getUsername())
-                .role(user.getRole().getCode().name())
-                .id(user.getId())
-                .status(user.getUserStatus())
-                .build();
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 }

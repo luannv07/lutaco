@@ -14,9 +14,6 @@ public class GeminiService {
     }
 
     public String askGemini(String message) {
-        return chatClient.prompt()
-                .user(message)
-                .call()
-                .content();
+        throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 }

@@ -11,10 +11,4 @@ import java.util.Date;
 
 @Repository
 public interface InvalidatedTokenRepository extends JpaRepository<InvalidatedToken, Integer> {
-
-    boolean existsByJti(String jti);
-
-    @Modifying
-    @Query("DELETE FROM InvalidatedToken t WHERE t.expiryTime < :now")
-    long deleteByExpiryTimeBefore(@Param("now") Date now);
 }
