@@ -1,26 +1,29 @@
 package vn.id.luannv.lutaco.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.Instant;
 
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "Invalidated_Tokens")
+@Entity
+@Table(
+        name = "invalidated_tokens",
+        indexes = {
+                @Index(name = "idx_invalidated_tokens_ref_token", columnList = "ref_token"),
+                @Index(name = "idx_invalidated_tokens_expiry_time", columnList = "expiry_time")
+        }
+)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-public class InvalidatedToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", updatable = false, nullable = false)
-    Integer id;
-    @Column(name = "jti", unique = true, nullable = false)
-    String jti;
-    @Column(name = "expiry_time")
-    Date expiryTime;
+public class InvalidatedToken extends BaseEntity {
+
+    @Column(name = "ref_token", nullable = false, unique = true, length = 36)
+    String refToken;
+
+    @Column(name = "expiry_time", nullable = false)
+    Instant expiryTime;
 }

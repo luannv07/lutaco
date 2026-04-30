@@ -3,18 +3,63 @@ databaseChangeLog:
       id: c1d2e3f4-aaaa-4bbb-9ccc-123456789000
       author: luannv
       changes:
+
         - createTable:
             tableName: categories
             columns:
-              - column: { name: id, type: bigint, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
-              - column: { name: category_code, type: varchar(100), constraints: { nullable: false } }
-              - column: { name: category_type, type: varchar(10), constraints: { nullable: false } }
-              - column: { name: parent_id, type: bigint }
-              - column: { name: ACTIVE_FLG, type: boolean, defaultValueBoolean: true, constraints: { nullable: false } }
-              - column: { name: created_by, type: varchar(50), defaultValue: "system" }
-              - column: { name: created_date, type: timestamp, defaultValueComputed: CURRENT_TIMESTAMP }
-              - column: { name: updated_by, type: varchar(50), defaultValue: "system" }
-              - column: { name: updated_date, type: timestamp, defaultValueComputed: CURRENT_TIMESTAMP }
+
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: category_code
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: category_type
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: parent_id
+                  type: bigint
+
+              - column:
+                  name: active_flg
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_by
+                  type: varchar(50)
+                  defaultValue: system
+
+              - column:
+                  name: updated_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        # ===== FK SELF =====
         - addForeignKeyConstraint:
             baseTableName: categories
             baseColumnNames: parent_id
@@ -22,93 +67,183 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_categories_parent
             onDelete: SET NULL
+
+        # ===== UNIQUE =====
         - addUniqueConstraint:
             tableName: categories
             columnNames: parent_id, category_code
             constraintName: uk_categories_parent_code
+
+        # ===== INDEX =====
         - createIndex:
             tableName: categories
             indexName: idx_categories_type
-            columns: [ { column: { name: category_type } } ]
+            columns:
+              - column:
+                  name: category_type
+
         - createIndex:
             tableName: categories
             indexName: idx_categories_parent
-            columns: [ { column: { name: parent_id } } ]
+            columns:
+              - column:
+                  name: parent_id
 
+  # ========================
+  # LEVEL 1 SEED (SAFE INSERT)
+  # ========================
   - changeSet:
       id: seed-categories-level1
       author: luannv
       changes:
-        # EXPENSE
-        - insert: { tableName: categories, columns: [ { name: category_code, value: FOOD }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: HOUSING }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: TRANSPORT }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: ENTERTAINMENT }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: HEALTHCARE }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: SHOPPING }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: EDUCATION }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: GIFTS_DONATIONS }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: PERSONAL_CARE }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: FAMILY }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: BILLS_FEES }, { name: category_type, value: EXPENSE } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: TRAVEL }, { name: category_type, value: EXPENSE } ] }
-        # INCOME
-        - insert: { tableName: categories, columns: [ { name: category_code, value: SALARY }, { name: category_type, value: INCOME } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: BONUS }, { name: category_type, value: INCOME } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: INVESTMENT }, { name: category_type, value: INCOME } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: SIDE_GIG }, { name: category_type, value: INCOME } ] }
-        - insert: { tableName: categories, columns: [ { name: category_code, value: GIFTS_RECEIVED }, { name: category_type, value: INCOME } ] }
 
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: FOOD }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: HOUSING }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: TRANSPORT }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: ENTERTAINMENT }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: HEALTHCARE }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: SHOPPING }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: EDUCATION }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: GIFTS_DONATIONS }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: PERSONAL_CARE }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: FAMILY }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: BILLS_FEES }
+              - column: { name: category_type, value: EXPENSE }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: TRAVEL }
+              - column: { name: category_type, value: EXPENSE }
+
+        # INCOME
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: SALARY }
+              - column: { name: category_type, value: INCOME }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: BONUS }
+              - column: { name: category_type, value: INCOME }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: INVESTMENT }
+              - column: { name: category_type, value: INCOME }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: SIDE_GIG }
+              - column: { name: category_type, value: INCOME }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_code, value: GIFTS_RECEIVED }
+              - column: { name: category_type, value: INCOME }
+
+  # ========================
+  # LEVEL 2 SEED (FIXED SAFE SQL)
+  # ========================
   - changeSet:
       id: seed-categories-level2
       author: luannv
       changes:
-        # FOOD children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'RESTAURANT', 'EXPENSE', id FROM categories WHERE category_code = 'FOOD';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'GROCERIES', 'EXPENSE', id FROM categories WHERE category_code = 'FOOD';" }
-        # HOUSING children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'RENT', 'EXPENSE', id FROM categories WHERE category_code = 'HOUSING';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'UTILITIES', 'EXPENSE', id FROM categories WHERE category_code = 'HOUSING';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'MORTGAGE', 'EXPENSE', id FROM categories WHERE category_code = 'HOUSING';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'REPAIRS', 'EXPENSE', id FROM categories WHERE category_code = 'HOUSING';" }
-        # TRANSPORT children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'FUEL', 'EXPENSE', id FROM categories WHERE category_code = 'TRANSPORT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'GRAB_TAXI', 'EXPENSE', id FROM categories WHERE category_code = 'TRANSPORT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'PUBLIC_TRANSPORT', 'EXPENSE', id FROM categories WHERE category_code = 'TRANSPORT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'MAINTENANCE', 'EXPENSE', id FROM categories WHERE category_code = 'TRANSPORT';" }
-        # ENTERTAINMENT children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'MOVIES', 'EXPENSE', id FROM categories WHERE category_code = 'ENTERTAINMENT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'GAMES', 'EXPENSE', id FROM categories WHERE category_code = 'ENTERTAINMENT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'SPORTS', 'EXPENSE', id FROM categories WHERE category_code = 'ENTERTAINMENT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'CONCERTS', 'EXPENSE', id FROM categories WHERE category_code = 'ENTERTAINMENT';" }
-        # HEALTHCARE children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'DOCTOR', 'EXPENSE', id FROM categories WHERE category_code = 'HEALTHCARE';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'PHARMACY', 'EXPENSE', id FROM categories WHERE category_code = 'HEALTHCARE';" }
-        # SHOPPING children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'CLOTHES', 'EXPENSE', id FROM categories WHERE category_code = 'SHOPPING';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'ELECTRONICS', 'EXPENSE', id FROM categories WHERE category_code = 'SHOPPING';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'HOUSEHOLD_SUPPLIES', 'EXPENSE', id FROM categories WHERE category_code = 'SHOPPING';" }
-        # EDUCATION children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'TUITION', 'EXPENSE', id FROM categories WHERE category_code = 'EDUCATION';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'BOOKS', 'EXPENSE', id FROM categories WHERE category_code = 'EDUCATION';" }
-        # GIFTS_DONATIONS children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'CHARITY', 'EXPENSE', id FROM categories WHERE category_code = 'GIFTS_DONATIONS';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'PRESENTS', 'EXPENSE', id FROM categories WHERE category_code = 'GIFTS_DONATIONS';" }
-        # PERSONAL_CARE children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'HAIRCUT', 'EXPENSE', id FROM categories WHERE category_code = 'PERSONAL_CARE';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'COSMETICS', 'EXPENSE', id FROM categories WHERE category_code = 'PERSONAL_CARE';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'GYM', 'EXPENSE', id FROM categories WHERE category_code = 'PERSONAL_CARE';" }
-        # FAMILY children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'CHILDCARE', 'EXPENSE', id FROM categories WHERE category_code = 'FAMILY';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'PETS', 'EXPENSE', id FROM categories WHERE category_code = 'FAMILY';" }
-        # BILLS_FEES children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'PHONE_BILL', 'EXPENSE', id FROM categories WHERE category_code = 'BILLS_FEES';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'INTERNET', 'EXPENSE', id FROM categories WHERE category_code = 'BILLS_FEES';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'INSURANCE', 'EXPENSE', id FROM categories WHERE category_code = 'BILLS_FEES';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'TAXES', 'EXPENSE', id FROM categories WHERE category_code = 'BILLS_FEES';" }
-        # TRAVEL children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'FLIGHTS', 'EXPENSE', id FROM categories WHERE category_code = 'TRAVEL';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'HOTELS', 'EXPENSE', id FROM categories WHERE category_code = 'TRAVEL';" }
-        # INVESTMENT children
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'DIVIDENDS', 'INCOME', id FROM categories WHERE category_code = 'INVESTMENT';" }
-        - sql: { sql: "INSERT INTO categories(category_code, category_type, parent_id) SELECT 'CAPITAL_GAINS', 'INCOME', id FROM categories WHERE category_code = 'INVESTMENT';" }
+
+        - sql:
+            sql: >
+              INSERT INTO categories(category_code, category_type, parent_id)
+              SELECT 'RESTAURANT', 'EXPENSE', c.id
+              FROM categories c
+              WHERE c.category_code = 'FOOD'
+              LIMIT 1;
+
+        - sql:
+            sql: >
+              INSERT INTO categories(category_code, category_type, parent_id)
+              SELECT 'GROCERIES', 'EXPENSE', c.id
+              FROM categories c
+              WHERE c.category_code = 'FOOD'
+              LIMIT 1;
+
+        - sql:
+            sql: >
+              INSERT INTO categories(category_code, category_type, parent_id)
+              SELECT 'RENT', 'EXPENSE', c.id
+              FROM categories c
+              WHERE c.category_code = 'HOUSING'
+              LIMIT 1;
+
+        - sql:
+            sql: >
+              INSERT INTO categories(category_code, category_type, parent_id)
+              SELECT 'UTILITIES', 'EXPENSE', c.id
+              FROM categories c
+              WHERE c.category_code = 'HOUSING'
+              LIMIT 1;
+
+        - sql:
+            sql: >
+              INSERT INTO categories(category_code, category_type, parent_id)
+              SELECT 'FUEL', 'EXPENSE', c.id
+              FROM categories c
+              WHERE c.category_code = 'TRANSPORT'
+              LIMIT 1;

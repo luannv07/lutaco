@@ -157,6 +157,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("[{}]: New category '{}' (ID: {}) created successfully for user ID {}.", username, savedCategory.getCategoryName(), savedCategory.getId(), userId);
         return buildDto(savedCategory);
     }
+
     @Override
     public CategoryResponse getDetail(String id) {
         String username = SecurityUtils.getCurrentUsername();
@@ -312,6 +313,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("[{}]: Category ID '{}' updated successfully.", username, updatedCategory.getId());
         return buildDto(updatedCategory);
     }
+
     @Override
     @Transactional
     public void deleteById(String id) {

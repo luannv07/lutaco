@@ -1,31 +1,26 @@
 package vn.id.luannv.lutaco.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.FrequentType;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "recurring_transactions")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Entity
+@Table(name = "recurring_transactions")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RecurringTransaction extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "transaction_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_recurring_transactions_transaction")
+            unique = true
     )
     Transaction transaction;
 
@@ -36,8 +31,9 @@ public class RecurringTransaction extends BaseEntity {
     LocalDate nextDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "frequent_type", nullable = false)
+    @Column(name = "frequent_type", nullable = false, length = 50)
     FrequentType frequentType;
 
-
+    @Column(name = "active_flg", nullable = false)
+    boolean activeFlg = true;
 }

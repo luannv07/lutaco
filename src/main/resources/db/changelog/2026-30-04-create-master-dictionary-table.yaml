@@ -475,7 +475,7 @@ databaseChangeLog:
         - insert:
             tableName: master_dictionary
             columns:
-              - column: { name: group, value: ACTIVE_FLG }
+              - column: { name: dict_group, value: ACTIVE_FLG }
               - column: { name: code, value: 1 }
               - column: { name: value_vi, value: "Đang hoạt động" }
               - column: { name: value_en, value: "Active" }
@@ -485,7 +485,7 @@ databaseChangeLog:
         - insert:
             tableName: master_dictionary
             columns:
-              - column: { name: group, value: ACTIVE_FLG }
+              - column: { name: dict_group, value: ACTIVE_FLG }
               - column: { name: code, value: 0 }
               - column: { name: value_vi, value: "Dừng hoạt động" }
               - column: { name: value_en, value: "Inactive" }

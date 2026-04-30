@@ -128,6 +128,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
+
     @Override
     @Transactional
     public void deleteBulk(List<String> ids, String currentId) {
@@ -230,6 +231,7 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("[{}]: Found {} transactions matching the criteria for user ID {}.", username, result.getTotalElements(), currentUserId);
         return result;
     }
+
     @Override
     @Transactional
     public TransactionResponse update(String id, TransactionRequest request) {

@@ -1,49 +1,50 @@
 package vn.id.luannv.lutaco.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.BatchSize;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 @Table(
         name = "categories",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_category_user_name",
-                        columnNames = {"owner_user_id", "category_name"}
+                        name = "uk_categories_parent_code",
+                        columnNames = {"parent_id", "category_code"}
                 )
+        },
+        indexes = {
+                @Index(name = "idx_categories_type", columnList = "category_type"),
+                @Index(name = "idx_categories_parent", columnList = "parent_id")
         }
 )
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-@ToString
 public class Category extends BaseEntity {
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
 
-    @Column(name = "category_name", nullable = false, length = 100)
-    String categoryName;
+    @Column(name = "category_code", nullable = false, length = 100)
+    String categoryCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "parent_id",
-            foreignKey = @ForeignKey(name = "fk_categories_id_parent_id")
-    )
-    Category parent;
-
-    @Column(name = "category_type", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
+    @Column(name = "category_type", nullable = false, length = 10)
     CategoryType categoryType;
 
-    @Column(name = "deleted_FLG")
-    Boolean deletedFlg;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    Category parent;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @BatchSize(size = 50)
+    Set<Category> children = new HashSet<>();
+
+    @Column(name = "active_flg", nullable = false)
+    boolean activeFlg = true;
 }

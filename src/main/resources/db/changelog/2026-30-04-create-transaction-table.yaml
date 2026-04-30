@@ -1,4 +1,5 @@
 databaseChangeLog:
+
   - changeSet:
       id: t1x2n3s4-0001
       author: luannv
@@ -10,7 +11,8 @@ databaseChangeLog:
 
               - column:
                   name: id
-                  type: varchar(36)
+                  type: bigint
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -83,6 +85,7 @@ databaseChangeLog:
                   name: updated_date
                   type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
+
         # USER FK
         - addForeignKeyConstraint:
             baseTableName: transactions

@@ -13,49 +13,59 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: user_id
                   type: bigint
                   constraints:
                     nullable: false
+
               - column:
                   name: name
                   type: varchar(100)
                   constraints:
                     nullable: false
+
               - column:
                   name: description
                   type: varchar(255)
+
               - column:
                   name: initial_balance
-                  type: decimal(19, 4)
-                  defaultValueNumeric: 0.00
+                  type: bigint
+                  defaultValueNumeric: 0
                   constraints:
                     nullable: false
+
               - column:
                   name: balance
-                  type: decimal(19, 4)
-                  defaultValueNumeric: 0.00
+                  type: bigint
+                  defaultValueNumeric: 0
                   constraints:
                     nullable: false
+
               - column:
-                  name: ACTIVE_FLG
+                  name: active_flg
                   type: boolean
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
+
               - column:
                   name: created_by
                   type: varchar(50)
                   defaultValue: system
+
               - column:
                   name: created_date
                   type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
+
               - column:
                   name: updated_by
                   type: varchar(50)
                   defaultValue: system
+
               - column:
                   name: updated_date
                   type: timestamp
@@ -71,7 +81,7 @@ databaseChangeLog:
 
         - createIndex:
             tableName: wallets
-            indexName: idx_wallets_user
+            indexName: idx_wallets_user_id
             columns:
               - column:
                   name: user_id

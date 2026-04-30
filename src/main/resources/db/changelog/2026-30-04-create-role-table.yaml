@@ -1,11 +1,14 @@
 databaseChangeLog:
+
   - changeSet:
       id: 1c2d3e4f-5678-4abc-9def-112233445500
       author: luannv
       changes:
+
         - createTable:
             tableName: roles
             columns:
+
               - column:
                   name: id
                   type: bigint
@@ -19,7 +22,6 @@ databaseChangeLog:
                   type: varchar(50)
                   constraints:
                     nullable: false
-                    unique: true
                   remarks: "SYS_ADMIN, ADMIN, USER"
 
               - column:
@@ -51,6 +53,7 @@ databaseChangeLog:
             tableName: roles
             columnNames: code
             constraintName: uk_roles_code
+
   - changeSet:
       id: 5f6a7b8c-9012-4abc-9def-778899001122
       author: luannv

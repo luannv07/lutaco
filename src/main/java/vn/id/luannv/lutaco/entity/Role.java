@@ -1,28 +1,23 @@
 package vn.id.luannv.lutaco.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.enumerate.UserType;
 
-import java.util.List;
-
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "ROLES")
+@Entity
+@Table(name = "roles")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", updatable = false, nullable = false)
-    Long id;
-    @Column(name = "NAME", unique = true, nullable = false)
-    String name;
-    @OneToMany(mappedBy = "role")
-    @JsonIgnore
-    List<User> users;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    UserType code;
+
+    @Column(name = "active_flg")
+    boolean activeFlg = true;
 }

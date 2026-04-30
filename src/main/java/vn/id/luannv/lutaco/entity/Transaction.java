@@ -1,53 +1,45 @@
 package vn.id.luannv.lutaco.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-@Entity
-@Table(name = "transactions")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Entity
+@Table(name = "transactions")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Transaction extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(length = 36)
     String id;
 
-    @Column(name = "user_id", nullable = false, updatable = false)
-    String userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "category_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_transactions_category")
-    )
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "wallet_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_transactions_wallet")
-    )
+    @JoinColumn(name = "wallet_id", nullable = false)
     Wallet wallet;
 
     @Column(nullable = false)
     Long amount;
 
     @Column(name = "transaction_date", nullable = false)
-    LocalDateTime transactionDate;
+    Instant transactionDate;
 
     @Column(length = 255)
     String note;
 
-    @Column(name = "active_flg")
-    LocalDateTime active_flg;
+    @Column(name = "active_flg", nullable = false)
+    boolean activeFlg = true;
 }

@@ -1,50 +1,46 @@
 package vn.id.luannv.lutaco.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "USERS")
-@Builder
+@Entity
+@Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", updatable = false, nullable = false)
-    Long id;
-    @Column(name = "USERNAME", unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true, length = 100)
     String username;
-    @Column(name = "PASSWORD", nullable = false)
+
+    @Column(nullable = false)
     String password;
-    @Column(name = "FULL_NAME", nullable = false)
+
+    @Column(name = "full_name", nullable = false, length = 255)
     String fullName;
-    @Column(name = "ADDRESS")
-    String address;
-    @Column(name = "EMAIL", nullable = false)
+
+    @Column(nullable = false, unique = true, length = 255)
     String email;
-    @Column(name = "GENDER", nullable = false)
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     UserGender gender;
-    @Column(name = "USER_STATUS", nullable = false)
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_status", nullable = false, length = 20)
     UserStatus userStatus;
-    @Column(name = "USER_PLAN", nullable = false)
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_plan", nullable = false, length = 20)
     UserPlan userPlan;
-    @JoinColumn(name = "ROLE_ID")
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
     Role role;
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    RefreshToken refreshToken;
 }

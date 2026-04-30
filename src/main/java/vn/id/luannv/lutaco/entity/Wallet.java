@@ -1,40 +1,36 @@
 package vn.id.luannv.lutaco.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.WalletStatus;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
+import java.math.BigDecimal;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "WALLETS")
+@Entity
+@Table(name = "wallets")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Wallet extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "ID", updatable = false, nullable = false)
-    String id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
-    @Column(name = "WALLET_name", nullable = false)
-    String walletName;
+    @Column(nullable = false, length = 100)
+    String name;
 
-    @Column(name = "INITIAL_BALANCE", nullable = false)
-    Long initialBalance;
-
-    @Column(name = "CURRENT_BALANCE", nullable = false)
-    Long currentBalance;
-
-    @Column(name = "DESCRIPTION")
+    @Column(length = 255)
     String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    @JsonIgnore
-    User user;
+    @Column(name = "initial_balance", nullable = false)
+    Long initialBalance = 0L;
+
+    @Column(nullable = false)
+    Long balance = 0L;
+
+    @Column(name = "active_flg", nullable = false)
+    boolean activeFlg = false;
 }
