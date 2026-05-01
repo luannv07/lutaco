@@ -22,6 +22,6 @@ public class UserRegisteredEventListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void handle(UserRegisteredEvent event) {
         walletService.createDefaultWallet(event.id());
-        otpService.sendOtp(event.email(), OtpType.REGISTER, event.username());
+//        otpService.sendOtp(event.email(), OtpType.REGISTER, event.username());
     }
 }

@@ -59,6 +59,28 @@ public class AuthController {
                 ));
     }
 
+    @PostMapping("/register/send-otp")
+//    @PreAuthorize("@securityPermission.isPendingVerification()")
+    public ResponseEntity<BaseResponse<Void>> resendOtp(
+            @Valid @RequestBody SendOtpRequest request
+    ) {
+        otpService.sendOtp(request, OtpType.REGISTER);
+        return ResponseEntity.ok(
+                BaseResponse.success("Gửi OTP thành công.")
+        );
+    }
+
+    @PostMapping("/register/verify-otp")
+//    @PreAuthorize("@securityPermission.isLoggedIn()")
+    public ResponseEntity<BaseResponse<Void>> verifyOtp(
+            @Valid @RequestBody VerifyOtpRequest request
+    ) {
+        otpService.verifyOtp(request, OtpType.REGISTER);
+        return ResponseEntity.ok(
+                BaseResponse.success("Xác thực OTP thành công.")
+        );
+    }
+
     @PostMapping("/logout")
     @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<Void>> logout(HttpServletRequest req) {
@@ -92,26 +114,5 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/send-otp")
-    @PreAuthorize("@securityPermission.isPendingVerification()")
-    public ResponseEntity<BaseResponse<Void>> resendOtp(
-            @Valid @RequestBody SendOtpRequest request
-    ) {
-        OtpType otpType = EnumUtils.from(OtpType.class, request.getOtpType());
-        otpService.sendOtp(request.getEmail(), otpType, request.getUsername());
-        return ResponseEntity.ok(
-                BaseResponse.success("Gửi OTP thành công.")
-        );
-    }
 
-    @PostMapping("/verify-otp")
-    @PreAuthorize("@securityPermission.isLoggedIn()")
-    public ResponseEntity<BaseResponse<Void>> verifyOtp(
-            @Valid @RequestBody VerifyOtpRequest request
-    ) {
-        otpService.verifyOtp(request);
-        return ResponseEntity.ok(
-                BaseResponse.success("Xác thực OTP thành công.")
-        );
-    }
 }
