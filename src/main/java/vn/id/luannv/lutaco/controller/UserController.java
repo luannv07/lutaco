@@ -32,8 +32,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.isActive()")
-            public ResponseEntity<BaseResponse<Page<UserResponse>>> getUsers(
-                        @Valid @ModelAttribute UserFilterRequest request
+    public ResponseEntity<BaseResponse<Page<UserResponse>>> getUsers(
+            @Valid @ModelAttribute UserFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-            @PreAuthorize("@securityPermission.isLoggedIn()")
+    @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<UserResponse>> getMe() {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -54,8 +54,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.isActive()")
-            public ResponseEntity<BaseResponse<UserResponse>> getUser(
-                        @PathVariable String id
+    public ResponseEntity<BaseResponse<UserResponse>> getUser(
+            @PathVariable String id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -68,8 +68,8 @@ public class UserController {
     @PreAuthorize(
             "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
-            public ResponseEntity<BaseResponse<UserResponse>> update(
-                        @PathVariable String id,
+    public ResponseEntity<BaseResponse<UserResponse>> update(
+            @PathVariable String id,
             @Valid @RequestBody UserUpdateRequest request
     ) {
         return ResponseEntity.ok(
@@ -81,8 +81,8 @@ public class UserController {
 
     @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('SYS_ADMIN') and @securityPermission.isActive()")
-            public ResponseEntity<BaseResponse<Void>> update(
-                        @PathVariable String id,
+    public ResponseEntity<BaseResponse<Void>> update(
+            @PathVariable String id,
             @Valid @RequestBody UserRoleRequest request
     ) {
         userService.updateUserRole(id, request);
@@ -95,8 +95,8 @@ public class UserController {
     @PreAuthorize(
             "hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and @securityPermission.isActive())"
     )
-            public ResponseEntity<BaseResponse<Void>> updateUserStatus(
-                        @PathVariable String id,
+    public ResponseEntity<BaseResponse<Void>> updateUserStatus(
+            @PathVariable String id,
             @Valid @RequestBody UserStatusSetRequest request
     ) {
         userService.updateStatus(id, request);
@@ -109,8 +109,8 @@ public class UserController {
     @PreAuthorize(
             "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
-            public ResponseEntity<BaseResponse<Void>> updatePassword(
-                        @PathVariable String id,
+    public ResponseEntity<BaseResponse<Void>> updatePassword(
+            @PathVariable String id,
             @Valid @RequestBody UpdatePasswordRequest request, HttpServletRequest req
     ) {
         String token = JwtUtils.resolveToken(req);

@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.Length;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleFilterRequest extends BaseFilterRequest {
 
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String name;
 }

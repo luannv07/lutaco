@@ -16,12 +16,12 @@ import java.time.LocalDate;
 public class RecurringTransactionRequest {
 
     @NotBlank(message = "{validation.required}")
-        String transactionId;
+    String transactionId;
 
     @NotNull(message = "{validation.required}")
-        String frequentType;
+    String frequentType;
 
     @NotNull(message = "{validation.required}")
     @FutureOrPresent(message = "{validation.field.future_or_present}")
-        LocalDate startDate;
+    LocalDate startDate;
 }

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class BudgetFilterRequest extends BaseFilterRequest {
 
-        String period;
+    String period;
 
-        String name;
+    String name;
 }

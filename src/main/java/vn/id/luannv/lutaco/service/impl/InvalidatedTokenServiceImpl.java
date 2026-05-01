@@ -14,7 +14,6 @@ import vn.id.luannv.lutaco.repository.InvalidatedTokenRepository;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Slf4j
 @Service

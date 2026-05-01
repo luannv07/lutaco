@@ -7,7 +7,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.event.entity.UserRegisteredEvent;
 import vn.id.luannv.lutaco.service.OtpService;
 import vn.id.luannv.lutaco.service.WalletService;

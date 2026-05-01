@@ -6,7 +6,6 @@ import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 
 import java.time.Instant;
-import java.util.Date;
 
 public interface AuthService {
     AuthenticateResponse login(LoginRequest request);

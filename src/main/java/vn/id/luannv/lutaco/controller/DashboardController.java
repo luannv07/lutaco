@@ -25,7 +25,7 @@ public class DashboardController {
 
     DashboardService dashboardService;
 
-            @GetMapping("/summary")
+    @GetMapping("/summary")
     public ResponseEntity<BaseResponse<DashboardResponse>> summary(@RequestParam(defaultValue = "LAST_1_MONTH", required = false) String period) {
         PeriodRange periodRange = EnumUtils.from(PeriodRange.class, period);
         return ResponseEntity.ok(
@@ -36,7 +36,7 @@ public class DashboardController {
         );
     }
 
-            @GetMapping("/export/basic")
+    @GetMapping("/export/basic")
     public void exportBasic(
             HttpServletResponse response
     ) {
@@ -53,7 +53,7 @@ public class DashboardController {
         dashboardService.exportBasic(response, period);
     }
 
-            @GetMapping("/export/advanced")
+    @GetMapping("/export/advanced")
     @PreAuthorize("isAuthenticated() and @securityPermission.isActive() and @securityPermission.isPremiumUser()")
     public void exportAdvanced(
             HttpServletResponse response,

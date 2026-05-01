@@ -8,13 +8,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PayOsWebhookRequest {
 
-        String code;
+    String code;
 
-        String desc;
+    String desc;
 
-        Boolean success;
+    Boolean success;
 
-        PayOsWebhookData data;
+    PayOsWebhookData data;
 
-        String signature;
+    String signature;
 }

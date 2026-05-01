@@ -10,11 +10,11 @@ import lombok.experimental.FieldDefaults;
 public class UserUpdateRequest {
 
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
-        String fullName;
+    String fullName;
 
     @Size(max = 255, message = "{validation.field.too_long}")
-        String address;
+    String address;
 
-        @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String gender;
 }

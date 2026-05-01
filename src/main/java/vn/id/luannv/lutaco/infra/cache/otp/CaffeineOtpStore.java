@@ -10,8 +10,6 @@ import vn.id.luannv.lutaco.domain.otp.OtpInfo;
 import vn.id.luannv.lutaco.domain.otp.OtpStore;
 import vn.id.luannv.lutaco.enumerate.OtpType;
 
-import java.util.concurrent.TimeUnit;
-
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor

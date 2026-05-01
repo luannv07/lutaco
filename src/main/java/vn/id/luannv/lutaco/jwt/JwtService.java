@@ -12,7 +12,6 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
@@ -21,7 +20,6 @@ import vn.id.luannv.lutaco.util.TimeUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -43,7 +41,11 @@ public class JwtService {
     @Value("role")
     String roleClaim;
 
-    public String generateToken(String username, String roleCode) {
+    @NonFinal
+    @Value("email")
+    String emailClaim;
+
+    public String generateToken(String username, String roleCode, String email) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
         Instant now = Instant.now();
 
@@ -56,6 +58,7 @@ public class JwtService {
                 .issueTime(issuedAt)
                 .expirationTime(expiresAt)
                 .claim(roleClaim, "ROLE_" + roleCode)
+                .claim(emailClaim, email)
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -124,6 +127,10 @@ public class JwtService {
 
     public String getJtiFromToken(String token) {
         return jwtClaimsSet(token).getJWTID();
+    }
+
+    public String getEmailClaim(String token) {
+        return generateFieldFromToken(token, emailClaim);
     }
 
     private String generateFieldFromToken(String token, String field) {

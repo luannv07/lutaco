@@ -12,12 +12,12 @@ import org.hibernate.validator.constraints.Length;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryRequest {
 
-        @NotBlank(message = "{validation.field.required}")
+    @NotBlank(message = "{validation.field.required}")
     @Length(max = 255, message = "{validation.field.too_long}")
     String categoryName;
 
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String parentId;
 
-        String categoryType;
+    String categoryType;
 }

@@ -17,27 +17,27 @@ import java.time.LocalDateTime;
 @Builder
 public class UserResponse {
     String id;
-        String username;
+    String username;
 
-        String fullName;
+    String fullName;
 
-        String address;
+    String address;
 
-        String email;
+    String email;
 
-        EnumDisplay<UserGender> gender;
+    EnumDisplay<UserGender> gender;
 
-        EnumDisplay<UserStatus> userStatus;
+    EnumDisplay<UserStatus> userStatus;
 
-        String roleName;
+    String roleName;
 
-        String createdBy;
+    String createdBy;
 
-        LocalDateTime createdDate;
+    LocalDateTime createdDate;
 
-        String updatedBy;
+    String updatedBy;
 
-        LocalDateTime updatedDate;
+    LocalDateTime updatedDate;
 
-        EnumDisplay<UserPlan> userPlan;
+    EnumDisplay<UserPlan> userPlan;
 }

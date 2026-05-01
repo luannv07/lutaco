@@ -3,8 +3,6 @@ package vn.id.luannv.lutaco.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 

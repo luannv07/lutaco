@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
 import vn.id.luannv.lutaco.dto.request.LoginRequest;
 import vn.id.luannv.lutaco.dto.request.RefreshTokenRequest;
 import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
@@ -32,7 +30,6 @@ import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Slf4j
 @Service
@@ -60,7 +57,8 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticateResponse.builder()
                 .accessToken(jwtService.generateToken(
                         user.getUsername(),
-                        user.getRole().getCode().name()
+                        user.getRole().getCode().name(),
+                        user.getEmail()
                 )).refreshToken(refreshTokenService.createRefreshToken(user.getId()).getRefToken())
                 .build();
     }
@@ -91,7 +89,8 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticateResponse.builder()
                 .accessToken(jwtService.generateToken(
                         user.getUsername(),
-                        user.getRole().getCode().name()
+                        user.getRole().getCode().name(),
+                        user.getEmail()
                 )).refreshToken(refreshTokenService.createRefreshToken(user.getId()).getRefToken())
                 .build();
     }
@@ -126,7 +125,8 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticateResponse.builder()
                 .accessToken(jwtService.generateToken(
                         user.getUsername(),
-                        user.getRole().getCode().name()
+                        user.getRole().getCode().name(),
+                        user.getEmail()
                 )).refreshToken(refreshTokenService.createRefreshToken(user.getId()).getRefToken())
                 .build();
     }

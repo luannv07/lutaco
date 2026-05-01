@@ -26,7 +26,7 @@ public class WalletController {
     WalletService walletService;
 
     @PostMapping
-            public ResponseEntity<BaseResponse<WalletResponse>> create(
+    public ResponseEntity<BaseResponse<WalletResponse>> create(
             @Valid @RequestBody WalletCreateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -37,8 +37,8 @@ public class WalletController {
     }
 
     @PutMapping("/{id}")
-            public ResponseEntity<BaseResponse<WalletResponse>> update(
-                        @PathVariable String id,
+    public ResponseEntity<BaseResponse<WalletResponse>> update(
+            @PathVariable String id,
             @Valid @RequestBody WalletUpdateRequest request
     ) {
         return ResponseEntity.ok(
@@ -49,8 +49,8 @@ public class WalletController {
     }
 
     @PatchMapping("/{id}/toggle-status")
-            public ResponseEntity<BaseResponse<Void>> toggle(
-                        @PathVariable String id
+    public ResponseEntity<BaseResponse<Void>> toggle(
+            @PathVariable String id
     ) {
         walletService.toggle(id);
         return ResponseEntity.ok(
@@ -59,8 +59,8 @@ public class WalletController {
     }
 
     @GetMapping("/{id}")
-            public ResponseEntity<BaseResponse<WalletResponse>> getDetail(
-                        @PathVariable String id
+    public ResponseEntity<BaseResponse<WalletResponse>> getDetail(
+            @PathVariable String id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -70,7 +70,7 @@ public class WalletController {
     }
 
     @GetMapping
-            public ResponseEntity<BaseResponse<List<WalletResponse>>> getMyWallets() {
+    public ResponseEntity<BaseResponse<List<WalletResponse>>> getMyWallets() {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         walletService.getMyWallets(),

@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Entity
 @Table(name = "master_dictionary", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_master_dictionary_group_code", columnNames = { "dict_group", "code" })
+        @UniqueConstraint(name = "uk_master_dictionary_group_code", columnNames = {"dict_group", "code"})
 })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterDictionary extends BaseEntity {

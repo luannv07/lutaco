@@ -15,23 +15,23 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TransactionResponse {
 
-        String id;
+    String id;
 
-        String categoryId;
+    String categoryId;
 
-        String categoryName;
+    String categoryName;
 
-        EnumDisplay<CategoryType> categoryType;
+    EnumDisplay<CategoryType> categoryType;
 
-        Long amount;
+    Long amount;
 
-        LocalDateTime transactionDate;
+    LocalDateTime transactionDate;
 
-        String note;
+    String note;
 
-        LocalDateTime createdDate;
+    LocalDateTime createdDate;
 
-        String walletId;
+    String walletId;
 
-        String walletName;
+    String walletName;
 }

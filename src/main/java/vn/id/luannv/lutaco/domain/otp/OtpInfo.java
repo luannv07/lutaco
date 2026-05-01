@@ -15,11 +15,9 @@ public class OtpInfo {
 
     String code;
     int maxAttempts;
-
+    Instant createdAt;
     @NonFinal
     int attempts;
-
-    Instant createdAt;
 
     public OtpInfo(String code, int maxAttempts) {
         this.code = code;

@@ -24,12 +24,12 @@ public class UserAuditController {
     UserAuditService userAuditService;
 
     @GetMapping
-            public ResponseEntity<BaseResponse<Page<UserAuditLog>>> viewUserAuditLogs(UserAuditFilterRequest filter) {
+    public ResponseEntity<BaseResponse<Page<UserAuditLog>>> viewUserAuditLogs(UserAuditFilterRequest filter) {
         return ResponseEntity.ok(BaseResponse.success(userAuditService.viewUserAuditLogs(filter), "Lấy danh sách log thành công."));
     }
 
     @DeleteMapping
-            @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Void>> deleteUserAuditLogs(@RequestBody UserAuditFilterRequest filter) {
         userAuditService.deleteUserAuditLogs(filter);
         return ResponseEntity.ok()
@@ -37,7 +37,7 @@ public class UserAuditController {
     }
 
     @DeleteMapping("/cron")
-            @PreAuthorize("hasRole('SYS_ADMIN')")
+    @PreAuthorize("hasRole('SYS_ADMIN')")
     public ResponseEntity<BaseResponse<Long>> manualCleanup(@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate) {
         return ResponseEntity.ok().body(BaseResponse.success(userAuditService.manualCleanup(startDate, endDate), "Dọn dẹp log thành công."));
     }

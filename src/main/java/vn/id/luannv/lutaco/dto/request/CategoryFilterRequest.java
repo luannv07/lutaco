@@ -11,9 +11,9 @@ import org.hibernate.validator.constraints.Length;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryFilterRequest extends BaseFilterRequest {
 
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryName;
 
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryType;
 }

@@ -8,6 +8,6 @@ import org.hibernate.validator.constraints.Length;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshTokenRequest {
-        @Length(max = 1000, message = "{validation.field.too_long}")
+    @Length(max = 1000, message = "{validation.field.too_long}")
     String refreshToken;
 }

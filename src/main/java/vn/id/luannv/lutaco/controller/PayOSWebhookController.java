@@ -28,8 +28,8 @@ public class PayOSWebhookController {
     PayOsClient payOsClient;
 
     @PostMapping("/webhook/payos")
-            public ResponseEntity<BaseResponse<Void>> handleWebhook(
-                        @Valid @RequestBody PayOsWebhookRequest request
+    public ResponseEntity<BaseResponse<Void>> handleWebhook(
+            @Valid @RequestBody PayOsWebhookRequest request
     ) {
         log.info("[system]: Received PayOS webhook request: {}", request);
         try {
@@ -46,8 +46,8 @@ public class PayOSWebhookController {
 
     @PostMapping("/api/v1/confirm-webhook")
     @PreAuthorize("hasRole('SYS_ADMIN')")
-            public ResponseEntity<BaseResponse<Void>> handleConfirmWebhook(
-                        @Valid @RequestBody Map<String, Object> confirm
+    public ResponseEntity<BaseResponse<Void>> handleConfirmWebhook(
+            @Valid @RequestBody Map<String, Object> confirm
     ) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to confirm PayOS webhook URL with request: {}", username, confirm);

@@ -15,20 +15,20 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponse {
 
-        String id;
+    String id;
 
-        String categoryName;
+    String categoryName;
 
-        String parentId;
+    String parentId;
 
-        EnumDisplay<CategoryType> categoryType;
+    EnumDisplay<CategoryType> categoryType;
 
-        List<CategoryResponse> children;
+    List<CategoryResponse> children;
 
-        Boolean isSystem;
+    Boolean isSystem;
 
-        LocalDateTime createdDate;
+    LocalDateTime createdDate;
 
-        String createdBy;
+    String createdBy;
     Boolean hasChildren = Boolean.FALSE;
 }

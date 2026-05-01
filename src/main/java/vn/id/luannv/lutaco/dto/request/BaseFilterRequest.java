@@ -11,9 +11,9 @@ import org.hibernate.validator.constraints.Range;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseFilterRequest {
 
-        @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
+    @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
     Integer page = 1;
 
-        @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
+    @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
     Integer size = 10;
 }
