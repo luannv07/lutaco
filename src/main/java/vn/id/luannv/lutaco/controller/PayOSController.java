@@ -23,7 +23,7 @@ public class PayOSController {
     PayOsService payOsService;
 
     @PostMapping("/premium-user")
-            public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
+    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataCreated>>> createPayment() {
         return ResponseEntity.ok()
                 .body(
                         BaseResponse.success(
@@ -35,8 +35,8 @@ public class PayOSController {
 
     @GetMapping("/{id}")
     @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN'))")
-            public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
-                        @PathVariable String id
+    public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
+            @PathVariable String id
     ) {
         return ResponseEntity.ok()
                 .body(
@@ -49,8 +49,8 @@ public class PayOSController {
 
     @GetMapping("/users/{userId}")
     @PreAuthorize("#userId == authentication.principal.id")
-            public ResponseEntity<BaseResponse<List<PayOSResponse.PayOSDataByUser>>> getByUserId(
-                        @PathVariable String userId
+    public ResponseEntity<BaseResponse<List<PayOSResponse.PayOSDataByUser>>> getByUserId(
+            @PathVariable String userId
     ) {
         return ResponseEntity.ok()
                 .body(

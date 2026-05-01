@@ -14,12 +14,12 @@ public class WalletCreateRequest {
 
     @NotBlank(message = "{validation.required}")
     @Size(max = 255, message = "{validation.field.too_long}")
-        String walletName;
+    String walletName;
 
     @NotNull(message = "{validation.required}")
     @PositiveOrZero(message = "{validation.field.positive_or_zero}")
-        Long balance;
+    Long balance;
 
     @Size(max = 500, message = "{validation.field.too_long}")
-        String description;
+    String description;
 }

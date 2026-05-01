@@ -10,8 +10,8 @@ import lombok.experimental.FieldDefaults;
 public class WalletUpdateRequest {
 
     @Size(max = 255, message = "{validation.field.too_long}")
-        String walletName;
+    String walletName;
 
     @Size(max = 500, message = "{validation.field.too_long}")
-        String description;
+    String description;
 }

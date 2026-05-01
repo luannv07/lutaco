@@ -36,9 +36,9 @@ public class TimeUtils {
      *
      * <p>Đây là method core, toàn bộ overload khác sẽ delegate về đây.</p>
      *
-     * @param instant  Thời gian UTC (chuẩn nên lưu trong DB)
-     * @param zoneId   Timezone đích (VD: "Asia/Ho_Chi_Minh"), nếu null sẽ dùng mặc định
-     * @param pattern  Format output (VD: "dd/MM/yyyy HH:mm:ss"), nếu null sẽ dùng mặc định
+     * @param instant Thời gian UTC (chuẩn nên lưu trong DB)
+     * @param zoneId  Timezone đích (VD: "Asia/Ho_Chi_Minh"), nếu null sẽ dùng mặc định
+     * @param pattern Format output (VD: "dd/MM/yyyy HH:mm:ss"), nếu null sẽ dùng mặc định
      * @return String đã format theo timezone user, hoặc null nếu input null
      */
     public static String formatToUserZone(Instant instant, String zoneId, String pattern) {
@@ -61,10 +61,12 @@ public class TimeUtils {
             return instant.toString(); // ISO-8601 fallback
         }
     }
+
     public static Date toDate(Instant instant) {
         if (instant == null) return new Date();
         return Date.from(instant);
     }
+
     public static Instant toInstant(Date date) {
         if (date == null) return Instant.now();
         return date.toInstant();

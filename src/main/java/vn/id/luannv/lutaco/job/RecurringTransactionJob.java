@@ -6,12 +6,10 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import vn.id.luannv.lutaco.entity.RecurringTransaction;
 import vn.id.luannv.lutaco.repository.RecurringTransactionRepository;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

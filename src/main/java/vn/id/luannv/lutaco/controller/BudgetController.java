@@ -27,7 +27,7 @@ public class BudgetController {
     BudgetService budgetService;
 
     @PostMapping
-            public ResponseEntity<BaseResponse<BudgetResponse>> create(@Valid @RequestBody BudgetRequest request) {
+    public ResponseEntity<BaseResponse<BudgetResponse>> create(@Valid @RequestBody BudgetRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         budgetService.create(request),
@@ -36,7 +36,7 @@ public class BudgetController {
     }
 
     @PatchMapping("/{id}/notification")
-            public ResponseEntity<BaseResponse<Boolean>> preventDangerEmail(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<Boolean>> preventDangerEmail(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
                         budgetService.preventDangerEmail(id),
@@ -45,7 +45,7 @@ public class BudgetController {
     }
 
     @GetMapping("/{id}")
-            public ResponseEntity<BaseResponse<BudgetResponse>> getDetail(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<BudgetResponse>> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         budgetService.getDetail(id),
@@ -54,7 +54,7 @@ public class BudgetController {
     }
 
     @GetMapping
-            public ResponseEntity<BaseResponse<Page<BudgetResponse>>> search(@Valid @ModelAttribute BudgetFilterRequest request) {
+    public ResponseEntity<BaseResponse<Page<BudgetResponse>>> search(@Valid @ModelAttribute BudgetFilterRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         budgetService.search(request, request.getPage(), request.getSize()),
@@ -63,7 +63,7 @@ public class BudgetController {
     }
 
     @PutMapping("/{id}")
-            public ResponseEntity<BaseResponse<BudgetResponse>> update(@PathVariable Long id, @Valid @RequestBody BudgetRequest request) {
+    public ResponseEntity<BaseResponse<BudgetResponse>> update(@PathVariable Long id, @Valid @RequestBody BudgetRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         budgetService.update(id, request),
@@ -72,7 +72,7 @@ public class BudgetController {
     }
 
     @DeleteMapping("/{id}")
-            public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
         budgetService.deleteById(id);
         return ResponseEntity.ok(
                 BaseResponse.success("Xóa ngân sách thành công.")

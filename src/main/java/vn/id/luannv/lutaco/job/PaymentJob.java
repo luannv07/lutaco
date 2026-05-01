@@ -9,14 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import vn.id.luannv.lutaco.dto.response.PayOSResponse;
-import vn.id.luannv.lutaco.entity.PayOS;
-import vn.id.luannv.lutaco.enumerate.PaymentStatus;
 import vn.id.luannv.lutaco.repository.PayOSRepository;
 import vn.id.luannv.lutaco.service.PayOsClient;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

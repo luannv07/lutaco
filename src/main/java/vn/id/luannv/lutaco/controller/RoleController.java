@@ -24,8 +24,8 @@ public class RoleController {
 
     @GetMapping
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
-            public ResponseEntity<BaseResponse<Page<Role>>> getAllRoles(
-                        @Valid @ModelAttribute RoleFilterRequest request
+    public ResponseEntity<BaseResponse<Page<Role>>> getAllRoles(
+            @Valid @ModelAttribute RoleFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -41,8 +41,8 @@ public class RoleController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('SYS_ADMIN') or hasRole('ADMIN')")
-            public ResponseEntity<BaseResponse<Role>> getRoleById(
-                        @PathVariable Integer id
+    public ResponseEntity<BaseResponse<Role>> getRoleById(
+            @PathVariable Integer id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(

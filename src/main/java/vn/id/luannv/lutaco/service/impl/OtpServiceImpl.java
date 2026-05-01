@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.domain.otp.OtpInfo;
 import vn.id.luannv.lutaco.domain.otp.OtpStore;
-import vn.id.luannv.lutaco.dto.request.SendOtpRequest;
 import vn.id.luannv.lutaco.dto.request.VerifyOtpRequest;
 import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -21,7 +20,6 @@ import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -48,8 +46,7 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
-    public void sendOtp(SendOtpRequest request, OtpType otpType) {
-        String email = request.getEmail();
+    public void sendOtp(String email, OtpType otpType) {
         String otpCode = generateOtp();
         int maxAttempts = this.maxAttempts;
         OtpInfo otpInfo = new OtpInfo(otpCode, maxAttempts);
@@ -77,9 +74,7 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
-    public void verifyOtp(VerifyOtpRequest request, OtpType otpType) {
-
-        String email = request.getEmail();
+    public void verifyOtp(VerifyOtpRequest request, String email, OtpType otpType) {
         String inputOtp = request.getCode();
 
         OtpInfo otp = otpStore.get(otpType, email);

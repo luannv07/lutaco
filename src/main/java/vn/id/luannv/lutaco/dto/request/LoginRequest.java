@@ -12,9 +12,9 @@ public class LoginRequest {
 
     @NotBlank(message = "{validation.required}")
     @Size(max = 255, message = "{validation.field.too_long}")
-        String username;
+    String username;
 
     @NotBlank(message = "{validation.required}")
     @Size(max = 255, message = "{validation.field.too_long}")
-        String password;
+    String password;
 }

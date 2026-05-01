@@ -12,14 +12,14 @@ import org.hibernate.validator.constraints.Length;
 public class UpdatePasswordRequest {
 
     @NotBlank(message = "{validation.required}")
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String oldPassword;
 
     @NotBlank(message = "{validation.required}")
     @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
-        String newPassword;
+    String newPassword;
 
     @NotBlank(message = "{validation.required}")
-        @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
+    @Size(min = 6, max = 255, message = "{validation.field.size_not_in_range}")
     String confirmNewPassword;
 }

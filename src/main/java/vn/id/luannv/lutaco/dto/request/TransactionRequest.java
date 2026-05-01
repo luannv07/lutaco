@@ -16,21 +16,21 @@ import java.time.LocalDateTime;
 public class TransactionRequest {
 
     @NotBlank(message = "{validation.required}")
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryId;
 
     @NotNull(message = "{validation.required}")
     @Positive(message = "{validation.field.positive}")
-        Long amount;
+    Long amount;
 
     @NotNull(message = "{validation.required}")
-        LocalDateTime transactionDate;
+    LocalDateTime transactionDate;
 
     @NotBlank(message = "{validation.required}")
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String walletId;
 
     @Size(max = 500, message = "{validation.field.too_long}")
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String note;
 }

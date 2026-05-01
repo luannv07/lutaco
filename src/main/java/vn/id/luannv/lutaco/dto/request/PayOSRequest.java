@@ -13,19 +13,19 @@ import lombok.experimental.FieldDefaults;
  */
 public class PayOSRequest {
 
-        Integer orderCode;
+    Integer orderCode;
 
-        Integer amount;
+    Integer amount;
 
-        String description;
+    String description;
 
-        String cancelUrl;
+    String cancelUrl;
 
-        String returnUrl;
+    String returnUrl;
 
-        Integer expiredAt;
+    Integer expiredAt;
 
-        String signature;
+    String signature;
 }
 
 /**

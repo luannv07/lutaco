@@ -12,18 +12,18 @@ import org.hibernate.validator.constraints.Range;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserFilterRequest extends BaseFilterRequest {
 
-        @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String username;
 
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
-        String address;
+    String address;
 
-        @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String userStatus;
 
     @Range(min = 0, max = 255, message = "{validation.field.size_not_in_range}")
-        Integer roleId;
+    Integer roleId;
 
-        @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
+    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String userPlan;
 }

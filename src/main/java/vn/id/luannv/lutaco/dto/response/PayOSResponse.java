@@ -14,42 +14,42 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PayOSResponse<T> {
 
-        String code;
+    String code;
 
-        String desc;
+    String desc;
 
-        T data;
+    T data;
 
-        String signature;
+    String signature;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-        public static class PayOSDataCreated {
+    public static class PayOSDataCreated {
 
-                String bin;
+        String bin;
 
-                String accountNumber;
+        String accountNumber;
 
-                String accountName;
+        String accountName;
 
-                Long amount;
+        Long amount;
 
-                String description;
+        String description;
 
-                Integer orderCode;
+        Integer orderCode;
 
-                String currency;
+        String currency;
 
-                String paymentLinkId;
+        String paymentLinkId;
 
-                String status;
+        String status;
 
-                String checkoutUrl;
+        String checkoutUrl;
 
-                String qrCode;
+        String qrCode;
     }
 
     @Data
@@ -57,23 +57,23 @@ public class PayOSResponse<T> {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-        public static class PayOSDataDetail {
+    public static class PayOSDataDetail {
 
-                String id;
+        String id;
 
-                int orderCode;
+        int orderCode;
 
-                int amount;
+        int amount;
 
-                int amountPaid;
+        int amountPaid;
 
-                int amountRemaining;
+        int amountRemaining;
 
-                String status;
+        String status;
 
-                Instant createdAt;
+        Instant createdAt;
 
-                List<Object> transactions;
+        List<Object> transactions;
     }
 
     @Data
@@ -81,24 +81,24 @@ public class PayOSResponse<T> {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-        public static class PayOSDataByUser {
+    public static class PayOSDataByUser {
 
-                Integer orderCode;
+        Integer orderCode;
 
-                String paymentLinkId;
+        String paymentLinkId;
 
-                Integer amount;
+        Integer amount;
 
-                String currency;
+        String currency;
 
-                String description;
+        String description;
 
-                String status;
+        String status;
 
-                String type;
+        String type;
 
-                LocalDateTime createdDate;
+        LocalDateTime createdDate;
 
-                LocalDateTime paidAt;
+        LocalDateTime paidAt;
     }
 }

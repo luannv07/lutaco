@@ -9,20 +9,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import vn.id.luannv.lutaco.dto.request.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import vn.id.luannv.lutaco.dto.request.LoginRequest;
+import vn.id.luannv.lutaco.dto.request.RefreshTokenRequest;
+import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
+import vn.id.luannv.lutaco.dto.request.VerifyOtpRequest;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.AuthService;
 import vn.id.luannv.lutaco.service.OtpService;
-import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.JwtUtils;
 import vn.id.luannv.lutaco.util.TimeUtils;
 
-import javax.swing.table.TableModel;
-import java.time.Instant;
 import java.util.Date;
 
 @Slf4j
@@ -60,22 +63,78 @@ public class AuthController {
     }
 
     @PostMapping("/register/send-otp")
-//    @PreAuthorize("@securityPermission.isPendingVerification()")
-    public ResponseEntity<BaseResponse<Void>> resendOtp(
-            @Valid @RequestBody SendOtpRequest request
-    ) {
-        otpService.sendOtp(request, OtpType.REGISTER);
+    @PreAuthorize("@securityPermission.isPendingVerification()")
+    public ResponseEntity<BaseResponse<Void>> registerSendOtp(HttpServletRequest request) {
+        String token = JwtUtils.resolveToken(request);
+        String email = jwtService.getEmailClaim(token);
+
+        otpService.sendOtp(email, OtpType.REGISTER);
         return ResponseEntity.ok(
                 BaseResponse.success("Gửi OTP thành công.")
         );
     }
 
     @PostMapping("/register/verify-otp")
-//    @PreAuthorize("@securityPermission.isLoggedIn()")
-    public ResponseEntity<BaseResponse<Void>> verifyOtp(
-            @Valid @RequestBody VerifyOtpRequest request
+    @PreAuthorize("@securityPermission.isLoggedIn()")
+    public ResponseEntity<BaseResponse<Void>> registerVerifyOtp(
+            @Valid @RequestBody VerifyOtpRequest verifyOtpRequest,
+            HttpServletRequest request
     ) {
-        otpService.verifyOtp(request, OtpType.REGISTER);
+        String token = JwtUtils.resolveToken(request);
+        String email = jwtService.getEmailClaim(token);
+        otpService.verifyOtp(verifyOtpRequest, email, OtpType.REGISTER);
+        return ResponseEntity.ok(
+                BaseResponse.success("Xác thực OTP thành công.")
+        );
+    }
+
+    @PostMapping("/login/send-otp")
+    @PreAuthorize("@securityPermission.isPendingVerification()")
+    public ResponseEntity<BaseResponse<Void>> loginSendOtp(HttpServletRequest request) {
+        String token = JwtUtils.resolveToken(request);
+        String email = jwtService.getEmailClaim(token);
+
+        otpService.sendOtp(email, OtpType.LOGIN);
+        return ResponseEntity.ok(
+                BaseResponse.success("Gửi OTP thành công.")
+        );
+    }
+
+    @PostMapping("/login/verify-otp")
+    @PreAuthorize("@securityPermission.isLoggedIn()")
+    public ResponseEntity<BaseResponse<Void>> loginVerifyOtp(
+            @Valid @RequestBody VerifyOtpRequest verifyOtpRequest,
+            HttpServletRequest request
+    ) {
+        String token = JwtUtils.resolveToken(request);
+        String email = jwtService.getEmailClaim(token);
+        otpService.verifyOtp(verifyOtpRequest, email, OtpType.LOGIN);
+        return ResponseEntity.ok(
+                BaseResponse.success("Xác thực OTP thành công.")
+        );
+    }
+
+    @PostMapping("/forgot-password/send-otp")
+    @PreAuthorize("@securityPermission.isPendingVerification()")
+    public ResponseEntity<BaseResponse<Void>> forgotResendOtp(HttpServletRequest request) {
+        String token = JwtUtils.resolveToken(request);
+        String email = jwtService.getEmailClaim(token);
+
+        otpService.sendOtp(email, OtpType.FORGOT_PASSWORD);
+        return ResponseEntity.ok(
+                BaseResponse.success("Gửi OTP thành công.")
+        );
+    }
+
+    @PostMapping("/forgot-password/verify-otp")
+    @PreAuthorize("@securityPermission.isLoggedIn()")
+    public ResponseEntity<BaseResponse<Void>> forgotVerifyOtp(
+            @Valid @RequestBody VerifyOtpRequest verifyOtpRequest,
+            HttpServletRequest request
+    ) {
+        String token = JwtUtils.resolveToken(request);
+        String email = jwtService.getEmailClaim(token);
+        otpService.verifyOtp(verifyOtpRequest, email, OtpType.FORGOT_PASSWORD);
         return ResponseEntity.ok(
                 BaseResponse.success("Xác thực OTP thành công.")
         );

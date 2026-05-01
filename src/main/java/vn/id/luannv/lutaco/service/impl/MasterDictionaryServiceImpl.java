@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -161,7 +160,7 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
         List<MasterDictionary> items = activeFlg == null
                 ? masterDictionaryRepository.findByDictGroupOrderByDisplayOrderAscIdAsc(normalizedGroup)
                 : masterDictionaryRepository.findByDictGroupAndActiveFlgOrderByDisplayOrderAscIdAsc(normalizedGroup,
-                        activeFlg);
+                activeFlg);
 
         return items.stream().map(this::toResponse).toList();
     }

@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 public class UserStatusSetRequest {
 
     @NotNull(message = "{validation.required}")
-        String status;
+    String status;
 }

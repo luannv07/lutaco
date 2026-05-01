@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TransactionFilterRequest extends BaseFilterRequest {
 
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String categoryName;
 
-        LocalDateTime fromDate;
+    LocalDateTime fromDate;
 
-        LocalDateTime toDate;
+    LocalDateTime toDate;
 
-        Long minAmount;
+    Long minAmount;
 
-        Long maxAmount;
+    Long maxAmount;
 
-        @Length(max = 255, message = "{validation.field.too_long}")
+    @Length(max = 255, message = "{validation.field.too_long}")
     String walletName;
 }

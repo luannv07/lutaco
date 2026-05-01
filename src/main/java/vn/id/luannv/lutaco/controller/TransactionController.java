@@ -28,8 +28,8 @@ public class TransactionController {
     TransactionService transactionService;
 
     @GetMapping
-            public ResponseEntity<BaseResponse<Page<TransactionResponse>>> search(
-                        @Valid @ModelAttribute TransactionFilterRequest request
+    public ResponseEntity<BaseResponse<Page<TransactionResponse>>> search(
+            @Valid @ModelAttribute TransactionFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -44,8 +44,8 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-            public ResponseEntity<BaseResponse<TransactionResponse>> getDetail(
-                        @PathVariable String id
+    public ResponseEntity<BaseResponse<TransactionResponse>> getDetail(
+            @PathVariable String id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -56,9 +56,9 @@ public class TransactionController {
     }
 
     @PostMapping
-            public ResponseEntity<BaseResponse<TransactionResponse>> create(
+    public ResponseEntity<BaseResponse<TransactionResponse>> create(
             @Valid
-                        @RequestBody TransactionRequest request
+            @RequestBody TransactionRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
@@ -68,9 +68,9 @@ public class TransactionController {
     }
 
     @PostMapping("/bulk")
-            public ResponseEntity<BaseResponse<List<TransactionResponse>>> createBulk(
+    public ResponseEntity<BaseResponse<List<TransactionResponse>>> createBulk(
             @Valid
-                        @RequestBody List<TransactionRequest> requests
+            @RequestBody List<TransactionRequest> requests
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
@@ -80,9 +80,9 @@ public class TransactionController {
     }
 
     @PutMapping("/bulk")
-            public ResponseEntity<BaseResponse<Void>> deleteBulk(
+    public ResponseEntity<BaseResponse<Void>> deleteBulk(
             @Valid
-                        @RequestBody List<String> ids
+            @RequestBody List<String> ids
     ) {
         transactionService.deleteBulk(ids, SecurityUtils.getCurrentId());
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -92,10 +92,10 @@ public class TransactionController {
     }
 
     @PutMapping("/{id}")
-            public ResponseEntity<BaseResponse<Void>> update(
-                        @PathVariable String id,
+    public ResponseEntity<BaseResponse<Void>> update(
+            @PathVariable String id,
             @Valid
-                        @RequestBody TransactionRequest request
+            @RequestBody TransactionRequest request
     ) {
         transactionService.update(id, request);
         return ResponseEntity.ok(
@@ -104,9 +104,9 @@ public class TransactionController {
     }
 
     @PatchMapping("/{id}/{walletId}/disable")
-            public ResponseEntity<BaseResponse<Void>> delete(
-                        @PathVariable String id,
-                        @PathVariable String walletId
+    public ResponseEntity<BaseResponse<Void>> delete(
+            @PathVariable String id,
+            @PathVariable String walletId
     ) {
         transactionService.deleteByIdAndWalletId(id, walletId);
         return ResponseEntity.ok(
@@ -115,10 +115,10 @@ public class TransactionController {
     }
 
     @PatchMapping("/{id}/{walletId}/enable")
-            @PreAuthorize("@securityPermission.isPremiumUser()")
+    @PreAuthorize("@securityPermission.isPremiumUser()")
     public ResponseEntity<BaseResponse<Void>> unDelete(
-                        @PathVariable String id,
-                        @PathVariable String walletId
+            @PathVariable String id,
+            @PathVariable String walletId
     ) {
         transactionService.restoreTransaction(id, walletId);
         return ResponseEntity.ok(

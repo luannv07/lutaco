@@ -11,35 +11,35 @@ import lombok.experimental.FieldDefaults;
  */
 public class PayOsWebhookData {
 
-        String accountNumber;
+    String accountNumber;
 
-        Integer amount;
+    Integer amount;
 
-        String description;
+    String description;
 
-        String reference;
+    String reference;
 
-        String transactionDateTime;
+    String transactionDateTime;
 
-        String virtualAccountNumber;
+    String virtualAccountNumber;
 
-        String counterAccountBankId;
+    String counterAccountBankId;
 
-        String counterAccountBankName;
+    String counterAccountBankName;
 
-        String counterAccountName;
+    String counterAccountName;
 
-        String counterAccountNumber;
+    String counterAccountNumber;
 
-        String virtualAccountName;
+    String virtualAccountName;
 
-        String currency;
+    String currency;
 
-        Integer orderCode;
+    Integer orderCode;
 
-        String paymentLinkId;
+    String paymentLinkId;
 
-        String code;
+    String code;
 
-        String desc;
+    String desc;
 }

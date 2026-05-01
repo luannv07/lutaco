@@ -10,13 +10,13 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BudgetRequest {
 
-        String categoryId;
+    String categoryId;
 
-        String name;
+    String name;
 
-        Long targetAmount;
+    Long targetAmount;
 
-        String period;
+    String period;
 
-        LocalDate startDate;
+    LocalDate startDate;
 }

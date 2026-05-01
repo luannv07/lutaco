@@ -25,8 +25,8 @@ public class RecurringTransactionController {
     RecurringTransactionService recurringTransactionService;
 
     @GetMapping
-            public ResponseEntity<BaseResponse<Page<RecurringTransactionResponse>>> search(
-                        @Valid @ModelAttribute RecurringTransactionFilterRequest request
+    public ResponseEntity<BaseResponse<Page<RecurringTransactionResponse>>> search(
+            @Valid @ModelAttribute RecurringTransactionFilterRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -41,9 +41,9 @@ public class RecurringTransactionController {
     }
 
     @PostMapping
-            public ResponseEntity<BaseResponse<RecurringTransactionResponse>> create(
+    public ResponseEntity<BaseResponse<RecurringTransactionResponse>> create(
             @Valid
-                        @RequestBody RecurringTransactionRequest request
+            @RequestBody RecurringTransactionRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
@@ -53,8 +53,8 @@ public class RecurringTransactionController {
     }
 
     @GetMapping("/{id}")
-            public ResponseEntity<BaseResponse<RecurringTransactionResponse>> getDetail(
-                        @PathVariable Long id
+    public ResponseEntity<BaseResponse<RecurringTransactionResponse>> getDetail(
+            @PathVariable Long id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -65,10 +65,10 @@ public class RecurringTransactionController {
     }
 
     @PutMapping("/{id}")
-            public ResponseEntity<BaseResponse<Void>> update(
-                        @PathVariable Long id,
+    public ResponseEntity<BaseResponse<Void>> update(
+            @PathVariable Long id,
             @Valid
-                        @RequestBody RecurringTransactionRequest request
+            @RequestBody RecurringTransactionRequest request
     ) {
         recurringTransactionService.update(id, request);
         return ResponseEntity.ok(
@@ -77,8 +77,8 @@ public class RecurringTransactionController {
     }
 
     @DeleteMapping("/{id}")
-            public ResponseEntity<BaseResponse<Void>> delete(
-                        @PathVariable Long id
+    public ResponseEntity<BaseResponse<Void>> delete(
+            @PathVariable Long id
     ) {
         recurringTransactionService.deleteById(id);
         return ResponseEntity.ok(
