@@ -38,10 +38,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse<Void>> handleBusinessException(BusinessException ex) {
         log.warn("[system]: Caught BusinessException: Code={}, Message={}, Params={}", ex.getErrorCode(), ex.getMessage(), ex.getParams());
         Map<String, Object> params = new HashMap<>();
+
         if (ex.getParams() != null) {
             ex.getParams().forEach((key, valueObj) -> {
-                if (valueObj instanceof String)
-                    params.put(key, localizationUtils.getLocalizedMessage(((String) valueObj).toLowerCase()));
+                if (valueObj instanceof String str) {
+                    params.put(key, localizationUtils.getLocalizedMessage(str.toLowerCase()));
+                } else {
+                    params.put(key, valueObj);
+                }
             });
         }
         String message = localizationUtils.getLocalizedMessage(ex.getErrorCode().getMessage(), params);

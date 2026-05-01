@@ -15,12 +15,9 @@ public class VerifyOtpRequest {
     @NotBlank(message = "{validation.required}")
     @Email(message = "{validation.failed}")
     @Size(max = 255, message = "{validation.field.too_long}")
-        String email;
-
-    @NotNull(message = "{validation.required}")
-        String otpType;
+    String email;
 
     @NotBlank(message = "{validation.required}")
     @Size(min = 6, max = 6, message = "{validation.failed}")
-        String code;
+    String code;
 }

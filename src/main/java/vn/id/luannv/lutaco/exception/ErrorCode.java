@@ -80,7 +80,7 @@ public enum ErrorCode {
     OTP_EXPIRED("otp.expired", HttpStatus.BAD_REQUEST),
     OTP_MAX_ATTEMPT("otp.max.attempt", HttpStatus.BAD_REQUEST),
     OTP_ALREADY_VERIFIED("otp.already.verified", HttpStatus.BAD_REQUEST),
-
+    OTP_ALREADY_SENT("otp.already.sent", HttpStatus.BAD_REQUEST),
     // =====================================================
     // ================= PAYMENT / EXTERNAL =================
     // =====================================================

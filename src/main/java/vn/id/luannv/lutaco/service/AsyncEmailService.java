@@ -19,6 +19,26 @@ public class AsyncEmailService {
 
     @Async
     public void sendEmail(String to, String subject, String body) {
-        throw new UnsupportedOperationException("This service is temporarily disabled.");
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    message,
+                    true, // multipart (để hỗ trợ HTML / attachment sau này)
+                    "UTF-8"
+            );
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true); // true = HTML
+
+            mailSender.send(message);
+
+            log.info("✅ Email sent successfully to={}", to);
+
+        } catch (Exception e) {
+            log.error("Failed to send email to={}", to, e);
+            // không throw lại vì đây là async
+        }
     }
 }

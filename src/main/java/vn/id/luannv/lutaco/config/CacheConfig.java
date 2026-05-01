@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import vn.id.luannv.lutaco.domain.otp.OtpInfo;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,19 +16,31 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheConfig {
 
-    @Value("${app.cache.caffeine.expire-after-write-minutes}")
-    private int expireAfterWriteMinutes;
+    @Value("${app.cache.default.expire-after-write-minutes}")
+    private int defaultExpireAfterWriteMinutes;
 
-    @Value("${app.cache.caffeine.maximum-size}")
-    private int maximumSize;
+    @Value("${app.cache.default.maximum-size}")
+    private int defaultMaximumSize;
+
+    @Value("${app.cache.rate-limit.expire-after-access-minutes}")
+    private int rateLimitExpireAfterWriteMinutes;
+
+    @Value("${app.cache.rate-limit.maximum-size}")
+    private int rateLimitMaximumSize;
+
+    @Value("${app.cache.otp.expire-after-write-minutes}")
+    private int otpExpireAfterWriteMinutes;
+
+    @Value("${app.cache.otp.maximum-size}")
+    private int otpMaximumSize;
 
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(
                 Caffeine.newBuilder()
-                        .expireAfterWrite(expireAfterWriteMinutes, TimeUnit.MINUTES)
-                        .maximumSize(maximumSize)
+                        .expireAfterWrite(defaultExpireAfterWriteMinutes, TimeUnit.MINUTES)
+                        .maximumSize(defaultMaximumSize)
         );
         return cacheManager;
     }
@@ -35,8 +48,16 @@ public class CacheConfig {
     @Bean
     public Cache<String, RateLimitingFilter.RequestInfo> rateLimitCache() {
         return Caffeine.newBuilder()
-                .expireAfterAccess(expireAfterWriteMinutes, TimeUnit.MINUTES)
-                .maximumSize(maximumSize)
+                .expireAfterAccess(rateLimitExpireAfterWriteMinutes, TimeUnit.MINUTES)
+                .maximumSize(rateLimitMaximumSize)
+                .build();
+    }
+
+    @Bean
+    public Cache<String, OtpInfo> otpCache() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(otpExpireAfterWriteMinutes, TimeUnit.MINUTES)
+                .maximumSize(otpMaximumSize)
                 .build();
     }
 }
