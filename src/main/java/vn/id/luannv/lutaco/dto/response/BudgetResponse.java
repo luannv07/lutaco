@@ -2,7 +2,6 @@ package vn.id.luannv.lutaco.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.Period;
 
@@ -21,10 +20,10 @@ public class BudgetResponse {
     String categoryName;
     String name;
     Long targetAmount;
-    EnumDisplay<Period> period;
+    Period period;
     LocalDate startDate;
     LocalDate endDate;
     Float percentage;
     Long actualAmount;
-    EnumDisplay<BudgetStatus> status;
+    BudgetStatus status;
 }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import vn.id.luannv.lutaco.domain.otp.OtpPostHandler;
 import vn.id.luannv.lutaco.dto.request.UserStatusSetRequest;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
-import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.enumerate.OtpType;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.service.UserService;

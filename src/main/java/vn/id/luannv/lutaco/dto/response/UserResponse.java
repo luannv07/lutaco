@@ -8,7 +8,6 @@ import vn.id.luannv.lutaco.enumerate.UserStatus;
 import vn.id.luannv.lutaco.enumerate.UserType;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
