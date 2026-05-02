@@ -13,13 +13,6 @@ import vn.id.luannv.lutaco.exception.ErrorCode;
 
 @Slf4j
 public class SecurityUtils {
-
-    public static void assertOwnerOrAdmin(String ownerId) {
-        if (!isAdmin() && !getCurrentId().equals(ownerId)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN);
-        }
-    }
-
     public static boolean isAdmin() {
         String currentRoleName = getCurrentRoleName();
         return currentRoleName.contains(UserType.ADMIN.name()) || currentRoleName.contains(UserType.SYS_ADMIN.name());
@@ -29,8 +22,8 @@ public class SecurityUtils {
         return getCurrentPrincipal().getUsername();
     }
 
-    public static String getCurrentId() {
-        return "";
+    public static Long getCurrentId() {
+        return getCurrentPrincipal().getId();
     }
 
     public static UserPlan getCurrentUserPlan() {

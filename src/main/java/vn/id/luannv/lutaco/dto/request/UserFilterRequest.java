@@ -16,9 +16,6 @@ public class UserFilterRequest extends BaseFilterRequest {
     String username;
 
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
-    String address;
-
-    @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String userStatus;
 
     @Range(min = 0, max = 255, message = "{validation.field.size_not_in_range}")
