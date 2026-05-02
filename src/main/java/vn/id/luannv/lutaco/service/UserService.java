@@ -3,7 +3,6 @@ package vn.id.luannv.lutaco.service;
 import jakarta.validation.Valid;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
-import vn.id.luannv.lutaco.entity.User;
 
 import java.util.Date;
 

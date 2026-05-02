@@ -2,7 +2,6 @@ package vn.id.luannv.lutaco.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class TransactionResponse {
 
     String categoryName;
 
-    EnumDisplay<CategoryType> categoryType;
+    CategoryType categoryType;
 
     Long amount;
 

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.entity.User;
 
 import java.util.Optional;

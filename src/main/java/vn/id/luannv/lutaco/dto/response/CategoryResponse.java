@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class CategoryResponse {
 
     String parentId;
 
-    EnumDisplay<CategoryType> categoryType;
+    CategoryType categoryType;
 
     List<CategoryResponse> children;
 
