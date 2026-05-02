@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import vn.id.luannv.lutaco.dto.UserAuditFilterRequest;
 import vn.id.luannv.lutaco.entity.UserAuditLog;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 public interface UserAuditService {
@@ -11,5 +12,5 @@ public interface UserAuditService {
 
     void deleteUserAuditLogs(UserAuditFilterRequest filter);
 
-    Long manualCleanup(LocalDate startDate, LocalDate endDate);
+    Long manualCleanup(Instant startDate, Instant endDate);
 }
