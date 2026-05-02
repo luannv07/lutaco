@@ -38,7 +38,7 @@ public class WalletController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<WalletResponse>> update(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid @RequestBody WalletUpdateRequest request
     ) {
         return ResponseEntity.ok(
@@ -50,7 +50,7 @@ public class WalletController {
 
     @PatchMapping("/{id}/toggle-status")
     public ResponseEntity<BaseResponse<Void>> toggle(
-            @PathVariable String id
+            @PathVariable Long id
     ) {
         walletService.toggle(id);
         return ResponseEntity.ok(
@@ -60,7 +60,7 @@ public class WalletController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<WalletResponse>> getDetail(
-            @PathVariable String id
+            @PathVariable Long id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
