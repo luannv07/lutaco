@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WalletResponse {
-    String id;
+    Long id;
     String walletName;
     Long initialBalance;
     Long currentBalance;

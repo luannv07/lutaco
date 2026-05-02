@@ -7,9 +7,9 @@ import vn.id.luannv.lutaco.dto.response.WalletResponse;
 
 import java.util.List;
 
-public interface WalletService extends BaseService<WalletFilterRequest, WalletResponse, WalletCreateRequest, String> {
+public interface WalletService extends BaseService<WalletFilterRequest, WalletResponse, WalletCreateRequest, Long> {
 
-    WalletResponse update(String id, WalletUpdateRequest request);
+    WalletResponse update(Long id, WalletUpdateRequest request);
 
     void archiveByAdmin(String userId, String walletName);
 
@@ -17,5 +17,5 @@ public interface WalletService extends BaseService<WalletFilterRequest, WalletRe
 
     void createDefaultWallet(Long userId);
 
-    void toggle(String id);
+    void toggle(Long id);
 }
