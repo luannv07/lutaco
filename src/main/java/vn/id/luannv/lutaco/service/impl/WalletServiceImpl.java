@@ -3,7 +3,9 @@ package vn.id.luannv.lutaco.service.impl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +13,11 @@ import vn.id.luannv.lutaco.dto.request.WalletCreateRequest;
 import vn.id.luannv.lutaco.dto.request.WalletFilterRequest;
 import vn.id.luannv.lutaco.dto.request.WalletUpdateRequest;
 import vn.id.luannv.lutaco.dto.response.WalletResponse;
+import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.exception.BusinessException;
+import vn.id.luannv.lutaco.exception.ErrorCode;
+import vn.id.luannv.lutaco.policy.PlanPolicy;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.WalletService;
@@ -29,16 +34,32 @@ public class WalletServiceImpl implements WalletService {
     WalletRepository walletRepository;
     UserRepository userRepository;
     LocalizationUtils localizationUtils;
+    PlanPolicy planPolicy;
 
     @Override
     public WalletResponse create(WalletCreateRequest request) {
         throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
+    // this method auto use by event like: register account, can not trigger by api
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
-    public void createDefaultWallet(String userId) {
-        throw new UnsupportedOperationException("This service is temporarily disabled.");
+    public void createDefaultWallet(Long userId) {
+        User user = userRepository.findByIdForUpdate(userId);
+        int currentWallet = walletRepository.countWalletByUser(user);
+        if (!planPolicy.canCreateWallet(user, currentWallet)) {
+            log.warn("User {} has reached the maximum wallet limit for their plan.", user.getUsername());
+            throw new BusinessException(ErrorCode.OPERATION_LIMIT_EXCEEDED);
+        }
+        Wallet wallet = new Wallet();
+        wallet.setName(localizationUtils.getLocalizedMessage("default.wallet.name"));
+        wallet.setUser(user);
+        wallet.setDescription(localizationUtils.getLocalizedMessage("default.wallet.description"));
+        wallet.setActiveFlg(true);
+        wallet.setBalance(0L);
+        wallet.setInitialBalance(0L);
+        walletRepository.save(wallet);
+        log.info("Default wallet created for user: {}", user.getUsername());
     }
 
     @Override

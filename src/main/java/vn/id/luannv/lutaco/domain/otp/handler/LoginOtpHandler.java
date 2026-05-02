@@ -14,9 +14,8 @@ public class LoginOtpHandler implements OtpPostHandler {
     }
 
     @Override
-    public Object handle(String email) {
+    public void handle(String email) {
         // No additional handling needed for login OTP
         log.info("Login OTP handled for email: {}", email);
-        return null;
     }
 }

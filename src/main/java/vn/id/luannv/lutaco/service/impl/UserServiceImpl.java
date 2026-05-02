@@ -11,13 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 import vn.id.luannv.lutaco.entity.User;
+import vn.id.luannv.lutaco.enumerate.UserStatus;
+import vn.id.luannv.lutaco.exception.BusinessException;
+import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
 import vn.id.luannv.lutaco.service.InvalidatedTokenService;
 import vn.id.luannv.lutaco.service.UserService;
+import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.Date;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -56,8 +61,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateStatus(String id, UserStatusSetRequest request) {
-        throw new UnsupportedOperationException("This service is temporarily disabled.");
+    @Transactional
+    public void updateStatus(Long id, UserStatusSetRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("id", id)));
+        UserStatus userStatus = EnumUtils.from(UserStatus.class, request.getStatus());
+        user.setUserStatus(userStatus);
+        userRepository.save(user);
     }
 
     @Override
@@ -78,7 +88,29 @@ public class UserServiceImpl implements UserService {
         throw new UnsupportedOperationException("This service is temporarily disabled.");
     }
 
+    @Override
+    public UserResponse getByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("email", email)));
+        return convertToResponse(user);
+    }
+
     private UserResponse convertToResponse(User user) {
-        throw new UnsupportedOperationException("This service is temporarily disabled.");
+        if (user == null) return null;
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .userStatus(user.getUserStatus())
+                .roleName(user.getRole().getCode())
+                .createdBy(user.getCreatedBy())
+                .createdDate(user.getCreatedDate())
+                .updatedBy(user.getUpdatedBy())
+                .updatedDate(user.getUpdatedDate())
+                .userPlan(user.getUserPlan())
+                .build();
     }
 }

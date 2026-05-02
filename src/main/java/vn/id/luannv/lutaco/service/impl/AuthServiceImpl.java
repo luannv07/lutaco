@@ -85,7 +85,6 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(role);
 
         userRepository.save(user);
-        // trigger tạo ví, gửi otp...
         return AuthenticateResponse.builder()
                 .accessToken(jwtService.generateToken(
                         user.getUsername(),
