@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.id.luannv.lutaco.dto.request.LoginRequest;
-import vn.id.luannv.lutaco.dto.request.RefreshTokenRequest;
-import vn.id.luannv.lutaco.dto.request.UserCreateRequest;
-import vn.id.luannv.lutaco.dto.request.VerifyOtpRequest;
+import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.AuthenticateResponse;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.enumerate.OtpType;
@@ -115,26 +112,18 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password/send-otp")
-    @PreAuthorize("@securityPermission.isPendingVerification()")
-    public ResponseEntity<BaseResponse<Void>> forgotResendOtp(HttpServletRequest request) {
-        String token = JwtUtils.resolveToken(request);
-        String email = jwtService.getEmailClaim(token);
-
-        otpService.sendOtp(email, OtpType.FORGOT_PASSWORD);
+    public ResponseEntity<BaseResponse<Void>> forgotResendOtp(@Valid @RequestBody SendOtpRequest request) {
+        otpService.sendOtp(request.getEmail(), OtpType.FORGOT_PASSWORD);
         return ResponseEntity.ok(
                 BaseResponse.success("Gửi OTP thành công.")
         );
     }
 
     @PostMapping("/forgot-password/verify-otp")
-    @PreAuthorize("@securityPermission.isLoggedIn()")
     public ResponseEntity<BaseResponse<Void>> forgotVerifyOtp(
-            @Valid @RequestBody VerifyOtpRequest verifyOtpRequest,
-            HttpServletRequest request
-    ) {
-        String token = JwtUtils.resolveToken(request);
-        String email = jwtService.getEmailClaim(token);
-        otpService.verifyOtp(verifyOtpRequest, email, OtpType.FORGOT_PASSWORD);
+            @Valid @RequestBody VerifyOtpRequest verifyOtpRequest) {
+
+        otpService.verifyOtp(verifyOtpRequest, verifyOtpRequest.getEmail(), OtpType.FORGOT_PASSWORD);
         return ResponseEntity.ok(
                 BaseResponse.success("Xác thực OTP thành công.")
         );

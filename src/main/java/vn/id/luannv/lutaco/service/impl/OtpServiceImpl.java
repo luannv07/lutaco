@@ -1,5 +1,6 @@
 package vn.id.luannv.lutaco.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.id.luannv.lutaco.domain.otp.OtpInfo;
+import vn.id.luannv.lutaco.domain.otp.OtpPostHandler;
 import vn.id.luannv.lutaco.domain.otp.OtpStore;
 import vn.id.luannv.lutaco.dto.request.VerifyOtpRequest;
 import vn.id.luannv.lutaco.enumerate.OtpType;
@@ -20,9 +22,11 @@ import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class OtpServiceImpl implements OtpService {
     OtpStore otpStore;
     AsyncEmailService asyncEmailService;
+    List<OtpPostHandler> otpPostHandlers;
 
     @Value("${otp.max-attempt}")
     @NonFinal
@@ -43,6 +48,19 @@ public class OtpServiceImpl implements OtpService {
     @Value("${otp.cooldown-seconds}")
     @NonFinal
     int cooldownSeconds;
+
+    @NonFinal
+    Map<OtpType, OtpPostHandler> handlerMap = Map.of();
+
+    @PostConstruct
+    void initHandlerMap() {
+        handlerMap = otpPostHandlers.stream()
+                .collect(Collectors.toMap(
+                        OtpPostHandler::getSupportedType,
+                        h -> h
+                ));
+        log.info("OTP handlers registered: {}", handlerMap.keySet());
+    }
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
@@ -118,6 +136,7 @@ public class OtpServiceImpl implements OtpService {
 
         // 3. Thành công
         otpStore.delete(otpType, email);
+        handlerMap.get(otpType).handle(email);
     }
 
     private String generateOtp() {

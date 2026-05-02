@@ -9,11 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VerifyOtpRequest {
-    @NotBlank(message = "{validation.required}")
-    @Size(min = 6, max = 6, message = "{validation.failed}")
-    String code;
-
+public class SendOtpRequest {
     @NotBlank(message = "{validation.required}")
     @Email(message = "{validation.failed}")
     String email;
