@@ -12,6 +12,7 @@ import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.entity.UserAuditLog;
 import vn.id.luannv.lutaco.service.UserAuditService;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @RestController
@@ -38,7 +39,7 @@ public class UserAuditController {
 
     @DeleteMapping("/cron")
     @PreAuthorize("hasRole('SYS_ADMIN')")
-    public ResponseEntity<BaseResponse<Long>> manualCleanup(@RequestParam(required = false) LocalDate startDate, @RequestParam(required = false) LocalDate endDate) {
+    public ResponseEntity<BaseResponse<Long>> manualCleanup(@RequestParam(required = false) Instant startDate, @RequestParam(required = false) Instant endDate) {
         return ResponseEntity.ok().body(BaseResponse.success(userAuditService.manualCleanup(startDate, endDate), "Dọn dẹp log thành công."));
     }
 }
