@@ -4,5 +4,5 @@ import vn.id.luannv.lutaco.enumerate.OtpType;
 
 public interface OtpPostHandler {
     OtpType getSupportedType();
-    Object handle(String email);
+    void handle(String email);
 }

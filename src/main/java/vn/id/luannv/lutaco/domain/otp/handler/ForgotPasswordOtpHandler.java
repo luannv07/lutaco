@@ -14,9 +14,8 @@ public class ForgotPasswordOtpHandler implements OtpPostHandler {
     }
 
     @Override
-    public Object handle(String email) {
+    public void handle(String email) {
         // No additional handling needed for forgot password OTP
         log.info("Forgot password OTP handled for email: {}", email);
-        return null;
     }
 }

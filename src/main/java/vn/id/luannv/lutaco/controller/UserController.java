@@ -96,7 +96,7 @@ public class UserController {
             "hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and @securityPermission.isActive())"
     )
     public ResponseEntity<BaseResponse<Void>> updateUserStatus(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid @RequestBody UserStatusSetRequest request
     ) {
         userService.updateStatus(id, request);

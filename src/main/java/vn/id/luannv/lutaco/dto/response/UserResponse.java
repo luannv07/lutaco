@@ -2,11 +2,12 @@ package vn.id.luannv.lutaco.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.EnumDisplay;
 import vn.id.luannv.lutaco.enumerate.UserGender;
 import vn.id.luannv.lutaco.enumerate.UserPlan;
 import vn.id.luannv.lutaco.enumerate.UserStatus;
+import vn.id.luannv.lutaco.enumerate.UserType;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,28 +17,26 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class UserResponse {
-    String id;
+    Long id;
     String username;
 
     String fullName;
 
-    String address;
-
     String email;
 
-    EnumDisplay<UserGender> gender;
+    UserGender gender;
 
-    EnumDisplay<UserStatus> userStatus;
+    UserStatus userStatus;
 
-    String roleName;
+    UserType roleName;
 
     String createdBy;
 
-    LocalDateTime createdDate;
+    Instant createdDate;
 
     String updatedBy;
 
-    LocalDateTime updatedDate;
+    Instant updatedDate;
 
-    EnumDisplay<UserPlan> userPlan;
+    UserPlan userPlan;
 }
