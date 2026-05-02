@@ -17,6 +17,7 @@ import vn.id.luannv.lutaco.jwt.JwtService;
 import vn.id.luannv.lutaco.service.UserService;
 import vn.id.luannv.lutaco.util.JwtUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.util.Date;
 
@@ -55,7 +56,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN')) and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<UserResponse>> getUser(
-            @PathVariable String id
+            @PathVariable Long id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -69,12 +70,12 @@ public class UserController {
             "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
     public ResponseEntity<BaseResponse<UserResponse>> update(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequest request
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        userService.updateUser(id, request),
+                        userService.updateUserBaseInfo(id, request),
                         "Cập nhật thông tin người dùng thành công."
                 ));
     }
@@ -82,7 +83,7 @@ public class UserController {
     @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('SYS_ADMIN') and @securityPermission.isActive()")
     public ResponseEntity<BaseResponse<Void>> update(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid @RequestBody UserRoleRequest request
     ) {
         userService.updateUserRole(id, request);
@@ -91,6 +92,7 @@ public class UserController {
         );
     }
 
+    // endpoint này dùng để deactive người dùng đối với chủ tài khoản, role còn lại tuỳ chỉnh
     @PatchMapping("/{id}/status")
     @PreAuthorize(
             "hasRole('SYS_ADMIN') or hasRole('ADMIN') or (#id == authentication.principal.id and @securityPermission.isActive())"
@@ -110,13 +112,13 @@ public class UserController {
             "(hasRole('SYS_ADMIN') or hasRole('ADMIN') or #id == authentication.principal.id) and @securityPermission.isActive()"
     )
     public ResponseEntity<BaseResponse<Void>> updatePassword(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid @RequestBody UpdatePasswordRequest request, HttpServletRequest req
     ) {
         String token = JwtUtils.resolveToken(req);
         String jti = jwtService.getJtiFromToken(token);
         Date expiryTime = jwtService.getExpiryTimeFromToken(token);
-        userService.updatePassword(id, request, jti, expiryTime);
+        userService.updatePassword(id, request, jti, TimeUtils.toInstant(expiryTime));
         return ResponseEntity.ok(
                 BaseResponse.success("Cập nhật mật khẩu thành công.")
         );

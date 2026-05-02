@@ -12,9 +12,6 @@ public class UserUpdateRequest {
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String fullName;
 
-    @Size(max = 255, message = "{validation.field.too_long}")
-    String address;
-
     @Size(min = 2, max = 255, message = "{validation.field.size_not_in_range}")
     String gender;
 }

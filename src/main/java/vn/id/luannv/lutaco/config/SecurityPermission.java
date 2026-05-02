@@ -27,7 +27,7 @@ public class SecurityPermission {
         return SecurityUtils.getCurrentUserPlan() == UserPlan.PREMIUM;
     }
 
-    public String getCurrentUserId() {
+    public Long getCurrentUserId() {
         return SecurityUtils.getCurrentId();
     }
 }

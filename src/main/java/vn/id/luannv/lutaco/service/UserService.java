@@ -4,15 +4,15 @@ import jakarta.validation.Valid;
 import vn.id.luannv.lutaco.dto.request.*;
 import vn.id.luannv.lutaco.dto.response.UserResponse;
 
-import java.util.Date;
+import java.time.Instant;
 
 public interface UserService extends
-        BaseService<UserFilterRequest, UserResponse, UserCreateRequest, String> {
-    void updateUserRole(String id, @Valid UserRoleRequest request);
+        BaseService<UserFilterRequest, UserResponse, UserCreateRequest, Long> {
+    void updateUserRole(Long id, @Valid UserRoleRequest request);
 
-    UserResponse updateUser(String id, @Valid UserUpdateRequest request);
+    UserResponse updateUserBaseInfo(Long id, @Valid UserUpdateRequest request);
 
-    void updatePassword(String id, UpdatePasswordRequest request, String jti, Date expiryTime);
+    void updatePassword(Long id, UpdatePasswordRequest request, String jti, Instant expiryTime);
 
     void updateStatus(Long id, UserStatusSetRequest request);
 
