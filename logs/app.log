@@ -1,0 +1,985 @@
+2026-05-09T08:59:53.904Z [PID:20380] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T08:59:53.966Z [PID:20380] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 20380 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T08:59:53.968Z [PID:20380] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T08:59:55.015Z [PID:20380] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T08:59:55.314Z [PID:20380] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 292 ms. Found 13 JPA repository interfaces.
+2026-05-09T08:59:56.167Z [PID:20380] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T08:59:56.182Z [PID:20380] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T08:59:56.183Z [PID:20380] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T08:59:56.184Z [PID:20380] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T08:59:56.257Z [PID:20380] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T08:59:56.257Z [PID:20380] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2247 ms
+2026-05-09T08:59:56.606Z [PID:20380] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T08:59:57.678Z [PID:20380] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3dec769
+2026-05-09T08:59:57.679Z [PID:20380] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T08:59:59.524Z [PID:20380] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T09:00:00.022Z [PID:20380] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-09T09:00:00.068Z [PID:20380] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T09:00:00.126Z [PID:20380] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-09T09:00:00.126Z [PID:20380] INFO  liquibase.util - Run:                          0
+2026-05-09T09:00:00.126Z [PID:20380] INFO  liquibase.util - Previously run:              18
+2026-05-09T09:00:00.126Z [PID:20380] INFO  liquibase.util - Filtered out:                 0
+2026-05-09T09:00:00.126Z [PID:20380] INFO  liquibase.util - -------------------------------
+2026-05-09T09:00:00.126Z [PID:20380] INFO  liquibase.util - Total change sets:           18
+2026-05-09T09:00:00.127Z [PID:20380] INFO  liquibase.util - Update summary generated
+2026-05-09T09:00:00.128Z [PID:20380] INFO  liquibase.command - Command execution complete
+2026-05-09T09:00:01.712Z [PID:20380] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-09T09:00:01.773Z [PID:20380] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-09T09:00:01.814Z [PID:20380] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-09T09:00:02.117Z [PID:20380] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-09T09:00:02.300Z [PID:20380] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-09T09:00:03.780Z [PID:20380] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-09T09:00:03.783Z [PID:20380] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T09:00:04.088Z [PID:20380] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-09T09:00:05.710Z [PID:20380] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [LOGIN, REGISTER, FORGOT_PASSWORD]
+2026-05-09T09:00:06.796Z [PID:20380] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-09T09:00:07.067Z [PID:20380] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-09T09:00:09.564Z [PID:20380] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-09T09:00:09.581Z [PID:20380] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T09:00:09.596Z [PID:20380] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 16.214 seconds (process running for 17.011)
+2026-05-09T09:00:09.598Z [PID:20380] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-09T09:03:19.674Z [PID:20380] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-09T09:03:19.674Z [PID:20380] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-09T09:03:19.676Z [PID:20380] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-05-09T09:03:19.734Z [PID:20380] INFO  vn.id.luannv.lutaco.jwt.JwtService - a4e8f2b3-a28d-425b-9ccc-86a334120010
+2026-05-09T09:03:19.938Z [PID:20380] INFO  vn.id.luannv.lutaco.jwt.JwtService - a4e8f2b3-a28d-425b-9ccc-86a334120010
+2026-05-09T09:03:19.985Z [PID:20380] INFO  vn.id.luannv.lutaco.jwt.JwtService - a4e8f2b3-a28d-425b-9ccc-86a334120010
+2026-05-09T09:03:20.852Z [PID:20380] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=INSUFFICIENT_BALANCE, Message=wallet.insufficient.balance, Params={message=Insufficient balance or wallet not found}
+2026-05-09T09:03:35.312Z [PID:20380] INFO  vn.id.luannv.lutaco.jwt.JwtService - a4e8f2b3-a28d-425b-9ccc-86a334120010
+2026-05-09T09:03:35.419Z [PID:20380] INFO  vn.id.luannv.lutaco.jwt.JwtService - a4e8f2b3-a28d-425b-9ccc-86a334120010
+2026-05-09T09:03:35.466Z [PID:20380] INFO  vn.id.luannv.lutaco.jwt.JwtService - a4e8f2b3-a28d-425b-9ccc-86a334120010
+2026-05-09T09:03:36.068Z [PID:20380] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=INSUFFICIENT_BALANCE, Message=wallet.insufficient.balance, Params={message=Insufficient balance or wallet not found}
+2026-05-09T09:13:44.570Z [PID:20380] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T09:13:44.630Z [PID:20380] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-09T09:13:44.656Z [PID:20380] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T09:13:44.658Z [PID:20380] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T09:13:44.719Z [PID:20380] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-09T09:31:02.929Z [PID:16036] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T09:31:02.982Z [PID:16036] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 16036 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T09:31:02.984Z [PID:16036] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T09:31:04.160Z [PID:16036] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T09:31:04.462Z [PID:16036] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 294 ms. Found 11 JPA repository interfaces.
+2026-05-09T09:31:05.253Z [PID:16036] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T09:31:05.263Z [PID:16036] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T09:31:05.265Z [PID:16036] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T09:31:05.265Z [PID:16036] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T09:31:05.334Z [PID:16036] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T09:31:05.334Z [PID:16036] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2297 ms
+2026-05-09T09:31:05.622Z [PID:16036] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T09:31:06.439Z [PID:16036] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@342394b3
+2026-05-09T09:31:06.440Z [PID:16036] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T09:31:08.166Z [PID:16036] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T09:31:08.614Z [PID:16036] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-09T09:31:08.675Z [PID:16036] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T09:31:08.733Z [PID:16036] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-09T09:31:08.734Z [PID:16036] INFO  liquibase.util - Run:                          0
+2026-05-09T09:31:08.734Z [PID:16036] INFO  liquibase.util - Previously run:              18
+2026-05-09T09:31:08.734Z [PID:16036] INFO  liquibase.util - Filtered out:                 0
+2026-05-09T09:31:08.734Z [PID:16036] INFO  liquibase.util - -------------------------------
+2026-05-09T09:31:08.734Z [PID:16036] INFO  liquibase.util - Total change sets:           18
+2026-05-09T09:31:08.734Z [PID:16036] INFO  liquibase.util - Update summary generated
+2026-05-09T09:31:08.735Z [PID:16036] INFO  liquibase.command - Command execution complete
+2026-05-09T09:31:10.201Z [PID:16036] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-09T09:31:10.255Z [PID:16036] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-09T09:31:10.288Z [PID:16036] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-09T09:31:10.532Z [PID:16036] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-09T09:31:10.661Z [PID:16036] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-09T09:31:11.786Z [PID:16036] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-09T09:31:11.788Z [PID:16036] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T09:31:12.023Z [PID:16036] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-09T09:31:13.114Z [PID:16036] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [FORGOT_PASSWORD, REGISTER, LOGIN]
+2026-05-09T09:31:13.827Z [PID:16036] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-09T09:31:14.071Z [PID:16036] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-09T09:31:15.186Z [PID:16036] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-09T09:31:15.203Z [PID:16036] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T09:31:15.217Z [PID:16036] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 12.66 seconds (process running for 13.136)
+2026-05-09T09:31:15.219Z [PID:16036] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-09T09:31:36.033Z [PID:16036] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-09T09:31:36.034Z [PID:16036] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-09T09:31:36.035Z [PID:16036] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-05-09T09:31:36.320Z [PID:16036] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:31:36.322Z [PID:16036] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:31:36.391Z [PID:16036] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:31:36.392Z [PID:16036] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:31:36.722Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.ui.SwaggerConfigResource.openapiJson, execution time: 6ms
+2026-05-09T09:31:37.327Z [PID:16036] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 931 ms
+2026-05-09T09:31:37.641Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 951ms
+2026-05-09T09:31:38.594Z [PID:16036] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:31:38.594Z [PID:16036] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:31:38.710Z [PID:16036] ERROR v.i.l.l.jwt.JwtAuthenticationFilter - [system]: Authentication failed during JWT filter for request URI: /favicon.ico. Error: Bạn không được phép thực hiện hành động này.
+2026-05-09T09:31:38.710Z [PID:16036] WARN  v.i.l.l.j.JwtAuthenticationEntryPoint - [system]: Authentication failed for request URI: /favicon.ico. Reason: Bạn không được phép thực hiện hành động này.
+2026-05-09T09:31:38.898Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 4ms
+2026-05-09T09:32:15.225Z [PID:16036] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:32:15.226Z [PID:16036] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:32:15.457Z [PID:16036] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:32:15.457Z [PID:16036] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:32:15.532Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 2ms
+2026-05-09T09:32:15.769Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 2ms
+2026-05-09T09:33:21.458Z [PID:16036] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-09T09:33:21.507Z [PID:16036] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:33:21.507Z [PID:16036] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:33:22.461Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.create, execution time: 659ms
+2026-05-09T09:34:02.049Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:02.190Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:02.238Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:02.532Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:03.037Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.registerSendOtp, execution time: 217ms
+2026-05-09T09:34:11.205Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:11.330Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:11.378Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:11.634Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:11.843Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_ALREADY_SENT, Message=otp.already.sent, Params={retryAfterSeconds=291}
+2026-05-09T09:34:21.627Z [PID:16036] INFO  v.i.l.l.service.AsyncEmailService - ✅ Email sent successfully to=vanluandvlp@gmail.com
+2026-05-09T09:34:41.732Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:41.839Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:41.889Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:42.161Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:42.389Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_INVALID, Message=otp.invalid, Params={remainingAttempts=4, attempts=1}
+2026-05-09T09:34:44.201Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:44.316Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:44.363Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:44.663Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:44.881Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_INVALID, Message=otp.invalid, Params={remainingAttempts=3, attempts=2}
+2026-05-09T09:34:45.650Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:45.744Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:45.794Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:46.051Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:46.265Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_INVALID, Message=otp.invalid, Params={remainingAttempts=2, attempts=3}
+2026-05-09T09:34:47.016Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:47.131Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:47.175Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:47.440Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:47.665Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_INVALID, Message=otp.invalid, Params={remainingAttempts=1, attempts=4}
+2026-05-09T09:34:48.439Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:48.545Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:48.594Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:48.883Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:49.096Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_MAX_ATTEMPT, Message=otp.max.attempt, Params={email=vanluandvlp@gmail.com, maxAttempts=5}
+2026-05-09T09:34:50.179Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:50.285Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:50.334Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:50.610Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:50.830Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_EXPIRED, Message=otp.expired, Params={email=vanluandvlp@gmail.com}
+2026-05-09T09:34:51.947Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:52.053Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:52.099Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:52.351Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:52.565Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_EXPIRED, Message=otp.expired, Params={email=vanluandvlp@gmail.com}
+2026-05-09T09:34:53.501Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:53.610Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:53.655Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:53.923Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:54.137Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_EXPIRED, Message=otp.expired, Params={email=vanluandvlp@gmail.com}
+2026-05-09T09:34:54.842Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:54.948Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:54.997Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:55.305Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:55.533Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_EXPIRED, Message=otp.expired, Params={email=vanluandvlp@gmail.com}
+2026-05-09T09:34:57.992Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:58.089Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:58.134Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:58.400Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:34:58.613Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OTP_EXPIRED, Message=otp.expired, Params={email=vanluandvlp@gmail.com}
+2026-05-09T09:35:03.835Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:35:03.943Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:35:03.988Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:35:04.246Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:35:04.737Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.registerSendOtp, execution time: 206ms
+2026-05-09T09:35:23.529Z [PID:16036] INFO  v.i.l.l.service.AsyncEmailService - ✅ Email sent successfully to=vanluandvlp@gmail.com
+2026-05-09T09:36:18.434Z [PID:16036] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5de66249 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2026-05-09T09:37:09.983Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:37:10.081Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:37:10.126Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:37:10.375Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:37:10.463Z [PID:16036] INFO  v.i.l.l.d.o.h.RegisterOtpHandler - Registration OTP handled for email: vanluandvlp@gmail.com
+2026-05-09T09:37:10.527Z [PID:16036] INFO  v.i.l.l.service.impl.UserServiceImpl - User status updated: id=4, newStatus=ACTIVE, actor=4
+2026-05-09T09:37:10.741Z [PID:16036] INFO  v.i.l.l.s.impl.WalletServiceImpl - Default wallet created for user: luannv
+2026-05-09T09:37:11.110Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.registerVerifyOtp, execution time: 478ms
+2026-05-09T09:38:03.817Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:03.918Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:03.970Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:04.268Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'page': The value for this field must be between 0 and 1000.
+2026-05-09T09:38:04.269Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'size': The value for this field must be between 0 and 1000.
+2026-05-09T09:38:04.269Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: MethodArgumentNotValidException: 2 validation errors occurred.
+2026-05-09T09:38:11.248Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:11.346Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:11.402Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:11.660Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'size': The value for this field must be between 0 and 1000.
+2026-05-09T09:38:11.660Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: MethodArgumentNotValidException: 1 validation errors occurred.
+2026-05-09T09:38:15.327Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:15.442Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:15.487Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:15.773Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Illegal argument provided: Page size must not be less than one
+2026-05-09T09:38:20.173Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:20.272Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:20.318Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:38:20.943Z [PID:16036] WARN  o.s.d.w.c.SpringDataJacksonConfiguration$PageModule$WarningLoggingModifier - Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-09T09:38:21.202Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.search, execution time: 358ms
+2026-05-09T09:39:14.381Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:39:14.506Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:39:14.551Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:39:15.031Z [PID:16036] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=UNAUTHORIZED, Message=auth.unauthorized, Params=null
+2026-05-09T09:39:27.346Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:39:27.445Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:39:27.497Z [PID:16036] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:39:28.293Z [PID:16036] INFO  v.i.l.l.s.i.TransactionServiceImpl - Transaction created for user 4: 1
+2026-05-09T09:39:28.699Z [PID:16036] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.create, execution time: 650ms
+2026-05-09T09:40:15.916Z [PID:16036] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T09:40:15.972Z [PID:16036] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-09T09:40:15.990Z [PID:16036] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T09:40:15.991Z [PID:16036] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T09:40:15.994Z [PID:16036] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-09T09:40:19.426Z [PID:34044] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T09:40:19.469Z [PID:34044] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 34044 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T09:40:19.469Z [PID:34044] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T09:40:20.347Z [PID:34044] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T09:40:20.502Z [PID:34044] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 148 ms. Found 11 JPA repository interfaces.
+2026-05-09T09:40:21.156Z [PID:34044] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T09:40:21.165Z [PID:34044] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T09:40:21.166Z [PID:34044] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T09:40:21.166Z [PID:34044] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T09:40:21.220Z [PID:34044] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T09:40:21.221Z [PID:34044] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1718 ms
+2026-05-09T09:40:21.465Z [PID:34044] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T09:40:22.197Z [PID:34044] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@59929ac
+2026-05-09T09:40:22.201Z [PID:34044] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T09:40:23.997Z [PID:34044] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T09:40:24.451Z [PID:34044] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-09T09:40:24.500Z [PID:34044] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T09:40:24.564Z [PID:34044] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-09T09:40:24.565Z [PID:34044] INFO  liquibase.util - Run:                          0
+2026-05-09T09:40:24.565Z [PID:34044] INFO  liquibase.util - Previously run:              18
+2026-05-09T09:40:24.565Z [PID:34044] INFO  liquibase.util - Filtered out:                 0
+2026-05-09T09:40:24.565Z [PID:34044] INFO  liquibase.util - -------------------------------
+2026-05-09T09:40:24.565Z [PID:34044] INFO  liquibase.util - Total change sets:           18
+2026-05-09T09:40:24.566Z [PID:34044] INFO  liquibase.util - Update summary generated
+2026-05-09T09:40:24.567Z [PID:34044] INFO  liquibase.command - Command execution complete
+2026-05-09T09:40:26.187Z [PID:34044] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-09T09:40:26.254Z [PID:34044] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-09T09:40:26.298Z [PID:34044] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-09T09:40:26.628Z [PID:34044] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-09T09:40:26.864Z [PID:34044] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-09T09:40:28.137Z [PID:34044] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-09T09:40:28.144Z [PID:34044] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T09:40:28.592Z [PID:34044] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-09T09:40:30.059Z [PID:34044] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [REGISTER, LOGIN, FORGOT_PASSWORD]
+2026-05-09T09:40:31.063Z [PID:34044] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-09T09:40:31.417Z [PID:34044] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-09T09:40:33.795Z [PID:34044] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-09T09:40:33.830Z [PID:34044] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T09:40:33.850Z [PID:34044] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 14.79 seconds (process running for 15.252)
+2026-05-09T09:40:33.854Z [PID:34044] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-09T09:41:02.818Z [PID:34044] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-09T09:41:02.819Z [PID:34044] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-09T09:41:02.821Z [PID:34044] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-09T09:41:02.893Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:03.131Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:03.180Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:04.166Z [PID:34044] WARN  o.s.d.w.c.SpringDataJacksonConfiguration$PageModule$WarningLoggingModifier - Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-09T09:41:04.410Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.search, execution time: 420ms
+2026-05-09T09:41:06.875Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:06.977Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:07.023Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:07.942Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.search, execution time: 364ms
+2026-05-09T09:41:13.910Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:14.017Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:14.081Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:41:15.003Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.search, execution time: 359ms
+2026-05-09T09:41:54.509Z [PID:34044] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-09T09:41:54.551Z [PID:34044] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T09:41:54.551Z [PID:34044] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T09:41:55.387Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.login, execution time: 547ms
+2026-05-09T09:42:06.105Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - df2eb694-cd52-4286-8a9c-9205a4d33f31
+2026-05-09T09:42:06.209Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - df2eb694-cd52-4286-8a9c-9205a4d33f31
+2026-05-09T09:42:06.262Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - df2eb694-cd52-4286-8a9c-9205a4d33f31
+2026-05-09T09:42:06.789Z [PID:34044] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=FORBIDDEN, Message=auth.forbidden, Params=null
+2026-05-09T09:42:24.384Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - df2eb694-cd52-4286-8a9c-9205a4d33f31
+2026-05-09T09:42:24.509Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - df2eb694-cd52-4286-8a9c-9205a4d33f31
+2026-05-09T09:42:24.555Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - df2eb694-cd52-4286-8a9c-9205a4d33f31
+2026-05-09T09:42:25.458Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [system]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.search, execution time: 317ms
+2026-05-09T09:43:07.072Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:07.180Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:07.227Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:07.870Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.getMyWallets, execution time: 53ms
+2026-05-09T09:43:23.413Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:23.519Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:23.567Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:23.902Z [PID:34044] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENTITY_NOT_FOUND, Message=entity.not.found, Params={id=4}
+2026-05-09T09:43:33.314Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:33.420Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:33.468Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:34.311Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.update, execution time: 291ms
+2026-05-09T09:43:52.779Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:52.879Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:52.926Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:43:53.747Z [PID:34044] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.update, execution time: 281ms
+2026-05-09T09:44:19.624Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:44:19.738Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:44:19.784Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:44:20.394Z [PID:34044] WARN  v.i.l.l.s.impl.WalletServiceImpl - User luannv has reached the maximum wallet limit for their plan.
+2026-05-09T09:44:20.395Z [PID:34044] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OPERATION_LIMIT_EXCEEDED, Message=error.plan.limit.exceeded, Params=null
+2026-05-09T09:44:29.307Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:44:29.411Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:44:29.462Z [PID:34044] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T09:44:29.908Z [PID:34044] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=SYSTEM_ERROR, Message=system.error, Params=null
+2026-05-09T10:00:00.129Z [PID:34044] INFO  vn.id.luannv.lutaco.job.PaymentJob - [system]: Starting scheduled job: Reconciling pending payments.
+2026-05-09T10:00:00.251Z [PID:34044] ERROR o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+java.lang.UnsupportedOperationException: This service is temporarily disabled.
+	at vn.id.luannv.lutaco.job.PaymentJob.reconcilePendingPayments(PaymentJob.java:31)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at vn.id.luannv.lutaco.job.PaymentJob$$SpringCGLIB$$0.reconcilePendingPayments(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:87)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2026-05-09T10:06:41.143Z [PID:34044] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T10:06:41.201Z [PID:34044] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-09T10:06:41.226Z [PID:34044] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T10:06:41.228Z [PID:34044] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T10:06:41.447Z [PID:34044] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-09T10:09:47.760Z [PID:21552] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T10:09:47.799Z [PID:21552] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 21552 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T10:09:47.799Z [PID:21552] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T10:09:48.683Z [PID:21552] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T10:09:48.836Z [PID:21552] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 147 ms. Found 11 JPA repository interfaces.
+2026-05-09T10:09:49.507Z [PID:21552] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T10:09:49.516Z [PID:21552] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T10:09:49.518Z [PID:21552] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T10:09:49.518Z [PID:21552] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T10:09:49.575Z [PID:21552] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T10:09:49.575Z [PID:21552] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1743 ms
+2026-05-09T10:09:49.827Z [PID:21552] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T10:09:50.738Z [PID:21552] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@20a4cba7
+2026-05-09T10:09:50.739Z [PID:21552] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T10:09:52.466Z [PID:21552] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T10:09:52.936Z [PID:21552] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-09T10:09:52.979Z [PID:21552] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T10:09:53.044Z [PID:21552] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-09T10:09:53.044Z [PID:21552] INFO  liquibase.util - Run:                          0
+2026-05-09T10:09:53.044Z [PID:21552] INFO  liquibase.util - Previously run:              18
+2026-05-09T10:09:53.044Z [PID:21552] INFO  liquibase.util - Filtered out:                 0
+2026-05-09T10:09:53.044Z [PID:21552] INFO  liquibase.util - -------------------------------
+2026-05-09T10:09:53.044Z [PID:21552] INFO  liquibase.util - Total change sets:           18
+2026-05-09T10:09:53.046Z [PID:21552] INFO  liquibase.util - Update summary generated
+2026-05-09T10:09:53.047Z [PID:21552] INFO  liquibase.command - Command execution complete
+2026-05-09T10:09:54.596Z [PID:21552] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-09T10:09:54.657Z [PID:21552] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-09T10:09:54.697Z [PID:21552] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-09T10:09:54.967Z [PID:21552] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-09T10:09:55.089Z [PID:21552] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-09T10:09:56.245Z [PID:21552] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-09T10:09:56.249Z [PID:21552] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T10:09:56.478Z [PID:21552] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-09T10:09:57.725Z [PID:21552] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [REGISTER, LOGIN, FORGOT_PASSWORD]
+2026-05-09T10:09:58.937Z [PID:21552] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-09T10:09:59.342Z [PID:21552] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-09T10:10:02.467Z [PID:21552] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-09T10:10:02.486Z [PID:21552] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T10:10:02.502Z [PID:21552] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 15.125 seconds (process running for 15.644)
+2026-05-09T10:10:02.504Z [PID:21552] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-09T10:10:08.479Z [PID:21552] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-09T10:10:08.479Z [PID:21552] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-09T10:10:08.481Z [PID:21552] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-09T10:10:08.560Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:08.812Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:08.864Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:09.219Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Access denied for current user: Access Denied
+2026-05-09T10:10:14.387Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:14.503Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:14.555Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:15.539Z [PID:21552] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.UserController.getMe, execution time: 395ms
+2026-05-09T10:10:19.948Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:20.060Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:20.116Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:10:20.562Z [PID:21552] INFO  v.i.l.lutaco.service.PayOsClient - [system]: Sending payment creation request to PayOS for order code: 1
+2026-05-09T10:10:21.449Z [PID:21552] WARN  v.i.l.lutaco.service.PayOsClient - [system]: PayOS response for order code 1 indicates an error or missing data. Code: 231, Desc: Đơn thanh toán đã tồn tại
+2026-05-09T10:10:21.664Z [PID:21552] INFO  v.i.l.lutaco.service.PayOsClient - [system]: PayOS reported order code 1 already exists. Local server did not have it, throwing PAYMENT_SYSTEM_ERROR.
+2026-05-09T10:10:21.785Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=PAYMENT_SYSTEM_ERROR, Message=payment.system.error, Params=null
+2026-05-09T10:11:22.785Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:11:22.900Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:11:22.946Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:11:23.389Z [PID:21552] INFO  v.i.l.lutaco.service.PayOsClient - [system]: Sending payment creation request to PayOS for order code: 100001
+2026-05-09T10:11:23.516Z [PID:21552] WARN  v.i.l.lutaco.service.PayOsClient - [system]: PayOS response for order code 100001 indicates an error or missing data. Code: 231, Desc: Đơn thanh toán đã tồn tại
+2026-05-09T10:11:23.704Z [PID:21552] INFO  v.i.l.lutaco.service.PayOsClient - [system]: PayOS reported order code 100001 already exists. Local server did not have it, throwing PAYMENT_SYSTEM_ERROR.
+2026-05-09T10:11:23.823Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=PAYMENT_SYSTEM_ERROR, Message=payment.system.error, Params=null
+2026-05-09T10:11:35.084Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:11:35.199Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:11:35.245Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:11:35.738Z [PID:21552] INFO  v.i.l.lutaco.service.PayOsClient - [system]: Sending payment creation request to PayOS for order code: 2374244
+2026-05-09T10:11:36.173Z [PID:21552] INFO  v.i.l.lutaco.service.PayOsClient - [system]: PayOS payment link created successfully for order code 2374244. Payment Link ID: 7f8e3e7e8f404fcaacbedfc9cb64ee4c
+2026-05-09T10:11:36.640Z [PID:21552] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.PayOSController.createPayment, execution time: 791ms
+2026-05-09T10:15:00.015Z [PID:21552] INFO  v.i.l.l.j.InvalidatedTokenCleanupJob - [system]: Starting scheduled job: Cleaning up expired invalidated tokens.
+2026-05-09T10:15:00.336Z [PID:21552] INFO  v.i.l.l.j.InvalidatedTokenCleanupJob - [system]: Finished scheduled job: Expired invalidated tokens cleanup complete.
+2026-05-09T10:16:35.476Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:16:35.577Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:16:35.630Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:16:35.960Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Access denied for current user: Access Denied
+2026-05-09T10:18:01.680Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:01.785Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:01.840Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:02.194Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'page': The value for this field must be between 0 and 1000.
+2026-05-09T10:18:02.194Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'size': The value for this field must be between 0 and 1000.
+2026-05-09T10:18:02.194Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: MethodArgumentNotValidException: 2 validation errors occurred.
+2026-05-09T10:18:04.198Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:04.309Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:04.361Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:05.159Z [PID:21552] WARN  o.s.d.w.c.SpringDataJacksonConfiguration$PageModule$WarningLoggingModifier - Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-09T10:18:05.447Z [PID:21552] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.CategoryController.search, execution time: 519ms
+2026-05-09T10:18:19.792Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:19.902Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:19.948Z [PID:21552] INFO  vn.id.luannv.lutaco.jwt.JwtService - 1fa0b173-f68b-42f6-88e4-73d005ad9eb3
+2026-05-09T10:18:20.442Z [PID:21552] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENTITY_NOT_FOUND, Message=entity.not.found, Params=null
+2026-05-09T10:18:34.476Z [PID:21552] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T10:18:34.538Z [PID:21552] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-09T10:18:36.632Z [PID:21552] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T10:18:36.634Z [PID:21552] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T10:18:36.690Z [PID:21552] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-09T18:36:15.217Z [PID:27800] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T18:36:15.268Z [PID:27800] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 27800 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T18:36:15.268Z [PID:27800] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T18:36:16.352Z [PID:27800] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T18:36:16.638Z [PID:27800] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 279 ms. Found 13 JPA repository interfaces.
+2026-05-09T18:36:17.477Z [PID:27800] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T18:36:17.489Z [PID:27800] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T18:36:17.491Z [PID:27800] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T18:36:17.491Z [PID:27800] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T18:36:17.571Z [PID:27800] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T18:36:17.572Z [PID:27800] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2266 ms
+2026-05-09T18:36:17.887Z [PID:27800] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T18:36:18.896Z [PID:27800] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@58afecfd
+2026-05-09T18:36:18.900Z [PID:27800] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T18:36:20.740Z [PID:27800] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T18:36:21.140Z [PID:27800] INFO  liquibase.changelog - Change failed validation!
+2026-05-09T18:36:21.143Z [PID:27800] INFO  liquibase.command - Logging exception.
+2026-05-09T18:36:21.143Z [PID:27800] INFO  liquibase.ui - ERROR: Exception Details
+2026-05-09T18:36:21.144Z [PID:27800] INFO  liquibase.ui - ERROR: Exception Primary Class:  ValidationFailedException
+2026-05-09T18:36:21.144Z [PID:27800] INFO  liquibase.ui - ERROR: Exception Primary Reason:  Validation Failed:
+     1 changesets check sum
+          db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv was: 9:4214368289171d068498c978697c30b3 but is now: 9:fa661de7a54953435aa0ddf3d22ec829
+
+2026-05-09T18:36:21.144Z [PID:27800] INFO  liquibase.ui - ERROR: Exception Primary Source:  4.31.1
+2026-05-09T18:36:21.145Z [PID:27800] INFO  liquibase.command - Command execution complete
+2026-05-09T18:36:22.575Z [PID:27800] ERROR o.s.b.w.e.tomcat.TomcatStarter - Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\jwt\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jwtService' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\jwt\JwtService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenServiceImpl' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\service\impl\InvalidatedTokenServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenRepository' defined in vn.id.luannv.lutaco.repository.InvalidatedTokenRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+2026-05-09T18:36:22.605Z [PID:27800] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2026-05-09T18:36:22.608Z [PID:27800] WARN  o.a.c.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [HikariPool-1:housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.12/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.12/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.12/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+ java.base@17.0.12/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.12/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.12/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.12/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.12/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.12/java.lang.Thread.run(Thread.java:842)
+2026-05-09T18:36:22.609Z [PID:27800] WARN  o.a.c.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [HikariPool-1:connection-adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.12/sun.nio.ch.Net.poll(Native Method)
+ java.base@17.0.12/sun.nio.ch.NioSocketImpl.park(NioSocketImpl.java:186)
+ java.base@17.0.12/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:290)
+ java.base@17.0.12/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:314)
+ java.base@17.0.12/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:355)
+ java.base@17.0.12/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:808)
+ java.base@17.0.12/java.net.Socket$SocketInputStream.read(Socket.java:966)
+ java.base@17.0.12/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:484)
+ java.base@17.0.12/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:478)
+ java.base@17.0.12/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+ java.base@17.0.12/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1461)
+ java.base@17.0.12/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1065)
+ java.base@17.0.12/java.io.FilterInputStream.read(FilterInputStream.java:132)
+ app//com.mysql.cj.protocol.FullReadInputStream.readFully(FullReadInputStream.java:55)
+ app//com.mysql.cj.protocol.a.SimplePacketReader.readHeaderLocal(SimplePacketReader.java:72)
+ app//com.mysql.cj.protocol.a.SimplePacketReader.readHeader(SimplePacketReader.java:54)
+ app//com.mysql.cj.protocol.a.SimplePacketReader.readHeader(SimplePacketReader.java:36)
+ app//com.mysql.cj.protocol.a.NativeProtocol.readMessage(NativeProtocol.java:585)
+ app//com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:768)
+ app//com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:746)
+ app//com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:147)
+ app//com.mysql.cj.protocol.a.NativeAuthenticationProvider.proceedHandshakeWithPluggableAuthentication(NativeAuthenticationProvider.java:461)
+ app//com.mysql.cj.protocol.a.NativeAuthenticationProvider.connect(NativeAuthenticationProvider.java:206)
+ app//com.mysql.cj.protocol.a.NativeProtocol.connect(NativeProtocol.java:1332)
+ app//com.mysql.cj.NativeSession.connect(NativeSession.java:155)
+ app//com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:964)
+ app//com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:828)
+ app//com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:416)
+ app//com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:237)
+ app//com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+ app//com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+ app//com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+ app//com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+ app//com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+ app//com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+ app//com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+ java.base@17.0.12/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+ java.base@17.0.12/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+ java.base@17.0.12/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.12/java.lang.Thread.run(Thread.java:842)
+2026-05-09T18:36:22.611Z [PID:27800] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
+2026-05-09T18:36:22.611Z [PID:27800] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T18:36:22.985Z [PID:27800] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-09T18:36:22.998Z [PID:27800] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-05-09T18:36:23.015Z [PID:27800] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:170)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at vn.id.luannv.lutaco.LutacoApplication.main(LutacoApplication.java:21)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:147)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167)
+	... 8 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'jwtAuthenticationFilter' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\jwt\JwtAuthenticationFilter.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jwtService' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\jwt\JwtService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenServiceImpl' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\service\impl\InvalidatedTokenServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenRepository' defined in vn.id.luannv.lutaco.repository.InvalidatedTokenRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4452)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1201)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1191)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:81)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:747)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:783)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1201)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1191)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:81)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:747)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:201)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:410)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:868)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:436)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	... 13 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'jwtService' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\jwt\JwtService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenServiceImpl' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\service\impl\InvalidatedTokenServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenRepository' defined in vn.id.luannv.lutaco.repository.InvalidatedTokenRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 54 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'invalidatedTokenServiceImpl' defined in file [C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes\vn\id\luannv\lutaco\service\impl\InvalidatedTokenServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'invalidatedTokenRepository' defined in vn.id.luannv.lutaco.repository.InvalidatedTokenRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1770)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 67 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'invalidatedTokenRepository' defined in vn.id.luannv.lutaco.repository.InvalidatedTokenRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot resolve reference to bean 'jpaSharedEM_entityManagerFactory' while setting bean property 'entityManager'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 81 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jpaSharedEM_entityManagerFactory': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:691)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 94 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.CommandExecutionException: liquibase.exception.ValidationFailedException: Validation Failed:
+     1 changesets check sum
+          db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv was: 9:4214368289171d068498c978697c30b3 but is now: 9:fa661de7a54953435aa0ddf3d22ec829
+
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1826)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:315)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 106 common frames omitted
+Caused by: liquibase.exception.LiquibaseException: liquibase.exception.CommandExecutionException: liquibase.exception.ValidationFailedException: Validation Failed:
+     1 changesets check sum
+          db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv was: 9:4214368289171d068498c978697c30b3 but is now: 9:fa661de7a54953435aa0ddf3d22ec829
+
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:288)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	... 115 common frames omitted
+Caused by: liquibase.exception.CommandExecutionException: liquibase.exception.ValidationFailedException: Validation Failed:
+     1 changesets check sum
+          db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv was: 9:4214368289171d068498c978697c30b3 but is now: 9:fa661de7a54953435aa0ddf3d22ec829
+
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:300)
+	at liquibase.Scope.child(Scope.java:210)
+	at liquibase.Scope.child(Scope.java:186)
+	at liquibase.command.CommandScope.execute(CommandScope.java:241)
+	at liquibase.Liquibase.lambda$update$0(Liquibase.java:216)
+	at liquibase.Scope.lambda$child$0(Scope.java:201)
+	at liquibase.Scope.child(Scope.java:210)
+	at liquibase.Scope.child(Scope.java:200)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.Liquibase.runInScope(Liquibase.java:1333)
+	at liquibase.Liquibase.update(Liquibase.java:205)
+	at liquibase.Liquibase.update(Liquibase.java:188)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:326)
+	at liquibase.integration.spring.SpringLiquibase.lambda$afterPropertiesSet$0(SpringLiquibase.java:278)
+	at liquibase.Scope.lambda$child$0(Scope.java:201)
+	at liquibase.Scope.child(Scope.java:210)
+	at liquibase.Scope.child(Scope.java:200)
+	at liquibase.Scope.child(Scope.java:179)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:271)
+	... 117 common frames omitted
+Caused by: liquibase.exception.ValidationFailedException: Validation Failed:
+     1 changesets check sum
+          db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv was: 9:4214368289171d068498c978697c30b3 but is now: 9:fa661de7a54953435aa0ddf3d22ec829
+
+	at liquibase.changelog.DatabaseChangeLog.validate(DatabaseChangeLog.java:384)
+	at liquibase.command.core.helpers.DatabaseChangelogCommandStep.run(DatabaseChangelogCommandStep.java:88)
+	at liquibase.command.CommandScope.lambda$execute$6(CommandScope.java:253)
+	... 135 common frames omitted
+2026-05-09T18:38:09.711Z [PID:9976] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T18:38:09.750Z [PID:9976] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 9976 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T18:38:09.751Z [PID:9976] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T18:38:10.607Z [PID:9976] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T18:38:10.777Z [PID:9976] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 163 ms. Found 13 JPA repository interfaces.
+2026-05-09T18:38:11.436Z [PID:9976] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T18:38:11.443Z [PID:9976] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T18:38:11.445Z [PID:9976] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T18:38:11.445Z [PID:9976] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T18:38:11.497Z [PID:9976] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T18:38:11.498Z [PID:9976] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1715 ms
+2026-05-09T18:38:11.748Z [PID:9976] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T18:38:12.467Z [PID:9976] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7c871ce4
+2026-05-09T18:38:12.468Z [PID:9976] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T18:38:13.275Z [PID:9976] INFO  liquibase.changelog - Creating database history table with name: test.databasechangelog
+2026-05-09T18:38:13.594Z [PID:9976] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T18:38:13.859Z [PID:9976] INFO  liquibase.snapshot - Creating snapshot
+2026-05-09T18:38:15.043Z [PID:9976] INFO  liquibase.lockservice - Successfully acquired change log lock
+2026-05-09T18:38:15.088Z [PID:9976] INFO  liquibase.command - Using deploymentId: 8351891734
+2026-05-09T18:38:15.133Z [PID:9976] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T18:38:15.226Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-master-dictionary-table.yaml::9f3b2c1e-7a4d-4c6a-8b1e-2d5f9a7c1234::luannv
+2026-05-09T18:38:15.511Z [PID:9976] INFO  liquibase.changelog - Table master_dictionary created
+2026-05-09T18:38:15.828Z [PID:9976] INFO  liquibase.changelog - Unique constraint added to master_dictionary(dict_group, code)
+2026-05-09T18:38:15.884Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-master-dictionary-table.yaml::9f3b2c1e-7a4d-4c6a-8b1e-2d5f9a7c1234::luannv ran successfully in 657ms
+2026-05-09T18:38:16.170Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-master-dictionary-table.yaml::b1c2d3e4-f5a6-47b8-9c0d-223344556677::luannv
+2026-05-09T18:38:16.383Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:16.487Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:16.623Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:16.724Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:16.831Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:16.932Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.027Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.131Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.231Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.331Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.435Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.535Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.639Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.741Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.842Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:17.944Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.043Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.140Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.239Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.349Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.457Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.559Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.663Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.764Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.867Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:18.969Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.059Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.174Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.280Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.379Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.481Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.584Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.691Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.797Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:19.895Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.032Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.151Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.259Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.359Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.459Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.563Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.663Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.767Z [PID:9976] INFO  liquibase.changelog - New row inserted into master_dictionary
+2026-05-09T18:38:20.828Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-master-dictionary-table.yaml::b1c2d3e4-f5a6-47b8-9c0d-223344556677::luannv ran successfully in 4657ms
+2026-05-09T18:38:21.052Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-role-table.yaml::1c2d3e4f-5678-4abc-9def-112233445500::luannv
+2026-05-09T18:38:21.335Z [PID:9976] INFO  liquibase.changelog - Table roles created
+2026-05-09T18:38:21.615Z [PID:9976] INFO  liquibase.changelog - Unique constraint added to roles(code)
+2026-05-09T18:38:21.671Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-role-table.yaml::1c2d3e4f-5678-4abc-9def-112233445500::luannv ran successfully in 619ms
+2026-05-09T18:38:21.892Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-role-table.yaml::5f6a7b8c-9012-4abc-9def-778899001122::luannv
+2026-05-09T18:38:22.115Z [PID:9976] INFO  liquibase.changelog - New row inserted into roles
+2026-05-09T18:38:22.224Z [PID:9976] INFO  liquibase.changelog - New row inserted into roles
+2026-05-09T18:38:22.338Z [PID:9976] INFO  liquibase.changelog - New row inserted into roles
+2026-05-09T18:38:22.412Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-role-table.yaml::5f6a7b8c-9012-4abc-9def-778899001122::luannv ran successfully in 518ms
+2026-05-09T18:38:22.628Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-user-table.yaml::8a1b2c3d-4e5f-4abc-9def-998877665544::luannv
+2026-05-09T18:38:22.927Z [PID:9976] INFO  liquibase.changelog - Table users created
+2026-05-09T18:38:23.361Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to users (role_id)
+2026-05-09T18:38:23.651Z [PID:9976] INFO  liquibase.changelog - Index idx_users_role created
+2026-05-09T18:38:23.714Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-user-table.yaml::8a1b2c3d-4e5f-4abc-9def-998877665544::luannv ran successfully in 1086ms
+2026-05-09T18:38:23.940Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-user-table.yaml::9b8c7d6e-5f4a-4abc-9def-112244668899::luannv
+2026-05-09T18:38:24.182Z [PID:9976] INFO  liquibase.changelog - New row inserted into users
+2026-05-09T18:38:24.243Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-user-table.yaml::9b8c7d6e-5f4a-4abc-9def-112244668899::luannv ran successfully in 302ms
+2026-05-09T18:38:24.473Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-refresh-token-table.yaml::7d9c2a11-3b4f-4d8a-9c10-5f2e8a7b9913::luannv
+2026-05-09T18:38:24.768Z [PID:9976] INFO  liquibase.changelog - Table refresh_tokens created
+2026-05-09T18:38:25.475Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to refresh_tokens (user_id)
+2026-05-09T18:38:25.773Z [PID:9976] INFO  liquibase.changelog - Index idx_refresh_tokens_user created
+2026-05-09T18:38:26.080Z [PID:9976] INFO  liquibase.changelog - Index idx_refresh_tokens_token created
+2026-05-09T18:38:26.368Z [PID:9976] INFO  liquibase.changelog - Index idx_refresh_tokens_expiry created
+2026-05-09T18:38:26.431Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-refresh-token-table.yaml::7d9c2a11-3b4f-4d8a-9c10-5f2e8a7b9913::luannv ran successfully in 1958ms
+2026-05-09T18:38:26.664Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-invalidated-token-table.yaml::b2c3d4e5-f6a7-4abc-9def-334455667788::luannv
+2026-05-09T18:38:26.957Z [PID:9976] INFO  liquibase.changelog - Table invalidated_tokens created
+2026-05-09T18:38:27.259Z [PID:9976] INFO  liquibase.changelog - Unique constraint added to invalidated_tokens(jti)
+2026-05-09T18:38:27.570Z [PID:9976] INFO  liquibase.changelog - Index idx_invalidated_tokens_expiry created
+2026-05-09T18:38:27.627Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-invalidated-token-table.yaml::b2c3d4e5-f6a7-4abc-9def-334455667788::luannv ran successfully in 963ms
+2026-05-09T18:38:27.847Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-user-audit-log-table.yaml::a9b8c7d6-1111-4aaa-bbbb-222233334444::luannv
+2026-05-09T18:38:28.128Z [PID:9976] INFO  liquibase.changelog - Table user_audit_logs created
+2026-05-09T18:38:28.408Z [PID:9976] INFO  liquibase.changelog - Index idx_audit_username created
+2026-05-09T18:38:28.696Z [PID:9976] INFO  liquibase.changelog - Index idx_audit_created_date created
+2026-05-09T18:38:28.979Z [PID:9976] INFO  liquibase.changelog - Index idx_audit_uri created
+2026-05-09T18:38:29.039Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-user-audit-log-table.yaml::a9b8c7d6-1111-4aaa-bbbb-222233334444::luannv ran successfully in 1190ms
+2026-05-09T18:38:29.275Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-category-table.yaml::c1d2e3f4-aaaa-4bbb-9ccc-123456789000::luannv
+2026-05-09T18:38:29.603Z [PID:9976] INFO  liquibase.changelog - Table categories created
+2026-05-09T18:38:30.077Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to categories (parent_id)
+2026-05-09T18:38:30.383Z [PID:9976] INFO  liquibase.changelog - Unique constraint added to categories(parent_id, category_code)
+2026-05-09T18:38:30.679Z [PID:9976] INFO  liquibase.changelog - Index idx_categories_type created
+2026-05-09T18:38:31.039Z [PID:9976] INFO  liquibase.changelog - Index idx_categories_parent created
+2026-05-09T18:38:31.095Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-category-table.yaml::c1d2e3f4-aaaa-4bbb-9ccc-123456789000::luannv ran successfully in 1820ms
+2026-05-09T18:38:31.316Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-category-table.yaml::seed-categories-level1::luannv
+2026-05-09T18:38:31.572Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:31.683Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:31.783Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:31.892Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:31.999Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.101Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.221Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.339Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.443Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.543Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.647Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.751Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.851Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:32.951Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:33.055Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:33.160Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:33.260Z [PID:9976] INFO  liquibase.changelog - New row inserted into categories
+2026-05-09T18:38:33.315Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-category-table.yaml::seed-categories-level1::luannv ran successfully in 1998ms
+2026-05-09T18:38:33.885Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-category-table.yaml::seed-categories-level2::luannv
+2026-05-09T18:38:34.869Z [PID:9976] INFO  liquibase.changelog - Custom SQL executed
+2026-05-09T18:38:35.203Z [PID:9976] INFO  liquibase.changelog - Custom SQL executed
+2026-05-09T18:38:35.632Z [PID:9976] INFO  liquibase.changelog - Custom SQL executed
+2026-05-09T18:38:35.951Z [PID:9976] INFO  liquibase.changelog - Custom SQL executed
+2026-05-09T18:38:36.415Z [PID:9976] INFO  liquibase.changelog - Custom SQL executed
+2026-05-09T18:38:36.567Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-category-table.yaml::seed-categories-level2::luannv ran successfully in 2682ms
+2026-05-09T18:38:36.788Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-wallet-table.yaml::create-wallet-table::luannv
+2026-05-09T18:38:37.067Z [PID:9976] INFO  liquibase.changelog - Table wallets created
+2026-05-09T18:38:37.523Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to wallets (user_id)
+2026-05-09T18:38:37.836Z [PID:9976] INFO  liquibase.changelog - Index idx_wallets_user_id created
+2026-05-09T18:38:37.913Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-wallet-table.yaml::create-wallet-table::luannv ran successfully in 1125ms
+2026-05-09T18:38:38.131Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-transaction-table.yaml::t1x2n3s4-0001::luannv
+2026-05-09T18:38:38.425Z [PID:9976] INFO  liquibase.changelog - Table transactions created
+2026-05-09T18:38:38.883Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to transactions (user_id)
+2026-05-09T18:38:39.380Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to transactions (category_id)
+2026-05-09T18:38:39.858Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to transactions (wallet_id)
+2026-05-09T18:38:40.403Z [PID:9976] INFO  liquibase.changelog - Index idx_txn_user created
+2026-05-09T18:38:40.683Z [PID:9976] INFO  liquibase.changelog - Index idx_txn_category created
+2026-05-09T18:38:40.967Z [PID:9976] INFO  liquibase.changelog - Index idx_txn_date created
+2026-05-09T18:38:41.024Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-transaction-table.yaml::t1x2n3s4-0001::luannv ran successfully in 2892ms
+2026-05-09T18:38:41.259Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv
+2026-05-09T18:38:41.555Z [PID:9976] INFO  liquibase.changelog - Table budgets created
+2026-05-09T18:38:42.010Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to budgets (user_id)
+2026-05-09T18:38:42.464Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to budgets (category_id)
+2026-05-09T18:38:42.779Z [PID:9976] INFO  liquibase.changelog - Unique constraint added to budgets(user_id, category_id, period)
+2026-05-09T18:38:43.083Z [PID:9976] INFO  liquibase.changelog - Index idx_budget_user created
+2026-05-09T18:38:43.375Z [PID:9976] INFO  liquibase.changelog - Index idx_budget_category created
+2026-05-09T18:38:43.668Z [PID:9976] INFO  liquibase.changelog - Index idx_budget_status created
+2026-05-09T18:38:43.975Z [PID:9976] INFO  liquibase.changelog - Index idx_budget_period created
+2026-05-09T18:38:44.031Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-budget-table.yaml::f1a2b3c4-budget-001::luannv ran successfully in 2772ms
+2026-05-09T18:38:44.268Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-pay-os-table.yaml::p1a2y3o4-0001::luannv
+2026-05-09T18:38:44.573Z [PID:9976] INFO  liquibase.changelog - Table pay_os created
+2026-05-09T18:38:45.055Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to pay_os (user_id)
+2026-05-09T18:38:45.359Z [PID:9976] INFO  liquibase.changelog - Index idx_pay_user created
+2026-05-09T18:38:45.659Z [PID:9976] INFO  liquibase.changelog - Index idx_pay_status created
+2026-05-09T18:38:45.947Z [PID:9976] INFO  liquibase.changelog - Index idx_pay_order_code created
+2026-05-09T18:38:46.007Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-pay-os-table.yaml::p1a2y3o4-0001::luannv ran successfully in 1739ms
+2026-05-09T18:38:46.224Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-create-rec-transaction-table.yaml::3a7c9e11-4f2b-4c8d-9a10-7d2f1b6c8890::luannv
+2026-05-09T18:38:46.516Z [PID:9976] INFO  liquibase.changelog - Table recurring_transactions created
+2026-05-09T18:38:46.759Z [PID:9976] INFO  liquibase.changelog - Foreign key constraint added to recurring_transactions (transaction_id)
+2026-05-09T18:38:47.216Z [PID:9976] INFO  liquibase.changelog - Index idx_recurring_next_date created
+2026-05-09T18:38:47.504Z [PID:9976] INFO  liquibase.changelog - Index idx_recurring_type created
+2026-05-09T18:38:47.559Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-create-rec-transaction-table.yaml::3a7c9e11-4f2b-4c8d-9a10-7d2f1b6c8890::luannv ran successfully in 1335ms
+2026-05-09T18:38:47.792Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-30-04-add-refresh-token-status-col.yaml::09b78c6e-787a-4e20-9f1d-5731ae0fbf29::luannv
+2026-05-09T18:38:48.312Z [PID:9976] INFO  liquibase.changelog - Columns used(boolean),active_flg(boolean) added to REFRESH_TOKENS
+2026-05-09T18:38:48.367Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-30-04-add-refresh-token-status-col.yaml::09b78c6e-787a-4e20-9f1d-5731ae0fbf29::luannv ran successfully in 575ms
+2026-05-09T18:38:48.588Z [PID:9976] INFO  liquibase.ui - Running Changeset: db/changelog/2026-10-05-add-end-date-to-rec-transaction.yaml::a1b2c3d4-recurring-end-date-001::luannv
+2026-05-09T18:38:49.005Z [PID:9976] INFO  liquibase.changelog - Columns end_date(date) added to recurring_transactions
+2026-05-09T18:38:49.059Z [PID:9976] INFO  liquibase.changelog - ChangeSet db/changelog/2026-10-05-add-end-date-to-rec-transaction.yaml::a1b2c3d4-recurring-end-date-001::luannv ran successfully in 471ms
+2026-05-09T18:38:49.289Z [PID:9976] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-09T18:38:49.289Z [PID:9976] INFO  liquibase.util - Run:                         19
+2026-05-09T18:38:49.289Z [PID:9976] INFO  liquibase.util - Previously run:               0
+2026-05-09T18:38:49.289Z [PID:9976] INFO  liquibase.util - Filtered out:                 0
+2026-05-09T18:38:49.289Z [PID:9976] INFO  liquibase.util - -------------------------------
+2026-05-09T18:38:49.289Z [PID:9976] INFO  liquibase.util - Total change sets:           19
+2026-05-09T18:38:49.290Z [PID:9976] INFO  liquibase.util - Update summary generated
+2026-05-09T18:38:49.292Z [PID:9976] INFO  liquibase.command - Update command completed successfully.
+2026-05-09T18:38:49.292Z [PID:9976] INFO  liquibase.ui - Liquibase: Update has been successful. Rows affected: 88
+2026-05-09T18:38:49.452Z [PID:9976] INFO  liquibase.lockservice - Successfully released change log lock
+2026-05-09T18:38:49.509Z [PID:9976] INFO  liquibase.command - Command execution complete
+2026-05-09T18:38:50.863Z [PID:9976] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-09T18:38:50.925Z [PID:9976] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-09T18:38:50.970Z [PID:9976] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-09T18:38:51.202Z [PID:9976] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-09T18:38:51.324Z [PID:9976] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-09T18:38:52.227Z [PID:9976] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-09T18:38:52.229Z [PID:9976] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T18:38:52.441Z [PID:9976] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-09T18:38:53.454Z [PID:9976] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [FORGOT_PASSWORD, REGISTER, LOGIN]
+2026-05-09T18:38:54.305Z [PID:9976] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-09T18:38:54.532Z [PID:9976] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-09T18:38:55.991Z [PID:9976] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-09T18:38:56.008Z [PID:9976] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T18:38:56.025Z [PID:9976] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 46.693 seconds (process running for 47.207)
+2026-05-09T18:38:56.028Z [PID:9976] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-09T18:39:36.030Z [PID:9976] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-09T18:39:36.030Z [PID:9976] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-09T18:39:36.031Z [PID:9976] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-05-09T18:39:36.309Z [PID:9976] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T18:39:36.310Z [PID:9976] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T18:39:36.363Z [PID:9976] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-09T18:39:36.363Z [PID:9976] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-09T18:39:37.114Z [PID:9976] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.ui.SwaggerConfigResource.openapiJson, execution time: 3ms
+2026-05-09T18:39:37.382Z [PID:9976] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 1017 ms
+2026-05-09T18:39:38.281Z [PID:9976] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 1035ms
