@@ -6,6 +6,6 @@ import vn.id.luannv.lutaco.dto.response.CategoryResponse;
 
 import java.util.List;
 
-public interface CategoryService extends BaseService<CategoryFilterRequest, CategoryResponse, CategoryRequest, String> {
-    List<CategoryResponse> getChildren(String id);
+public interface CategoryService extends BaseService<CategoryFilterRequest, CategoryResponse, CategoryRequest, Long> {
+    List<CategoryResponse> getChildren(Long id);
 }

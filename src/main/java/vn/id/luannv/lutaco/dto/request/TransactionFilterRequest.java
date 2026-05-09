@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,17 +14,15 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TransactionFilterRequest extends BaseFilterRequest {
 
-    @Length(max = 255, message = "{validation.field.too_long}")
-    String categoryName;
+    Long categoryId;
 
-    LocalDateTime fromDate;
+    Instant fromDate;
 
-    LocalDateTime toDate;
+    Instant toDate;
 
     Long minAmount;
 
     Long maxAmount;
 
-    @Length(max = 255, message = "{validation.field.too_long}")
-    String walletName;
+    Long walletId;
 }

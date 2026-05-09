@@ -125,7 +125,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateStatus(Long id, UserStatusSetRequest request) {
-
         User actor = userRepository.findById(SecurityUtils.getCurrentId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("id", id)));
 
@@ -136,27 +135,32 @@ public class UserServiceImpl implements UserService {
         UserType actorRole = actor.getRole().getCode();
         UserType targetRole = target.getRole().getCode();
 
+        // SYS_ADMIN không thể tự disable/ban chính mình
         if (actorRole == UserType.SYS_ADMIN && actor.getId().equals(id)) {
             throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
         }
 
-        if (actorRole == UserType.USER && !actor.getId().equals(id)) {
-            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
-        }
-
+        // ADMIN không thể thay đổi trạng thái của SYS_ADMIN
         if (actorRole == UserType.ADMIN && targetRole == UserType.SYS_ADMIN) {
             throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
         }
 
-        if (actorRole == UserType.USER) {
-            target.setUserStatus(UserStatus.INACTIVE);
-            return;
+        // USER chỉ có thể cập nhật trạng thái của chính mình
+        if (actorRole == UserType.USER && !actor.getId().equals(id)) {
+            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
+        }
+
+        // Nếu là USER và đang PENDING, cho phép cập nhật trạng thái từ request
+        // Còn nếu là ADMIN hoặc SYS_ADMIN, luôn cho phép update
+        if (actorRole == UserType.USER && actor.getUserStatus() != UserStatus.PENDING) {
+            throw new BusinessException(ErrorCode.OPERATION_NOT_ALLOWED);
         }
 
         UserStatus newStatus = EnumUtils.from(UserStatus.class, request.getStatus());
         target.setUserStatus(newStatus);
 
         userRepository.save(target);
+        log.info("User status updated: id={}, newStatus={}, actor={}", id, newStatus, actor.getId());
     }
 
     @Override

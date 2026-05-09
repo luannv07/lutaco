@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,9 +15,9 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TransactionResponse {
 
-    String id;
+    Long id;
 
-    String categoryId;
+    Long categoryId;
 
     String categoryName;
 
@@ -24,13 +25,13 @@ public class TransactionResponse {
 
     Long amount;
 
-    LocalDateTime transactionDate;
+    Instant transactionDate;
 
     String note;
 
-    LocalDateTime createdDate;
+    Instant createdDate;
 
-    String walletId;
+    Long walletId;
 
     String walletName;
 }

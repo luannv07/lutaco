@@ -45,7 +45,7 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<TransactionResponse>> getDetail(
-            @PathVariable String id
+            @PathVariable Long id
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
@@ -62,7 +62,7 @@ public class TransactionController {
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.success(
-                        transactionService.customCreate(request, SecurityUtils.getCurrentId()),
+                        transactionService.create(request),
                         "Tạo giao dịch thành công."
                 ));
     }
@@ -82,7 +82,7 @@ public class TransactionController {
     @PutMapping("/bulk")
     public ResponseEntity<BaseResponse<Void>> deleteBulk(
             @Valid
-            @RequestBody List<String> ids
+            @RequestBody List<Long> ids
     ) {
         transactionService.deleteBulk(ids, SecurityUtils.getCurrentId());
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -93,7 +93,7 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<Void>> update(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid
             @RequestBody TransactionRequest request
     ) {
@@ -105,8 +105,8 @@ public class TransactionController {
 
     @PatchMapping("/{id}/{walletId}/disable")
     public ResponseEntity<BaseResponse<Void>> delete(
-            @PathVariable String id,
-            @PathVariable String walletId
+            @PathVariable Long id,
+            @PathVariable Long walletId
     ) {
         transactionService.deleteByIdAndWalletId(id, walletId);
         return ResponseEntity.ok(
@@ -117,8 +117,8 @@ public class TransactionController {
     @PatchMapping("/{id}/{walletId}/enable")
     @PreAuthorize("@securityPermission.isPremiumUser()")
     public ResponseEntity<BaseResponse<Void>> unDelete(
-            @PathVariable String id,
-            @PathVariable String walletId
+            @PathVariable Long id,
+            @PathVariable Long walletId
     ) {
         transactionService.restoreTransaction(id, walletId);
         return ResponseEntity.ok(

@@ -96,7 +96,15 @@ public enum ErrorCode {
     // ===================== JSON / FORMAT ==================
     // =====================================================
     JSON_WRONG_FORMAT("json.wrong.format", HttpStatus.BAD_REQUEST),
-
+    WALLET_INACTIVE("wallet.inactive", HttpStatus.BAD_REQUEST),
+    WALLET_ACCESS_DENIED("wallet.access.denied", HttpStatus.FORBIDDEN),
+    INVALID_TRANSACTION_AMOUNT("transaction.amount.invalid", HttpStatus.BAD_REQUEST),
+    INVALID_TRANSACTION_DATE("transaction.date.invalid", HttpStatus.BAD_REQUEST),
+    TRANSACTION_NOT_EDITABLE("transaction.not.editable", HttpStatus.BAD_REQUEST),
+    TRANSACTION_ALREADY_DELETED("transaction.already.deleted", HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_BALANCE("wallet.insufficient.balance", HttpStatus.BAD_REQUEST),
+    CATEGORY_INVALID_TYPE("category.type.invalid", HttpStatus.BAD_REQUEST),
+    CATEGORY_ACCESS_DENIED("category.access.denied", HttpStatus.FORBIDDEN),
     // =====================================================
     // ===================== JOB / SCHEDULER ================
     // =====================================================

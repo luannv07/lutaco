@@ -9,26 +9,27 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TransactionRequest {
 
-    @NotBlank(message = "{validation.required}")
-    @Length(max = 255, message = "{validation.field.too_long}")
-    String categoryId;
+    @NotNull(message = "{validation.required}")
+    @Positive(message = "{validation.field.positive}")
+    Long categoryId;
 
     @NotNull(message = "{validation.required}")
     @Positive(message = "{validation.field.positive}")
     Long amount;
 
     @NotNull(message = "{validation.required}")
-    LocalDateTime transactionDate;
+    Instant transactionDate;
 
-    @NotBlank(message = "{validation.required}")
-    @Length(max = 255, message = "{validation.field.too_long}")
-    String walletId;
+    @NotNull(message = "{validation.required}")
+    @Positive(message = "{validation.field.positive}")
+    Long walletId;
 
     @Size(max = 500, message = "{validation.field.too_long}")
     @Length(max = 255, message = "{validation.field.too_long}")
