@@ -3,6 +3,7 @@ package vn.id.luannv.lutaco.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigInteger;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -87,7 +88,7 @@ public class PayOSResponse<T> {
 
         String paymentLinkId;
 
-        Integer amount;
+        BigInteger amount;
 
         String currency;
 
@@ -97,8 +98,8 @@ public class PayOSResponse<T> {
 
         String type;
 
-        LocalDateTime createdDate;
+        Instant createdDate;
 
-        LocalDateTime paidAt;
+        Instant paidAt;
     }
 }

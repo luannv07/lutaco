@@ -17,7 +17,11 @@ public class SecurityUtils {
         String currentRoleName = getCurrentRoleName();
         return currentRoleName.contains(UserType.ADMIN.name()) || currentRoleName.contains(UserType.SYS_ADMIN.name());
     }
-
+    public static void assertOwnerOrAdmin(Long ownerId) {
+        if (!isAdmin() && !getCurrentId().equals(ownerId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+    }
     public static String getCurrentUsername() {
         return getCurrentPrincipal().getUsername();
     }

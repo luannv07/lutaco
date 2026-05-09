@@ -3,6 +3,8 @@ package vn.id.luannv.lutaco.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigInteger;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +17,7 @@ public class PayOSRequest {
 
     Integer orderCode;
 
-    Integer amount;
+    BigInteger amount;
 
     String description;
 

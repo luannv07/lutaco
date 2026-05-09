@@ -167,7 +167,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("field", "wallet.id")));
         
         if (!wallet.getUser().getId().equals(userId)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+            throw new BusinessException(ErrorCode.FORBIDDEN);
         }
         
         // Validate and fetch category

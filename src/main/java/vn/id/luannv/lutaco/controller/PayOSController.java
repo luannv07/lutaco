@@ -36,7 +36,7 @@ public class PayOSController {
     @GetMapping("/{id}")
     @PreAuthorize("(hasRole('SYS_ADMIN') or hasRole('ADMIN'))")
     public ResponseEntity<BaseResponse<PayOSResponse<PayOSResponse.PayOSDataDetail>>> getDetail(
-            @PathVariable String id
+            @PathVariable Integer id
     ) {
         return ResponseEntity.ok()
                 .body(
@@ -50,7 +50,7 @@ public class PayOSController {
     @GetMapping("/users/{userId}")
     @PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<BaseResponse<List<PayOSResponse.PayOSDataByUser>>> getByUserId(
-            @PathVariable String userId
+            @PathVariable Long userId
     ) {
         return ResponseEntity.ok()
                 .body(
