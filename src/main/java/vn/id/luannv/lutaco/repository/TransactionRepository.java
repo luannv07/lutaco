@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.id.luannv.lutaco.entity.Transaction;
 
+import java.time.Instant;
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
@@ -29,4 +31,20 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     WHERE t.id = :id AND t.user.id = :userId
 """)
     Optional<Transaction> findByIdAndUserIdIncludingDeleted(@Param("id") Long id, @Param("userId") Long userId);
+
+    @Query("""
+    SELECT COALESCE(SUM(t.amount), 0)
+    FROM Transaction t
+    WHERE t.user.id = :userId
+      AND t.category.id IN :categoryIds
+      AND t.transactionDate >= :startDate
+      AND t.transactionDate < :endDate
+      AND t.activeFlg = true
+""")
+    Long sumAmountByCategoryIdsAndDateRange(
+            @Param("userId") Long userId,
+            @Param("categoryIds") Collection<Long> categoryIds,
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate
+    );
 }

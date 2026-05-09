@@ -57,3 +57,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/2026-30-04-add-refresh-token-status-col.yaml
+
+  - include:
+      file: db/changelog/2026-10-05-add-end-date-to-rec-transaction.yaml

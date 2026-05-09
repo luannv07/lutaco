@@ -39,13 +39,13 @@ databaseChangeLog:
               # ===== MONEY =====
               - column:
                   name: target_amount
-                  type: BIGINT
+                  type: DECIMAL(19,2)
                   constraints:
                     nullable: false
 
               - column:
                   name: actual_amount
-                  type: BIGINT
+                  type: DECIMAL(19,2)
                   constraints:
                     nullable: false
 
@@ -59,11 +59,15 @@ databaseChangeLog:
               - column:
                   name: status
                   type: VARCHAR(50)
+                  constraints:
+                    nullable: false
 
               # ===== DATE RANGE =====
               - column:
                   name: start_date
                   type: DATE
+                  constraints:
+                    nullable: false
 
               - column:
                   name: end_date
@@ -113,11 +117,11 @@ databaseChangeLog:
             constraintName: fk_budgets_category
             onDelete: RESTRICT
 
-        # ===== UNIQUE =====
+        # ===== UNIQUE: one budget per user + category + period =====
         - addUniqueConstraint:
             tableName: budgets
-            columnNames: user_id, category_id
-            constraintName: uk_budget_user_category
+            columnNames: user_id, category_id, period
+            constraintName: uk_budget_user_category_period
 
         # ===== INDEX =====
         - createIndex:
@@ -140,3 +144,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: status
+
+        - createIndex:
+            tableName: budgets
+            indexName: idx_budget_period
+            columns:
+              - column:
+                  name: period
