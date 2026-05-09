@@ -8,7 +8,7 @@ import java.util.List;
 public interface PayOsService {
     PayOSResponse<PayOSResponse.PayOSDataCreated> createPayment(PaymentType paymentType);
 
-    PayOSResponse<PayOSResponse.PayOSDataDetail> getDetailPayment(String id);
+    PayOSResponse<PayOSResponse.PayOSDataDetail> getDetailPayment(Integer id);
 
-    List<PayOSResponse.PayOSDataByUser> getPaymentsByUserId(String userId);
+    List<PayOSResponse.PayOSDataByUser> getPaymentsByUserId(Long userId);
 }

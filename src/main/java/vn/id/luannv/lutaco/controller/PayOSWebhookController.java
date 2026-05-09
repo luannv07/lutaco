@@ -51,6 +51,7 @@ public class PayOSWebhookController {
     ) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Attempting to confirm PayOS webhook URL with request: {}", username, confirm);
+        // {"webhookUrl": "https://your-website.com"}
         payOsClient.confirmHookUrl(confirm);
         log.info("[{}]: Successfully confirmed PayOS webhook URL.", username);
         return ResponseEntity.ok()
