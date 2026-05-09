@@ -9,21 +9,40 @@ import vn.id.luannv.lutaco.policy.PlanPolicy;
 public class PlanPolicyImpl implements PlanPolicy {
 
     @Value("${plan.freemium.max-wallets}")
-    private int freemiumMax;
+    private int freemiumMaxWallets;
 
     @Value("${plan.premium.max-wallets}")
-    private int premiumMax;
+    private int premiumMaxWallets;
+
+    @Value("${plan.freemium.max-budgets}")
+    private int freemiumMaxBudgets;
+
+    @Value("${plan.premium.max-budgets}")
+    private int premiumMaxBudgets;
 
     @Override
     public int maxWallets(User user) {
         return switch (user.getUserPlan()) {
-            case PREMIUM -> premiumMax;
-            default -> freemiumMax;
+            case PREMIUM -> premiumMaxWallets;
+            default -> freemiumMaxWallets;
         };
     }
 
     @Override
     public boolean canCreateWallet(User user, int currentWalletCount) {
         return currentWalletCount < maxWallets(user);
+    }
+
+    @Override
+    public int maxBudgets(User user) {
+        return switch (user.getUserPlan()) {
+            case PREMIUM -> premiumMaxBudgets;
+            default -> freemiumMaxBudgets;
+        };
+    }
+
+    @Override
+    public boolean canCreateBudget(User user, int currentBudgetCount) {
+        return currentBudgetCount < maxBudgets(user);
     }
 }

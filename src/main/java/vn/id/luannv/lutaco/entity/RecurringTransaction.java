@@ -36,4 +36,7 @@ public class RecurringTransaction extends BaseEntity {
 
     @Column(name = "active_flg", nullable = false)
     boolean activeFlg = true;
+
+    @Column(name = "end_date")
+    LocalDate endDate;
 }
