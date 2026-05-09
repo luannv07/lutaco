@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/children")
-    public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(@PathVariable String id) {
+    public ResponseEntity<BaseResponse<List<CategoryResponse>>> search(@PathVariable Long id) {
         return ResponseEntity.ok(
                 BaseResponse.success(
                         categoryService.getChildren(id),
@@ -59,7 +59,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<Void>> update(
-            @PathVariable String id,
+            @PathVariable Long id,
             @Valid @RequestBody CategoryRequest request
     ) {
         categoryService.update(id, request);
@@ -70,7 +70,7 @@ public class CategoryController {
 
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<BaseResponse<Void>> updateStatus(
-            @PathVariable String id
+            @PathVariable Long id
     ) {
         categoryService.deleteById(id);
         return ResponseEntity.ok(

@@ -53,8 +53,8 @@ public class RecurringTransactionListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void sendRecurringTransactionFrequencyEmail(
             RecurringTransactionEvent.RecurringFrequency recurring) {
-        transactionService
-                .autoCreateTransactionWithCronJob(recurring.getRecurringUserFields().getTransactionId(), recurring.getRecurringUserFields().getUserId());
+//        transactionService
+//                .autoCreateTransactionWithCronJob(recurring.getRecurringUserFields().getTransactionId(), recurring.getRecurringUserFields().getUserId());
         try {
             log.info("[system]: Processing recurring transaction frequency event for transaction ID: {}",
                     recurring.getRecurringUserFields().getTransactionId());

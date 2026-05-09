@@ -8,8 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.entity.Role;
 import vn.id.luannv.lutaco.enumerate.UserType;
+import vn.id.luannv.lutaco.exception.BusinessException;
+import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.repository.RoleRepository;
 import vn.id.luannv.lutaco.service.RoleService;
+
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -46,6 +50,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getByRoleCode(UserType userType) {
-        return roleRepository.findByCode(userType);
+        return roleRepository.findByCode(userType).orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("code", userType)));
     }
 }

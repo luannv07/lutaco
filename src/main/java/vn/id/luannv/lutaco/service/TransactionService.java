@@ -8,16 +8,12 @@ import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import java.util.List;
 
 public interface TransactionService extends
-        BaseService<TransactionFilterRequest, TransactionResponse, TransactionRequest, String> {
-    void deleteByIdAndWalletId(String transactionId, String walletId);
+        BaseService<TransactionFilterRequest, TransactionResponse, TransactionRequest, Long> {
+    List<TransactionResponse> createBulk(List<TransactionRequest> requests, Long currentId);
 
-    void restoreTransaction(String id, String walletId);
+    void deleteBulk(@Valid List<Long> ids, Long currentId);
 
-    void autoCreateTransactionWithCronJob(String transactionId, String userId);
+    void deleteByIdAndWalletId(Long id, Long walletId);
 
-    TransactionResponse customCreate(TransactionRequest request, String userId);
-
-    List<TransactionResponse> createBulk(List<TransactionRequest> requests, String currentId);
-
-    void deleteBulk(@Valid List<String> ids, String currentId);
+    void restoreTransaction(Long id, Long walletId);
 }

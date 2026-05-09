@@ -1,3 +1,4 @@
+# FLOW: auth -> user -> wallet -> transaction -> recurring transaction -> report/insight -> export -> job
 # Lutaco Backend API
 
 Lutaco is a modern, production-ready backend service built with Spring Boot.
