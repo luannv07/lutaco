@@ -86,7 +86,7 @@ public class RecurringTransactionController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        recurringTransactionService.search(request, request.getPage(), request.getSize()),
+                        recurringTransactionService.search(request),
                         "Tìm kiếm giao dịch định kỳ thành công."
                 ));
     }

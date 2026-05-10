@@ -111,7 +111,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Page<WalletResponse> search(WalletFilterRequest request, Integer page, Integer size) {
+    public Page<WalletResponse> search(WalletFilterRequest request) {
         // This service does not support pagination search yet.
         return Page.empty();
     }

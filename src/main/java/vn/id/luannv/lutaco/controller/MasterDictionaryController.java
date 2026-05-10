@@ -34,7 +34,7 @@ public class MasterDictionaryController {
             @Valid @ModelAttribute MasterDictionaryFilterRequest request) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        masterDictionaryService.search(request, request.getPage(), request.getSize()),
+                        masterDictionaryService.search(request),
                         "Lấy danh sách từ điển thành công."));
     }
 

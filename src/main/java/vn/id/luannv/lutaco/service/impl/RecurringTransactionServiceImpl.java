@@ -177,10 +177,8 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
 
     @Override
     @Transactional(readOnly = true)
-    public Page<RecurringTransactionResponse> search(RecurringTransactionFilterRequest request, Integer page, Integer size) {
+    public Page<RecurringTransactionResponse> search(RecurringTransactionFilterRequest request) {
         Long userId = SecurityUtils.getCurrentId();
-        int pageIndex = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Order.desc("createdDate")));
 
         Specification<RecurringTransaction> spec = (root, query, cb) ->
                 cb.equal(root.get("transaction").get("user").get("id"), userId);
@@ -194,7 +192,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
             }
         }
 
-        return recurringTransactionRepository.findAll(spec, pageable).map(this::toResponse);
+        return recurringTransactionRepository.findAll(spec, request.pageable()).map(this::toResponse);
     }
 
     @Override

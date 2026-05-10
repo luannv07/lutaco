@@ -32,7 +32,7 @@ public class CategoryController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        categoryService.search(request, request.getPage(), request.getSize()),
+                        categoryService.search(request),
                         "Lấy danh sách danh mục thành công."
                 )
         );

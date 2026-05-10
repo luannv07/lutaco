@@ -15,7 +15,7 @@ public interface BaseService<E, R, T, I> {
 
     R getDetail(I id);
 
-    Page<R> search(E request, Integer page, Integer size);
+    Page<R> search(E request);
 
     R update(I id, T request);
 

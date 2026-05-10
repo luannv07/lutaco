@@ -88,7 +88,6 @@ public class JwtService {
 
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
-            log.info(jti);
             if (expirationTime == null || expirationTime.before(TimeUtils.toDate(now)) || invalidatedTokenService.existByJti(jti)) {
                 log.warn("[system]: JWT token is expired or invalidated. JTI: {}", jti);
                 throw new BusinessException(ErrorCode.UNAUTHORIZED);

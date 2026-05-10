@@ -72,13 +72,7 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<MasterDictionaryResponse> search(MasterDictionaryFilterRequest request, Integer page, Integer size) {
-        int pageIndex = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(
-                pageIndex,
-                size,
-                Sort.by(Sort.Order.asc("displayOrder"), Sort.Order.asc("id")));
-
+    public Page<MasterDictionaryResponse> search(MasterDictionaryFilterRequest request) {
         Specification<MasterDictionary> specification = Specification.anyOf();
 
         if (StringUtils.hasText(request.getDictGroup())) {
@@ -110,7 +104,7 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
                     .and((root, query, cb) -> cb.equal(root.get("activeFlg"), request.getActiveFlg()));
         }
 
-        return masterDictionaryRepository.findAll(specification, pageable).map(this::toResponse);
+        return masterDictionaryRepository.findAll(specification, request.pageable()).map(this::toResponse);
     }
 
     @Override

@@ -50,7 +50,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Page<Role> search(String name, Integer page, Integer size) {
+    public Page<Role> search(String request) {
+        return null;
+    }
+
+    @Override
+    public Page<Role> literalSearch(String name, Integer page, Integer size) {
         String username = SecurityUtils.getCurrentUsername();
         log.info("[{}]: Searching roles with name: '{}', page: {}, size: {}.", username, name, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);

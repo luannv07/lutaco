@@ -983,3 +983,607 @@ Caused by: liquibase.exception.ValidationFailedException: Validation Failed:
 2026-05-09T18:39:37.114Z [PID:9976] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.ui.SwaggerConfigResource.openapiJson, execution time: 3ms
 2026-05-09T18:39:37.382Z [PID:9976] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 1017 ms
 2026-05-09T18:39:38.281Z [PID:9976] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 1035ms
+2026-05-09T18:40:26.686Z [PID:9976] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T18:40:26.744Z [PID:9976] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-09T18:40:26.764Z [PID:9976] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T18:40:26.765Z [PID:9976] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T18:40:26.821Z [PID:9976] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-09T18:40:29.205Z [PID:25852] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-09T18:40:29.250Z [PID:25852] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 25852 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-09T18:40:29.251Z [PID:25852] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-09T18:40:30.215Z [PID:25852] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-09T18:40:30.387Z [PID:25852] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 166 ms. Found 13 JPA repository interfaces.
+2026-05-09T18:40:31.129Z [PID:25852] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-09T18:40:31.137Z [PID:25852] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-09T18:40:31.139Z [PID:25852] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-09T18:40:31.139Z [PID:25852] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T18:40:31.192Z [PID:25852] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-09T18:40:31.193Z [PID:25852] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1907 ms
+2026-05-09T18:40:31.461Z [PID:25852] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-09T18:40:32.248Z [PID:25852] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7c871ce4
+2026-05-09T18:40:32.249Z [PID:25852] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-09T18:40:34.036Z [PID:25852] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T18:40:34.496Z [PID:25852] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-09T18:40:34.547Z [PID:25852] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-09T18:40:34.618Z [PID:25852] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-09T18:40:34.618Z [PID:25852] INFO  liquibase.util - Run:                          0
+2026-05-09T18:40:34.618Z [PID:25852] INFO  liquibase.util - Previously run:              19
+2026-05-09T18:40:34.618Z [PID:25852] INFO  liquibase.util - Filtered out:                 0
+2026-05-09T18:40:34.618Z [PID:25852] INFO  liquibase.util - -------------------------------
+2026-05-09T18:40:34.618Z [PID:25852] INFO  liquibase.util - Total change sets:           19
+2026-05-09T18:40:34.619Z [PID:25852] INFO  liquibase.util - Update summary generated
+2026-05-09T18:40:34.620Z [PID:25852] INFO  liquibase.command - Command execution complete
+2026-05-09T18:40:36.075Z [PID:25852] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-09T18:40:36.124Z [PID:25852] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-09T18:40:36.151Z [PID:25852] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-09T18:40:36.386Z [PID:25852] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-09T18:40:36.493Z [PID:25852] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-09T18:40:37.517Z [PID:25852] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-09T18:40:37.520Z [PID:25852] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T18:40:37.712Z [PID:25852] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-09T18:40:38.731Z [PID:25852] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [LOGIN, REGISTER, FORGOT_PASSWORD]
+2026-05-09T18:40:39.625Z [PID:25852] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-09T18:40:39.870Z [PID:25852] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-09T18:40:40.957Z [PID:25852] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-09T18:40:40.974Z [PID:25852] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T18:40:40.988Z [PID:25852] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 12.159 seconds (process running for 12.731)
+2026-05-09T18:40:40.990Z [PID:25852] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-09T18:41:08.050Z [PID:25852] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T18:41:08.109Z [PID:25852] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-09T18:41:08.128Z [PID:25852] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-09T18:41:08.130Z [PID:25852] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-09T18:41:08.198Z [PID:25852] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T01:29:46.521Z [PID:21104] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T01:29:46.585Z [PID:21104] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 21104 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T01:29:46.586Z [PID:21104] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T01:29:48.059Z [PID:21104] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T01:29:48.337Z [PID:21104] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 271 ms. Found 13 JPA repository interfaces.
+2026-05-10T01:29:49.188Z [PID:21104] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T01:29:49.199Z [PID:21104] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-10T01:29:49.201Z [PID:21104] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-10T01:29:49.201Z [PID:21104] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-10T01:29:49.283Z [PID:21104] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-10T01:29:49.283Z [PID:21104] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2644 ms
+2026-05-10T01:29:49.571Z [PID:21104] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T01:29:50.335Z [PID:21104] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@323c6f9c
+2026-05-10T01:29:50.337Z [PID:21104] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T01:29:52.085Z [PID:21104] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T01:29:52.559Z [PID:21104] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-10T01:29:52.603Z [PID:21104] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T01:29:52.672Z [PID:21104] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-10T01:29:52.672Z [PID:21104] INFO  liquibase.util - Run:                          0
+2026-05-10T01:29:52.672Z [PID:21104] INFO  liquibase.util - Previously run:              19
+2026-05-10T01:29:52.672Z [PID:21104] INFO  liquibase.util - Filtered out:                 0
+2026-05-10T01:29:52.673Z [PID:21104] INFO  liquibase.util - -------------------------------
+2026-05-10T01:29:52.673Z [PID:21104] INFO  liquibase.util - Total change sets:           19
+2026-05-10T01:29:52.674Z [PID:21104] INFO  liquibase.util - Update summary generated
+2026-05-10T01:29:52.675Z [PID:21104] INFO  liquibase.command - Command execution complete
+2026-05-10T01:29:54.374Z [PID:21104] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T01:29:54.453Z [PID:21104] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T01:29:54.521Z [PID:21104] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T01:29:54.806Z [PID:21104] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T01:29:55.006Z [PID:21104] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T01:29:56.167Z [PID:21104] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T01:29:56.170Z [PID:21104] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:29:56.466Z [PID:21104] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T01:29:57.830Z [PID:21104] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [REGISTER, FORGOT_PASSWORD, LOGIN]
+2026-05-10T01:29:58.857Z [PID:21104] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T01:29:59.136Z [PID:21104] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T01:30:00.746Z [PID:21104] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-10T01:30:00.771Z [PID:21104] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T01:30:00.785Z [PID:21104] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 14.888 seconds (process running for 15.849)
+2026-05-10T01:30:00.788Z [PID:21104] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T01:31:44.734Z [PID:21104] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-10T01:31:44.734Z [PID:21104] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-10T01:31:44.736Z [PID:21104] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-10T01:31:45.063Z [PID:21104] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:31:45.065Z [PID:21104] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:31:45.118Z [PID:21104] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:31:45.119Z [PID:21104] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:31:45.444Z [PID:21104] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.ui.SwaggerConfigResource.openapiJson, execution time: 3ms
+2026-05-10T01:31:46.161Z [PID:21104] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 1041 ms
+2026-05-10T01:31:46.464Z [PID:21104] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 1059ms
+2026-05-10T01:31:49.794Z [PID:21104] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:31:49.795Z [PID:21104] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:31:49.909Z [PID:21104] ERROR v.i.l.l.jwt.JwtAuthenticationFilter - [system]: Authentication failed during JWT filter for request URI: /favicon.ico. Error: Bạn không được phép thực hiện hành động này.
+2026-05-10T01:31:49.909Z [PID:21104] WARN  v.i.l.l.j.JwtAuthenticationEntryPoint - [system]: Authentication failed for request URI: /favicon.ico. Reason: Bạn không được phép thực hiện hành động này.
+2026-05-10T01:31:50.076Z [PID:21104] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 4ms
+2026-05-10T01:32:10.869Z [PID:21104] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:32:10.869Z [PID:21104] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:32:11.155Z [PID:21104] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: org.springdoc.webmvc.api.OpenApiWebMvcResource.openapiJson, execution time: 3ms
+2026-05-10T01:32:45.632Z [PID:21104] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:32:45.688Z [PID:21104] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:32:45.689Z [PID:21104] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:32:46.060Z [PID:21104] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=LOGIN_FAILED, Message=auth.login.failed, Params=null
+2026-05-10T01:33:55.311Z [PID:21104] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:33:55.329Z [PID:21104] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:33:55.329Z [PID:21104] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:33:55.522Z [PID:21104] ERROR vn.id.luannv.lutaco.util.EnumUtils - [system]: Failed to convert value 'FEM' to enum type 'vn.id.luannv.lutaco.enumerate.UserGender'. Error: No enum constant vn.id.luannv.lutaco.enumerate.UserGender.FEM
+2026-05-10T01:33:55.677Z [PID:21104] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENUM_NOT_FOUND, Message=validation.enum.notFound, Params=null
+2026-05-10T01:36:47.771Z [PID:21104] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T01:36:47.825Z [PID:21104] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T01:36:47.847Z [PID:21104] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:36:47.849Z [PID:21104] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T01:36:47.906Z [PID:21104] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T01:36:51.420Z [PID:31580] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T01:36:51.465Z [PID:31580] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 31580 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T01:36:51.466Z [PID:31580] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T01:36:52.365Z [PID:31580] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T01:36:52.522Z [PID:31580] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 151 ms. Found 13 JPA repository interfaces.
+2026-05-10T01:36:53.178Z [PID:31580] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T01:36:53.188Z [PID:31580] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-10T01:36:53.190Z [PID:31580] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-10T01:36:53.191Z [PID:31580] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-10T01:36:53.246Z [PID:31580] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-10T01:36:53.247Z [PID:31580] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1745 ms
+2026-05-10T01:36:53.489Z [PID:31580] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T01:36:54.384Z [PID:31580] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@206bd7a0
+2026-05-10T01:36:54.386Z [PID:31580] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T01:36:56.224Z [PID:31580] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T01:36:56.651Z [PID:31580] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-10T01:36:56.699Z [PID:31580] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T01:36:56.753Z [PID:31580] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-10T01:36:56.753Z [PID:31580] INFO  liquibase.util - Run:                          0
+2026-05-10T01:36:56.753Z [PID:31580] INFO  liquibase.util - Previously run:              19
+2026-05-10T01:36:56.754Z [PID:31580] INFO  liquibase.util - Filtered out:                 0
+2026-05-10T01:36:56.754Z [PID:31580] INFO  liquibase.util - -------------------------------
+2026-05-10T01:36:56.754Z [PID:31580] INFO  liquibase.util - Total change sets:           19
+2026-05-10T01:36:56.754Z [PID:31580] INFO  liquibase.util - Update summary generated
+2026-05-10T01:36:56.755Z [PID:31580] INFO  liquibase.command - Command execution complete
+2026-05-10T01:36:58.093Z [PID:31580] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T01:36:58.138Z [PID:31580] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T01:36:58.163Z [PID:31580] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T01:36:58.389Z [PID:31580] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T01:36:58.501Z [PID:31580] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T01:36:59.462Z [PID:31580] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T01:36:59.465Z [PID:31580] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:36:59.691Z [PID:31580] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T01:37:00.759Z [PID:31580] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [REGISTER, FORGOT_PASSWORD, LOGIN]
+2026-05-10T01:37:01.654Z [PID:31580] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T01:37:01.933Z [PID:31580] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T01:37:02.911Z [PID:31580] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-10T01:37:02.928Z [PID:31580] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T01:37:02.941Z [PID:31580] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 11.921 seconds (process running for 12.471)
+2026-05-10T01:37:02.944Z [PID:31580] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T01:37:09.490Z [PID:31580] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-10T01:37:09.490Z [PID:31580] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-10T01:37:09.491Z [PID:31580] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-05-10T01:37:09.510Z [PID:31580] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:37:09.630Z [PID:31580] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:37:09.631Z [PID:31580] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:37:09.892Z [PID:31580] ERROR vn.id.luannv.lutaco.util.EnumUtils - [system]: Failed to convert value 'FEM' to enum type 'vn.id.luannv.lutaco.enumerate.UserGender'. Error: No enum constant vn.id.luannv.lutaco.enumerate.UserGender.FEM
+2026-05-10T01:37:10.019Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENUM_NOT_FOUND, Message=validation.enum.notFound, Params={enum=FEM}
+2026-05-10T01:38:10.237Z [PID:31580] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:38:10.243Z [PID:31580] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:38:10.243Z [PID:31580] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:38:11.451Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.create, execution time: 681ms
+2026-05-10T01:38:30.407Z [PID:31580] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:38:30.410Z [PID:31580] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:38:30.411Z [PID:31580] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:38:31.220Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.login, execution time: 518ms
+2026-05-10T01:38:33.838Z [PID:31580] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:38:33.840Z [PID:31580] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:38:33.840Z [PID:31580] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:38:34.624Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.login, execution time: 483ms
+2026-05-10T01:38:35.099Z [PID:31580] WARN  v.i.luannv.lutaco.util.SecurityUtils - [system]: Authentication object is null or not authenticated.
+2026-05-10T01:38:35.101Z [PID:31580] ERROR v.i.luannv.lutaco.util.SecurityUtils - [system]: Principal is not of type CustomUserDetails. Actual type: java.lang.String
+2026-05-10T01:38:35.101Z [PID:31580] WARN  v.i.l.l.aspect.UserActivityLogger - Could not get username from SecurityContext, trying PublicAuditValidate...
+2026-05-10T01:38:35.924Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [anonymous]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.login, execution time: 509ms
+2026-05-10T01:38:44.036Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:38:44.173Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:38:44.224Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:38:45.188Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.UserController.getMe, execution time: 380ms
+2026-05-10T01:39:14.581Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:39:14.681Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:39:14.727Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:39:14.993Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:39:15.484Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.registerSendOtp, execution time: 213ms
+2026-05-10T01:39:34.529Z [PID:31580] INFO  v.i.l.l.service.AsyncEmailService - ✅ Email sent successfully to=vanluandvlp@gmail.com
+2026-05-10T01:40:24.933Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:25.035Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:25.081Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:25.353Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:25.455Z [PID:31580] INFO  v.i.l.l.d.o.h.RegisterOtpHandler - Registration OTP handled for email: vanluandvlp@gmail.com
+2026-05-10T01:40:25.515Z [PID:31580] INFO  v.i.l.l.service.impl.UserServiceImpl - User status updated: id=2, newStatus=ACTIVE, actor=2
+2026-05-10T01:40:25.747Z [PID:31580] INFO  v.i.l.l.s.impl.WalletServiceImpl - Default wallet created for user: luannv
+2026-05-10T01:40:26.165Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.AuthController.registerVerifyOtp, execution time: 511ms
+2026-05-10T01:40:34.121Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:34.230Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:34.277Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:40:35.204Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.UserController.getMe, execution time: 352ms
+2026-05-10T01:45:21.533Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:21.636Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:21.681Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:21.957Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Access denied for current user: Access Denied
+2026-05-10T01:45:28.679Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:28.782Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:28.834Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:29.427Z [PID:31580] ERROR vn.id.luannv.lutaco.util.EnumUtils - [system]: Failed to convert value 'FEMAL' to enum type 'vn.id.luannv.lutaco.enumerate.UserGender'. Error: No enum constant vn.id.luannv.lutaco.enumerate.UserGender.FEMAL
+2026-05-10T01:45:29.427Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENUM_NOT_FOUND, Message=validation.enum.notFound, Params={enum=FEMAL}
+2026-05-10T01:45:34.342Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:34.443Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:34.494Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:45:35.625Z [PID:31580] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.UserController.update, execution time: 580ms
+2026-05-10T01:46:09.282Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:09.384Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:09.432Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:09.701Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Access denied for current user: Access Denied
+2026-05-10T01:46:15.053Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:15.173Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:15.222Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:15.749Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OPERATION_NOT_ALLOWED, Message=business.operation.not.allowed, Params=null
+2026-05-10T01:46:27.492Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:27.608Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:27.655Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:28.254Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OPERATION_NOT_ALLOWED, Message=business.operation.not.allowed, Params=null
+2026-05-10T01:46:36.639Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:36.734Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:36.779Z [PID:31580] INFO  vn.id.luannv.lutaco.jwt.JwtService - 79fc0642-1f27-4a98-ac11-e7d818a09994
+2026-05-10T01:46:37.340Z [PID:31580] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OPERATION_NOT_ALLOWED, Message=business.operation.not.allowed, Params=null
+2026-05-10T01:48:24.067Z [PID:31580] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T01:48:24.124Z [PID:31580] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T01:48:24.143Z [PID:31580] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:48:24.144Z [PID:31580] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T01:48:24.203Z [PID:31580] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T01:48:28.024Z [PID:10708] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T01:48:28.062Z [PID:10708] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 10708 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T01:48:28.063Z [PID:10708] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T01:48:29.005Z [PID:10708] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T01:48:29.164Z [PID:10708] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 153 ms. Found 13 JPA repository interfaces.
+2026-05-10T01:48:29.798Z [PID:10708] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T01:48:29.859Z [PID:10708] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1763 ms
+2026-05-10T01:48:30.081Z [PID:10708] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T01:48:30.945Z [PID:10708] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@13cc31df
+2026-05-10T01:48:30.946Z [PID:10708] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T01:48:34.750Z [PID:10708] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T01:48:34.787Z [PID:10708] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T01:48:34.819Z [PID:10708] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T01:48:35.011Z [PID:10708] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T01:48:35.108Z [PID:10708] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T01:48:35.935Z [PID:10708] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T01:48:35.938Z [PID:10708] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:48:36.129Z [PID:10708] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T01:48:37.046Z [PID:10708] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [FORGOT_PASSWORD, REGISTER, LOGIN]
+2026-05-10T01:48:37.830Z [PID:10708] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T01:48:38.032Z [PID:10708] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T01:48:39.182Z [PID:10708] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T01:48:39.192Z [PID:10708] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 11.523 seconds (process running for 12.026)
+2026-05-10T01:48:39.194Z [PID:10708] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T01:48:39.194Z [PID:10708] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T01:48:39.249Z [PID:10708] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T01:48:39.266Z [PID:10708] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:48:39.268Z [PID:10708] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T01:48:39.327Z [PID:10708] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T01:48:44.139Z [PID:23600] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T01:48:44.185Z [PID:23600] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 23600 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T01:48:44.186Z [PID:23600] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T01:49:24.979Z [PID:23600] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T01:49:25.155Z [PID:23600] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 168 ms. Found 13 JPA repository interfaces.
+2026-05-10T01:49:25.926Z [PID:23600] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T01:49:25.991Z [PID:23600] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 41756 ms
+2026-05-10T01:49:26.238Z [PID:23600] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T01:49:26.996Z [PID:23600] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@51e0f2eb
+2026-05-10T01:49:26.999Z [PID:23600] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T01:49:30.791Z [PID:23600] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T01:49:30.832Z [PID:23600] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T01:49:30.859Z [PID:23600] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T01:49:31.065Z [PID:23600] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T01:49:31.165Z [PID:23600] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T01:49:32.060Z [PID:23600] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T01:49:32.063Z [PID:23600] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:49:32.260Z [PID:23600] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T01:49:33.198Z [PID:23600] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [LOGIN, REGISTER, FORGOT_PASSWORD]
+2026-05-10T01:49:34.023Z [PID:23600] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T01:49:34.221Z [PID:23600] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T01:49:35.149Z [PID:23600] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T01:49:35.161Z [PID:23600] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 51.432 seconds (process running for 52.702)
+2026-05-10T01:49:35.163Z [PID:23600] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T01:49:35.163Z [PID:23600] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T01:49:35.220Z [PID:23600] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T01:49:35.239Z [PID:23600] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:49:35.241Z [PID:23600] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T01:49:35.303Z [PID:23600] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T01:49:40.365Z [PID:26892] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T01:49:40.409Z [PID:26892] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 26892 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T01:49:40.410Z [PID:26892] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T01:51:41.832Z [PID:26892] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T01:51:42.014Z [PID:26892] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 174 ms. Found 13 JPA repository interfaces.
+2026-05-10T01:51:42.766Z [PID:26892] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T01:51:42.830Z [PID:26892] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 122373 ms
+2026-05-10T01:51:43.070Z [PID:26892] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T01:51:43.827Z [PID:26892] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@284b487f
+2026-05-10T01:51:43.829Z [PID:26892] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T01:51:47.879Z [PID:26892] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T01:51:47.917Z [PID:26892] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T01:51:47.945Z [PID:26892] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T01:51:48.150Z [PID:26892] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T01:51:48.257Z [PID:26892] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T01:51:49.245Z [PID:26892] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T01:51:49.250Z [PID:26892] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:51:49.496Z [PID:26892] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T01:51:50.685Z [PID:26892] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [LOGIN, REGISTER, FORGOT_PASSWORD]
+2026-05-10T01:51:51.647Z [PID:26892] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T01:51:51.887Z [PID:26892] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T01:51:53.118Z [PID:26892] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T01:51:53.133Z [PID:26892] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 133.191 seconds (process running for 133.955)
+2026-05-10T01:51:53.136Z [PID:26892] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T01:51:53.136Z [PID:26892] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T01:51:53.199Z [PID:26892] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T01:51:53.220Z [PID:26892] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:51:53.222Z [PID:26892] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T01:51:53.282Z [PID:26892] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T01:52:51.156Z [PID:32624] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T01:52:51.209Z [PID:32624] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 32624 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T01:52:51.209Z [PID:32624] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T01:53:09.177Z [PID:32624] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T01:53:09.361Z [PID:32624] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 176 ms. Found 13 JPA repository interfaces.
+2026-05-10T01:53:10.082Z [PID:32624] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T01:53:10.092Z [PID:32624] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-10T01:53:10.093Z [PID:32624] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-10T01:53:10.093Z [PID:32624] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-10T01:53:10.150Z [PID:32624] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-10T01:53:10.150Z [PID:32624] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 18867 ms
+2026-05-10T01:53:10.410Z [PID:32624] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T01:53:11.187Z [PID:32624] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@52e92f6
+2026-05-10T01:53:11.190Z [PID:32624] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T01:53:13.008Z [PID:32624] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T01:53:13.448Z [PID:32624] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-10T01:53:13.493Z [PID:32624] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T01:53:13.558Z [PID:32624] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-10T01:53:13.558Z [PID:32624] INFO  liquibase.util - Run:                          0
+2026-05-10T01:53:13.558Z [PID:32624] INFO  liquibase.util - Previously run:              19
+2026-05-10T01:53:13.558Z [PID:32624] INFO  liquibase.util - Filtered out:                 0
+2026-05-10T01:53:13.558Z [PID:32624] INFO  liquibase.util - -------------------------------
+2026-05-10T01:53:13.559Z [PID:32624] INFO  liquibase.util - Total change sets:           19
+2026-05-10T01:53:13.560Z [PID:32624] INFO  liquibase.util - Update summary generated
+2026-05-10T01:53:13.561Z [PID:32624] INFO  liquibase.command - Command execution complete
+2026-05-10T01:53:14.905Z [PID:32624] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T01:53:14.951Z [PID:32624] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T01:53:14.983Z [PID:32624] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T01:53:15.214Z [PID:32624] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T01:53:15.323Z [PID:32624] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T01:53:16.285Z [PID:32624] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T01:53:16.288Z [PID:32624] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T01:53:16.511Z [PID:32624] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T01:53:17.570Z [PID:32624] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [FORGOT_PASSWORD, REGISTER, LOGIN]
+2026-05-10T01:53:18.510Z [PID:32624] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T01:53:18.737Z [PID:32624] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T01:53:19.703Z [PID:32624] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-10T01:53:19.723Z [PID:32624] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T01:53:19.735Z [PID:32624] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 29.038 seconds (process running for 29.852)
+2026-05-10T01:53:19.738Z [PID:32624] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T01:53:31.982Z [PID:32624] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-10T01:53:31.982Z [PID:32624] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-10T01:53:31.984Z [PID:32624] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-10T01:55:06.259Z [PID:32624] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m54s964ms262µs500ns).
+2026-05-10T01:55:06.365Z [PID:32624] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OPERATION_NOT_ALLOWED, Message=business.operation.not.allowed, Params=null
+2026-05-10T01:56:26.927Z [PID:32624] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.UserController.getMe, execution time: 397ms
+2026-05-10T01:56:47.647Z [PID:32624] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.getMyWallets, execution time: 92ms
+2026-05-10T01:57:08.710Z [PID:32624] WARN  v.i.l.l.s.impl.WalletServiceImpl - User luannv has reached the maximum wallet limit for their plan.
+2026-05-10T01:57:08.711Z [PID:32624] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=OPERATION_LIMIT_EXCEEDED, Message=error.plan.limit.exceeded, Params=null
+2026-05-10T01:57:22.118Z [PID:32624] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.toggle, execution time: 305ms
+2026-05-10T01:57:28.739Z [PID:32624] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.toggle, execution time: 277ms
+2026-05-10T01:57:30.298Z [PID:32624] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.toggle, execution time: 258ms
+2026-05-10T01:57:31.806Z [PID:32624] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.WalletController.toggle, execution time: 382ms
+2026-05-10T02:00:00.122Z [PID:32624] INFO  vn.id.luannv.lutaco.job.PaymentJob - [system]: Starting scheduled job: Reconciling pending payments.
+2026-05-10T02:00:00.236Z [PID:32624] ERROR o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+java.lang.UnsupportedOperationException: This service is temporarily disabled.
+	at vn.id.luannv.lutaco.job.PaymentJob.reconcilePendingPayments(PaymentJob.java:31)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at vn.id.luannv.lutaco.job.PaymentJob$$SpringCGLIB$$0.reconcilePendingPayments(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:87)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:264)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2026-05-10T02:13:05.084Z [PID:32624] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T02:13:05.139Z [PID:32624] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T02:13:05.163Z [PID:32624] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T02:13:05.165Z [PID:32624] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T02:13:05.226Z [PID:32624] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T02:14:10.513Z [PID:16300] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T02:14:10.551Z [PID:16300] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 16300 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T02:14:10.551Z [PID:16300] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T02:14:11.509Z [PID:16300] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T02:14:11.669Z [PID:16300] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 154 ms. Found 13 JPA repository interfaces.
+2026-05-10T02:14:12.385Z [PID:16300] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T02:14:12.395Z [PID:16300] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-10T02:14:12.396Z [PID:16300] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-10T02:14:12.397Z [PID:16300] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-10T02:14:12.456Z [PID:16300] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-10T02:14:12.457Z [PID:16300] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1873 ms
+2026-05-10T02:14:12.733Z [PID:16300] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T02:14:13.771Z [PID:16300] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@433b546f
+2026-05-10T02:14:13.772Z [PID:16300] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T02:14:15.512Z [PID:16300] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T02:14:16.009Z [PID:16300] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-10T02:14:16.053Z [PID:16300] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T02:14:16.114Z [PID:16300] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-10T02:14:16.115Z [PID:16300] INFO  liquibase.util - Run:                          0
+2026-05-10T02:14:16.115Z [PID:16300] INFO  liquibase.util - Previously run:              19
+2026-05-10T02:14:16.115Z [PID:16300] INFO  liquibase.util - Filtered out:                 0
+2026-05-10T02:14:16.115Z [PID:16300] INFO  liquibase.util - -------------------------------
+2026-05-10T02:14:16.115Z [PID:16300] INFO  liquibase.util - Total change sets:           19
+2026-05-10T02:14:16.116Z [PID:16300] INFO  liquibase.util - Update summary generated
+2026-05-10T02:14:16.118Z [PID:16300] INFO  liquibase.command - Command execution complete
+2026-05-10T02:14:17.382Z [PID:16300] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T02:14:17.439Z [PID:16300] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T02:14:17.476Z [PID:16300] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T02:14:17.758Z [PID:16300] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T02:14:17.941Z [PID:16300] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T02:14:19.063Z [PID:16300] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T02:14:19.065Z [PID:16300] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T02:14:19.294Z [PID:16300] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T02:14:20.413Z [PID:16300] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [FORGOT_PASSWORD, REGISTER, LOGIN]
+2026-05-10T02:14:21.582Z [PID:16300] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T02:14:21.824Z [PID:16300] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T02:14:23.340Z [PID:16300] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-10T02:14:23.366Z [PID:16300] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T02:14:23.379Z [PID:16300] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 13.245 seconds (process running for 13.827)
+2026-05-10T02:14:23.381Z [PID:16300] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T02:15:00.022Z [PID:16300] INFO  v.i.l.l.j.InvalidatedTokenCleanupJob - [system]: Starting scheduled job: Cleaning up expired invalidated tokens.
+2026-05-10T02:15:00.362Z [PID:16300] INFO  v.i.l.l.j.InvalidatedTokenCleanupJob - [system]: Finished scheduled job: Expired invalidated tokens cleanup complete.
+2026-05-10T02:15:02.325Z [PID:16300] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-10T02:15:02.326Z [PID:16300] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-10T02:15:02.328Z [PID:16300] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-10T02:15:03.027Z [PID:16300] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'page': The value for this field must be between 1 and 1000.
+2026-05-10T02:15:03.028Z [PID:16300] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Validation error in field 'size': The value for this field must be between 1 and 1000.
+2026-05-10T02:15:03.028Z [PID:16300] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: MethodArgumentNotValidException: 2 validation errors occurred.
+2026-05-10T02:15:16.115Z [PID:16300] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-10T02:15:16.176Z [PID:16300] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-05-10T02:15:16.193Z [PID:16300] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T02:15:16.195Z [PID:16300] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-05-10T02:15:16.257Z [PID:16300] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-05-10T02:15:30.878Z [PID:19652] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-05-10T02:15:30.918Z [PID:19652] INFO  v.id.luannv.lutaco.LutacoApplication - Starting LutacoApplication using Java 17.0.12 with PID 19652 (C:\Users\luannv\Desktop\lutaco\lutaco-be\target\classes started by luannv in C:\Users\luannv\Desktop\lutaco\lutaco-be)
+2026-05-10T02:15:30.919Z [PID:19652] INFO  v.id.luannv.lutaco.LutacoApplication - No active profile set, falling back to 1 default profile: "default"
+2026-05-10T02:15:31.912Z [PID:19652] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-10T02:15:32.072Z [PID:19652] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 153 ms. Found 13 JPA repository interfaces.
+2026-05-10T02:15:32.747Z [PID:19652] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-05-10T02:15:32.757Z [PID:19652] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-10T02:15:32.758Z [PID:19652] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-05-10T02:15:32.759Z [PID:19652] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-10T02:15:32.824Z [PID:19652] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-05-10T02:15:32.825Z [PID:19652] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1872 ms
+2026-05-10T02:15:33.099Z [PID:19652] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-05-10T02:15:33.892Z [PID:19652] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ed35f24
+2026-05-10T02:15:33.893Z [PID:19652] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-05-10T02:15:35.654Z [PID:19652] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T02:15:36.110Z [PID:19652] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-05-10T02:15:36.155Z [PID:19652] INFO  liquibase.changelog - Reading from test.databasechangelog
+2026-05-10T02:15:36.217Z [PID:19652] INFO  liquibase.util - UPDATE SUMMARY
+2026-05-10T02:15:36.217Z [PID:19652] INFO  liquibase.util - Run:                          0
+2026-05-10T02:15:36.217Z [PID:19652] INFO  liquibase.util - Previously run:              19
+2026-05-10T02:15:36.217Z [PID:19652] INFO  liquibase.util - Filtered out:                 0
+2026-05-10T02:15:36.217Z [PID:19652] INFO  liquibase.util - -------------------------------
+2026-05-10T02:15:36.217Z [PID:19652] INFO  liquibase.util - Total change sets:           19
+2026-05-10T02:15:36.218Z [PID:19652] INFO  liquibase.util - Update summary generated
+2026-05-10T02:15:36.219Z [PID:19652] INFO  liquibase.command - Command execution complete
+2026-05-10T02:15:37.637Z [PID:19652] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-10T02:15:37.676Z [PID:19652] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.39.Final
+2026-05-10T02:15:37.702Z [PID:19652] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-05-10T02:15:37.924Z [PID:19652] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-10T02:15:38.051Z [PID:19652] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.11
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-10T02:15:39.038Z [PID:19652] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-10T02:15:39.040Z [PID:19652] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-10T02:15:39.248Z [PID:19652] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-10T02:15:40.309Z [PID:19652] INFO  v.i.l.l.service.impl.OtpServiceImpl - OTP handlers registered: [FORGOT_PASSWORD, LOGIN, REGISTER]
+2026-05-10T02:15:41.236Z [PID:19652] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-10T02:15:41.485Z [PID:19652] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-05-10T02:15:43.468Z [PID:19652] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-05-10T02:15:43.498Z [PID:19652] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-05-10T02:15:43.520Z [PID:19652] INFO  v.id.luannv.lutaco.LutacoApplication - Started LutacoApplication in 13.05 seconds (process running for 13.631)
+2026-05-10T02:15:43.526Z [PID:19652] INFO  v.id.luannv.lutaco.LutacoApplication - ✅ Build Successfully!
+2026-05-10T02:17:30.493Z [PID:19652] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-10T02:17:30.493Z [PID:19652] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-05-10T02:17:30.495Z [PID:19652] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-05-10T02:17:31.677Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=INSUFFICIENT_BALANCE, Message=wallet.insufficient.balance, Params={message=Insufficient balance or wallet not found}
+2026-05-10T02:17:36.078Z [PID:19652] INFO  v.i.l.l.s.i.TransactionServiceImpl - Transaction created for user 2: 1
+2026-05-10T02:17:36.498Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.create, execution time: 459ms
+2026-05-10T02:18:28.825Z [PID:19652] INFO  v.i.l.l.s.i.TransactionServiceImpl - Transaction created for user 2: 2
+2026-05-10T02:18:29.236Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.create, execution time: 421ms
+2026-05-10T02:19:03.014Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENTITY_NOT_FOUND, Message=entity.not.found, Params={field=category.id}
+2026-05-10T02:20:17.677Z [PID:19652] ERROR vn.id.luannv.lutaco.util.EnumUtils - [system]: Failed to convert value 'DAY' to enum type 'vn.id.luannv.lutaco.enumerate.FrequentType'. Error: No enum constant vn.id.luannv.lutaco.enumerate.FrequentType.DAY
+2026-05-10T02:20:17.803Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENUM_NOT_FOUND, Message=validation.enum.notFound, Params={enum=DAY}
+2026-05-10T02:21:32.239Z [PID:19652] ERROR vn.id.luannv.lutaco.util.EnumUtils - [system]: Failed to convert value 'DAY' to enum type 'vn.id.luannv.lutaco.enumerate.FrequentType'. Error: No enum constant vn.id.luannv.lutaco.enumerate.FrequentType.DAY
+2026-05-10T02:21:32.361Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENUM_NOT_FOUND, Message=validation.enum.notFound, Params={enum=DAY}
+2026-05-10T02:21:52.330Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=INVALID_PARAMS, Message=validation.invalid.param, Params={reason=recurring.date.end_before_start, field=endDate}
+2026-05-10T02:22:05.101Z [PID:19652] INFO  v.i.l.l.s.i.RecurringTransactionServiceImpl - Recurring job created for user luannv: category=12, wallet=1, freq=DAILY
+2026-05-10T02:22:05.517Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.RecurringTransactionController.create, execution time: 472ms
+2026-05-10T02:24:11.541Z [PID:19652] INFO  v.i.l.l.s.impl.BudgetServiceImpl - Budget created for user: luannv, category: 1, period: DAY
+2026-05-10T02:24:11.950Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.BudgetController.create, execution time: 576ms
+2026-05-10T02:24:41.661Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=ENTITY_NOT_FOUND, Message=entity.not.found, Params={id=7188}
+2026-05-10T02:24:47.967Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.BudgetController.update, execution time: 429ms
+2026-05-10T02:25:14.253Z [PID:19652] INFO  v.i.l.l.s.i.TransactionServiceImpl - Transaction created for user 2: 4
+2026-05-10T02:25:14.665Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.TransactionController.create, execution time: 425ms
+2026-05-10T02:25:20.215Z [PID:19652] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1690, SQLState: 22001
+2026-05-10T02:25:20.215Z [PID:19652] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: DECIMAL value is out of range in '?'
+2026-05-10T02:25:20.334Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Data integrity violation occurred.: could not execute statement [Data truncation: DECIMAL value is out of range in '?'] [update budgets set actual_amount=?,category_id=?,end_date=?,name=?,percentage=?,period=?,start_date=?,status=?,target_amount=?,updated_by=?,updated_date=?,user_id=? where id=?]; SQL [update budgets set actual_amount=?,category_id=?,end_date=?,name=?,percentage=?,period=?,start_date=?,status=?,target_amount=?,updated_by=?,updated_date=?,user_id=? where id=?]
+2026-05-10T02:25:39.009Z [PID:19652] INFO  v.i.l.l.event.UserAuditEventListener - [luannv]: User audit log saved for method: vn.id.luannv.lutaco.controller.BudgetController.getDetail, execution time: 373ms
+2026-05-10T02:26:16.017Z [PID:19652] WARN  v.i.l.l.e.GlobalExceptionHandler - [system]: Caught BusinessException: Code=INSUFFICIENT_BALANCE, Message=wallet.insufficient.balance, Params={message=Insufficient balance or wallet not found}

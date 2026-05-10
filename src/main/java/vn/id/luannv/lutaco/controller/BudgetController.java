@@ -80,7 +80,7 @@ public class BudgetController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        budgetService.search(request, request.getPage(), request.getSize()),
+                        budgetService.search(request),
                         "Tìm kiếm ngân sách thành công."
                 ));
     }

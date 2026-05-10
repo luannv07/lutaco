@@ -78,10 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CategoryResponse> search(CategoryFilterRequest request, Integer page, Integer size) {
-        int pageIndex = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Order.asc("categoryCode"), Sort.Order.asc("id")));
-
+    public Page<CategoryResponse> search(CategoryFilterRequest request) {
         Specification<Category> specification = Specification.anyOf();
 
         if (StringUtils.hasText(request.getCategoryName())) {
@@ -99,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
 
-        return categoryRepository.findAll(specification, pageable).map(this::toResponse);
+        return categoryRepository.findAll(specification, request.pageable()).map(this::toResponse);
     }
 
     @Override
