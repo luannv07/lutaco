@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: a1b2c3d4-recurring-end-date-001
+      author: luannv
+      changes:
+        - addColumn:
+            tableName: recurring_transactions
+            columns:
+              - column:
+                  name: end_date
+                  type: date

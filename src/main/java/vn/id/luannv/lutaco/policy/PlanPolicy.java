@@ -6,4 +6,8 @@ public interface PlanPolicy {
     int maxWallets(User user);
 
     boolean canCreateWallet(User user, int currentWalletCount);
+
+    int maxBudgets(User user);
+
+    boolean canCreateBudget(User user, int currentBudgetCount);
 }

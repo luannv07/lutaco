@@ -7,32 +7,27 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Length;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RecurringTransactionRequest {
+public class BudgetCreateRequest {
+
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 255, message = "{validation.field.too_long}")
+    String name;
 
     @NotNull(message = "{validation.required}")
-    @Positive(message = "{validation.field.positive}")
     Long categoryId;
 
     @NotNull(message = "{validation.required}")
     @Positive(message = "{validation.field.positive}")
-    Long walletId;
-
-    @NotNull(message = "{validation.required}")
-    @Positive(message = "{validation.field.positive}")
-    Long amount;
-
-    @Size(max = 255, message = "{validation.field.too_long}")
-    @Length(max = 255, message = "{validation.field.too_long}")
-    String note;
+    BigDecimal targetAmount;
 
     @NotBlank(message = "{validation.required}")
-    String frequentType;
+    String period;
 
     @NotNull(message = "{validation.required}")
     LocalDate startDate;
