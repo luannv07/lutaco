@@ -219,19 +219,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<TransactionResponse> search(TransactionFilterRequest request, Integer page, Integer size) {
+    public Page<TransactionResponse> search(TransactionFilterRequest request) {
 
         Long userId = SecurityUtils.getCurrentId();
 
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by(Sort.Direction.DESC, "transactionDate")
-        );
-
         Specification<Transaction> spec = buildSpec(request, userId);
 
-        Page<Transaction> pageData = transactionRepository.findAll(spec, pageable);
+        Page<Transaction> pageData = transactionRepository.findAll(spec, request.pageable());
 
         return pageData.map(this::toResponse);
     }

@@ -142,11 +142,8 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BudgetResponse> search(BudgetFilterRequest request, Integer page, Integer size) {
+    public Page<BudgetResponse> search(BudgetFilterRequest request) {
         Long userId = SecurityUtils.getCurrentId();
-        int pageIndex = Math.max(0, page - 1);
-        Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Order.desc("createdDate")));
-
         Specification<Budget> spec = (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
 
         if (StringUtils.hasText(request.getName())) {
@@ -177,7 +174,7 @@ public class BudgetServiceImpl implements BudgetService {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("category").get("id"), request.getCategoryId()));
         }
 
-        return budgetRepository.findAll(spec, pageable).map(this::toResponse);
+        return budgetRepository.findAll(spec, request.pageable()).map(this::toResponse);
     }
 
     @Override

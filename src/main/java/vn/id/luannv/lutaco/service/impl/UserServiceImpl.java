@@ -95,12 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserResponse> search(UserFilterRequest request, Integer page, Integer size) {
-        if (page == null) page = 0;
-        if (size == null) size = 10;
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    public Page<UserResponse> search(UserFilterRequest request) {
         Specification<User> spec = buildSpec(request);
-        Page<User> users = userRepository.findAll(spec, pageable);
+        Page<User> users = userRepository.findAll(spec, request.pageable());
         return users.map(this::convertToResponse);
     }
 

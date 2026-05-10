@@ -38,7 +38,7 @@ public class UserController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        userService.search(request, request.getPage(), request.getSize()),
+                        userService.search(request),
                         "Lấy danh sách người dùng thành công."
                 ));
     }

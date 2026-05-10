@@ -33,11 +33,7 @@ public class TransactionController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        transactionService.search(
-                                request,
-                                request.getPage(),
-                                request.getSize()
-                        ),
+                        transactionService.search(request),
                         "Lấy danh sách giao dịch thành công."
                 )
         );

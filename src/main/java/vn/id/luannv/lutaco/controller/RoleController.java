@@ -29,7 +29,7 @@ public class RoleController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        roleService.search(
+                        roleService.literalSearch(
                                 request.getName(),
                                 request.getPage(),
                                 request.getSize()
