@@ -20,6 +20,8 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
     List<Wallet> findByUserId(Long userId);
 
+    List<Wallet> findByUserIdAndActiveFlgTrue(Long userId);
+
     @Modifying
     @Query("""
     UPDATE Wallet w

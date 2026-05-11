@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import vn.id.luannv.lutaco.converter.PeriodConverter;
 import vn.id.luannv.lutaco.enumerate.BudgetStatus;
 import vn.id.luannv.lutaco.enumerate.Period;
 
@@ -35,7 +36,7 @@ public class Budget extends BaseEntity {
     @Column(name = "actual_amount", nullable = false, precision = 19, scale = 2)
     BigDecimal actualAmount;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PeriodConverter.class)
     @Column(nullable = false, length = 50)
     Period period;
 

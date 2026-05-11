@@ -3,8 +3,10 @@ package vn.id.luannv.lutaco.util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -29,6 +31,24 @@ public class TimeUtils {
         if (isMax)
             return dateTime == null || dateTime.isAfter(SAFE_MAX_DATE) ? SAFE_MAX_DATE : dateTime;
         return dateTime == null || dateTime.isBefore(SAFE_MIN_DATE) ? SAFE_MIN_DATE : dateTime;
+    }
+
+    public static LocalDate today() {
+        return LocalDate.now();
+    }
+
+    public static Instant toUtcStartInstant(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return date.atStartOfDay(ZoneOffset.UTC).toInstant();
+    }
+
+    public static Instant toUtcExclusiveEndInstant(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return date.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
     }
 
     /**
