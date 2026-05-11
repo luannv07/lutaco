@@ -10,6 +10,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.buf.ByteChunk;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -63,10 +64,12 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         String buildKey = username + "_" + ipAddress;
         RequestInfo requestInfo = getRequestInfo(buildKey, now);
 
-        try {
-            if (requestInfo.requests.size() > rateLimitMaxAttempts)
-                throw new BusinessException(ErrorCode.TOO_MANY_REQUESTS);
 
+        try {
+            if (requestInfo.blockedUntil != null && requestInfo.blockedUntil.isAfter(now)
+                    || requestInfo.requests.size() > rateLimitMaxAttempts) {
+                throw new BusinessException(ErrorCode.TOO_MANY_REQUESTS);
+            }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             ErrorCode errorCode = ErrorCode.SYSTEM_ERROR;
@@ -81,29 +84,34 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
             objectMapper.writeValue(response.getOutputStream(), BaseResponse.error(
                     errorCode,
-                    localizationUtils.getLocalizedMessage(errorCode.getMessage()),
+                    localizationUtils.getLocalizedMessage(request, errorCode.getMessage()),
                     Map.of("retryAt", requestInfo.lastRequest.plusSeconds(Math.min(rateLimitMiniumPendingSeconds, Integer.MAX_VALUE)))
             ));
         }
     }
-
     private RequestInfo getRequestInfo(String key, Instant now) {
         return rateLimitCache.asMap().compute(key, (k, v) -> {
+            if (v == null) v = new RequestInfo();
 
-            if (v == null) {
-                v = new RequestInfo();
+            // Vẫn bị block → không add request
+            if (v.blockedUntil != null && v.blockedUntil.isAfter(now)) {
+                return v;
             }
 
+            // Slide window: xóa request cũ hơn 1 giây
             while (!v.requests.isEmpty() &&
                     v.requests.peekFirst().plusSeconds(1).isBefore(now)) {
                 v.requests.pollFirst();
             }
 
-            if (v.requests.size() > rateLimitMaxAttempts) {
-                return v;
-            }
-            v.lastRequest = now;
             v.requests.addLast(now);
+            v.lastRequest = now;
+
+            if (v.requests.size() > rateLimitMaxAttempts) {
+                v.blockedUntil = now.plusSeconds(rateLimitMiniumPendingSeconds);
+                // KHÔNG clear → giữ size để check bên ngoài đúng
+            }
+
             return v;
         });
     }
@@ -116,6 +124,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     public static class RequestInfo {
         @Builder.Default
         Deque<Instant> requests = new ArrayDeque<>();
+        Instant blockedUntil;
         @Builder.Default
         Instant lastRequest = Instant.now();
     }

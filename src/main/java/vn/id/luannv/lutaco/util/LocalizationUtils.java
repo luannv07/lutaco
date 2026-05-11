@@ -32,6 +32,15 @@ public class LocalizationUtils {
         }
     }
 
+    public String getLocalizedMessage(HttpServletRequest request, String key, Object... args) {
+        try {
+            Locale locale = localeResolver.resolveLocale(request);
+            return i18nCacheService.getMessage(key, locale, args);
+        } catch (Exception e) {
+            return key;
+        }
+    }
+
     public String getCurrentLocaleKey() {
         try {
             HttpServletRequest request = ((ServletRequestAttributes)
