@@ -17,7 +17,7 @@ public interface RecurringTransactionRepository
 
     @Query("""
             SELECT rt.id FROM RecurringTransaction rt
-            WHERE rt.activeFlg = true AND rt.nextDate <= :today
+            WHERE rt.activeFlg = true AND rt.nextDate = :today
             """)
     List<Long> findDueActiveJobIds(@Param("today") LocalDate today);
 

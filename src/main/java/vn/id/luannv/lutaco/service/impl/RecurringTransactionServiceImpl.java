@@ -207,8 +207,16 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         RecurringTransaction job = recurringTransactionRepository.findById(jobId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, Map.of("id", jobId)));
 
+        LocalDate today = TimeUtils.today();
+
         if (!job.isActiveFlg()) {
             log.info("[recurring-job]: Job {} is inactive, skipping.", jobId);
+            return;
+        }
+
+        if (job.getNextDate() == null || !job.getNextDate().isEqual(today)) {
+            log.debug("[recurring-job]: Job {} is not due today (nextDate={}, today={}), skipping.",
+                    jobId, job.getNextDate(), today);
             return;
         }
 

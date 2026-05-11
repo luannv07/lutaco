@@ -22,7 +22,7 @@ public class RecurringTransactionJob {
     RecurringTransactionRepository recurringTransactionRepository;
     RecurringTransactionService recurringTransactionService;
 
-    @Scheduled(cron = "0 0 * * * ?") // every hour at minute 0
+    @Scheduled(cron = "${jobs.recurring.cron:0 5 0 * * *}", zone = "Asia/Ho_Chi_Minh") // default: 00:05 every day
     public void processRecurringTransactions() {
         LocalDate today = TimeUtils.today();
         List<Long> dueJobIds = recurringTransactionRepository.findDueActiveJobIds(today);
