@@ -53,6 +53,14 @@ public class BudgetServiceImpl implements BudgetService {
     UserRepository userRepository;
     PlanPolicy planPolicy;
 
+    private LocalDate calculateEndDate(LocalDate startDate, Period period) {
+        return switch (period) {
+            case DAY -> startDate.plusDays(1).minusDays(1);
+            case WEEK -> startDate.plusWeeks(1).minusDays(1);
+            case MONTH -> startDate.plusMonths(1).minusDays(1);
+            case YEAR -> startDate.plusYears(1).minusDays(1);
+        };
+    }
     @Override
     @Transactional
     public BudgetResponse create(BudgetCreateRequest request) {
@@ -71,11 +79,11 @@ public class BudgetServiceImpl implements BudgetService {
 
         Period period = EnumUtils.from(Period.class, request.getPeriod());
 
-        validateDateRange(request.getStartDate(), request.getEndDate());
-
         if (budgetRepository.existsByUserIdAndCategoryIdAndPeriod(user.getId(), category.getId(), period)) {
             throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, Map.of("field", "budget.user_category_period"));
         }
+
+        LocalDate endDate = calculateEndDate(request.getStartDate(), period);
 
         Budget budget = new Budget();
         budget.setUser(user);
@@ -84,7 +92,7 @@ public class BudgetServiceImpl implements BudgetService {
         budget.setTargetAmount(request.getTargetAmount());
         budget.setPeriod(period);
         budget.setStartDate(request.getStartDate());
-        budget.setEndDate(request.getEndDate());
+        budget.setEndDate(endDate);
 
         recalculate(budget, user.getId(), category);
 

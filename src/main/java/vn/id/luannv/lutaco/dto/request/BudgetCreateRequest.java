@@ -31,6 +31,4 @@ public class BudgetCreateRequest {
 
     @NotNull(message = "{validation.required}")
     LocalDate startDate;
-
-    LocalDate endDate;
 }
