@@ -23,7 +23,7 @@ public class BaseFilterRequest {
     @Range(min = 1, max = 1000, message = "{validation.field.size_not_in_range}")
     Integer size = 10;
 
-    String sortBy = "createdAt";
+    String sortBy = "createdDate";
 
     Sort.Direction sortDirection = Sort.Direction.DESC;
 
@@ -41,10 +41,10 @@ public class BaseFilterRequest {
     }
 
     protected Set<String> getAllowedSortFields() {
-        return Set.of("createdAt", "updatedAt");
+        return Set.of("createdDate", "updatedDate");
     }
 
     protected String getDefaultSortBy() {
-        return "createdAt";
+        return "createdDate";
     }
 }
