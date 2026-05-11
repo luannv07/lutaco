@@ -195,6 +195,29 @@ public class BudgetServiceImpl implements BudgetService {
         return toResponse(budget);
     }
 
+    @Override
+    @Transactional
+    public void refreshBudgetsForTransaction(Long userId, Long categoryId) {
+        Category transactionCategory = getCategoryOrThrow(categoryId);
+        Long parentCategoryId = transactionCategory.getParent() != null
+                ? transactionCategory.getParent().getId()
+                : null;
+
+        List<Budget> budgets = budgetRepository.findByUserId(userId);
+        List<Budget> affectedBudgets = budgets.stream()
+                .filter(budget -> isAffectedByTransaction(budget, categoryId, parentCategoryId))
+                .toList();
+
+        if (affectedBudgets.isEmpty()) {
+            log.debug("No matching budgets found for user {} and category {}", userId, categoryId);
+            return;
+        }
+
+        affectedBudgets.forEach(budget -> recalculate(budget, userId, budget.getCategory()));
+        budgetRepository.saveAll(affectedBudgets);
+        log.info("Refreshed {} budget(s) for user {} and category {}", affectedBudgets.size(), userId, categoryId);
+    }
+
     private void recalculate(Budget budget, Long userId, Category category) {
         List<Long> categoryIds = collectCategoryIds(category);
 
@@ -281,5 +304,17 @@ public class BudgetServiceImpl implements BudgetService {
                 .endDate(budget.getEndDate())
                 .userId(budget.getUser() != null ? budget.getUser().getId().toString() : null)
                 .build();
+    }
+
+    private boolean isAffectedByTransaction(Budget budget, Long categoryId, Long parentCategoryId) {
+        if (budget == null || budget.getCategory() == null) {
+            return false;
+        }
+
+        Long budgetCategoryId = budget.getCategory().getId();
+        return budgetCategoryId != null && (
+                budgetCategoryId.equals(categoryId)
+                        || (parentCategoryId != null && budgetCategoryId.equals(parentCategoryId))
+        );
     }
 }

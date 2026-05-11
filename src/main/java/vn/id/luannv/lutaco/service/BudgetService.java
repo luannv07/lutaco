@@ -14,4 +14,6 @@ public interface BudgetService extends BaseService<BudgetFilterRequest, BudgetRe
     List<BudgetResponse> getMyBudgets();
 
     BudgetResponse refreshProgress(Long id);
+
+    void refreshBudgetsForTransaction(Long userId, Long categoryId);
 }
