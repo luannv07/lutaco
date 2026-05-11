@@ -172,7 +172,7 @@ public class InsightServiceImpl implements InsightService {
         return switch (code) {
             case EXPENSE_INCREASE -> localized(
                     value != null && value >= insightConfig.getExpense().getDangerRate() * 100
-                            ? "dashboard.insight.expense.increase.danger.message"
+                            ? "dashboard.insight.expense.increase.danger"
                             : "dashboard.insight.expense.increase.message",
                     valueText
             );

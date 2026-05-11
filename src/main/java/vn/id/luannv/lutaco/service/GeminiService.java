@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class GeminiService {
 
     private static final int MAX_USER_PROMPT_LENGTH = 500;
+    private static final int MAX_DASHBOARD_PROMPT_LENGTH = 4000;
     private static final List<String> ALLOWED_FINANCE_KEYWORDS = List.of(
             "tai chinh", "tài chính",
             "chi tieu", "chi tiêu",
@@ -51,44 +52,47 @@ public class GeminiService {
     public String askGemini(String message) {
         String safeMessage = normalizeUserPrompt(message, "message");
         ensureFinanceRelevant(safeMessage);
-        return chatClient.prompt()
-                .system(buildSystemPrompt())
-                .user(safeMessage)
-                .call()
-                .content();
+        return callModel(buildSystemPrompt(), safeMessage);
     }
 
     public String askDashboard(String question, DashboardResponse dashboard) {
+        return askDashboard(question, dashboard, null);
+    }
+
+    public String askDashboard(String question, DashboardResponse dashboard, String currentUsername) {
         String safeQuestion = normalizeUserPrompt(question, "question");
         ensureFinanceRelevant(safeQuestion);
-        String prompt = buildDashboardPrompt(safeQuestion, dashboard);
+        String safeUserName = sanitizeDisplayName(currentUsername);
+        String prompt = clampDashboardPrompt(buildDashboardPrompt(safeQuestion, dashboard, safeUserName));
 
         try {
-            return askGemini(prompt);
+            String rawAnswer = callModel(buildSystemPrompt(), prompt);
+            return normalizeDashboardAnswer(rawAnswer, safeUserName);
         } catch (Exception e) {
             log.warn("[ai] dashboard analysis fallback because AI call failed: {}", e.getMessage());
-            return localized("dashboard.ai.fallback") + "\n\n" + prompt;
+            return buildLocalDashboardFallback(dashboard, safeUserName);
         }
     }
 
-    private String buildDashboardPrompt(String question, DashboardResponse dashboard) {
+    private String buildDashboardPrompt(String question, DashboardResponse dashboard, String currentUsername) {
         String title = localized("dashboard.ai.prompt.title");
         String questionLabel = localized("dashboard.ai.prompt.question");
         String overviewLabel = localized("dashboard.ai.prompt.overview");
         String topExpenseLabel = localized("dashboard.ai.prompt.top_expense");
         String insightsLabel = localized("dashboard.ai.prompt.insights");
-        String outputLabel = localized("dashboard.ai.prompt.output");
         String scopeLabel = localized("dashboard.ai.prompt.out_of_scope");
         String replyStyle = localized("dashboard.ai.prompt.reply_style");
+        String greetingRule = localized("dashboard.ai.prompt.greeting.rule", currentUsername);
+        String outputFormatRule = localized("dashboard.ai.prompt.output.format", currentUsername);
 
-        String insights = dashboard.getInsights() == null
-                ? localized("i18n.no.message")
+        String insights = dashboard.getInsights() == null || dashboard.getInsights().isEmpty()
+                ? localized("dashboard.ai.prompt.no_insight")
                 : dashboard.getInsights().stream()
                 .map(i -> "- [" + i.getLevel() + "] " + i.getMessage() + (i.getRecommendation() != null ? " | Gợi ý: " + i.getRecommendation() : ""))
                 .collect(Collectors.joining("\n"));
 
-        String categories = dashboard.getTopExpenseCategories() == null
-                ? localized("i18n.no.message")
+        String categories = dashboard.getTopExpenseCategories() == null || dashboard.getTopExpenseCategories().isEmpty()
+                ? localized("dashboard.ai.prompt.no_data")
                 : dashboard.getTopExpenseCategories().stream()
                 .map(c -> "- " + c.getCategoryName() + ": " + c.getAmount() + " (" + String.format(Locale.US, "%.2f", c.getRatioNormalized()) + "%)")
                 .collect(Collectors.joining("\n"));
@@ -103,7 +107,9 @@ public class GeminiService {
                 + localized("dashboard.ai.system.refuse") + "\n"
                 + localized("dashboard.ai.system.response.language") + "\n"
                 + localized("dashboard.ai.system.response.limit") + "\n\n"
-                + outputLabel + ": " + localized("dashboard.ai.prompt.output") + "\n"
+                + localized("dashboard.ai.prompt.output") + "\n"
+                + greetingRule + "\n"
+                + outputFormatRule + "\n"
                 + scopeLabel + "\n"
                 + questionLabel + ": " + question + "\n\n"
                 + overviewLabel + ":\n"
@@ -113,6 +119,89 @@ public class GeminiService {
                 + topExpenseLabel + ":\n" + categories + "\n\n"
                 + insightsLabel + ":\n" + insights + "\n\n"
                 + replyStyle;
+    }
+
+    private String clampDashboardPrompt(String prompt) {
+        if (prompt == null) {
+            return "";
+        }
+        if (prompt.length() <= MAX_DASHBOARD_PROMPT_LENGTH) {
+            return prompt;
+        }
+        return prompt.substring(0, MAX_DASHBOARD_PROMPT_LENGTH)
+                + "\n\n"
+                + localized("dashboard.ai.prompt.truncated");
+    }
+
+    private String buildLocalDashboardFallback(DashboardResponse dashboard, String currentUsername) {
+        StringBuilder builder = new StringBuilder(localized("dashboard.ai.fallback"));
+        builder.append("\n\n");
+        if (isVietnameseLocale()) {
+            builder.append("Chào ").append(currentUsername).append(",\n\n");
+        } else {
+            builder.append("Hi ").append(currentUsername).append(",\n\n");
+        }
+        builder.append(localized("dashboard.ai.fallback.summary")).append(":\n");
+        builder.append("- ")
+                .append(isVietnameseLocale() ? "Thu nhập" : "Income")
+                .append(": ")
+                .append(dashboard.getDashboardOverview().getTotalIncome())
+                .append("\n");
+        builder.append("- ")
+                .append(isVietnameseLocale() ? "Chi tiêu" : "Expense")
+                .append(": ")
+                .append(dashboard.getDashboardOverview().getTotalExpense())
+                .append("\n");
+        builder.append("- ")
+                .append(isVietnameseLocale() ? "Số dư" : "Balance")
+                .append(": ")
+                .append(dashboard.getDashboardOverview().getBalance())
+                .append("\n");
+
+        if (dashboard.getInsights() != null && !dashboard.getInsights().isEmpty()) {
+            builder.append("\n")
+                    .append(localized("dashboard.ai.prompt.insights"))
+                    .append(":\n");
+            dashboard.getInsights().stream().limit(3).forEach(insight ->
+                    builder.append("- ").append(insight.getMessage()).append("\n")
+            );
+        }
+
+        return builder.toString().trim();
+    }
+
+    private String callModel(String systemPrompt, String userPrompt) {
+        return chatClient.prompt()
+                .system(systemPrompt)
+                .user(userPrompt)
+                .call()
+                .content();
+    }
+
+    private String normalizeDashboardAnswer(String answer, String currentUsername) {
+        String normalized = answer == null ? "" : answer.trim().replace("\r\n", "\n");
+
+        String expectedGreeting = isVietnameseLocale()
+                ? "Chào " + currentUsername + ","
+                : "Hi " + currentUsername + ",";
+
+        normalized = normalized
+                .replaceFirst("^Chào\\s+Lutaco,?", expectedGreeting)
+                .replaceFirst("^Hi\\s+Lutaco,?", expectedGreeting)
+                .replaceFirst("^Hello\\s+Lutaco,?", expectedGreeting);
+
+        if (!normalized.startsWith(expectedGreeting)) {
+            normalized = expectedGreeting + "\n\n" + normalized;
+        }
+
+        if (!normalized.contains("1.")) {
+            String actionHeader = isVietnameseLocale()
+                    ? "\n\n1. Hành động ưu tiên 1\n2. Hành động ưu tiên 2\n3. Hành động ưu tiên 3"
+                    : "\n\n1. Priority action 1\n2. Priority action 2\n3. Priority action 3";
+            normalized = normalized + actionHeader;
+        }
+
+        return normalized.trim();
     }
 
     private String normalizeUserPrompt(String value, String field) {
@@ -147,6 +236,10 @@ public class GeminiService {
         return localizationUtils.getLocalizedMessage(key);
     }
 
+    private String localized(String key, Object... args) {
+        return localizationUtils.getLocalizedMessage(key, args);
+    }
+
     private boolean isVietnameseLocale() {
         return localizationUtils.getCurrentLocaleKey().toLowerCase(Locale.ROOT).startsWith("vi");
     }
@@ -157,6 +250,23 @@ public class GeminiService {
                 + localized("dashboard.ai.system.refuse") + "\n"
                 + localized("dashboard.ai.system.response.language") + "\n"
                 + localized("dashboard.ai.system.response.limit");
+    }
+
+    private String sanitizeDisplayName(String rawName) {
+        if (rawName == null) {
+            return isVietnameseLocale() ? "bạn" : "there";
+        }
+
+        String name = rawName.trim().replaceAll("\\s+", " ");
+        if (name.isBlank()) {
+            return isVietnameseLocale() ? "bạn" : "there";
+        }
+
+        if (name.length() > 60) {
+            name = name.substring(0, 60);
+        }
+
+        return name;
     }
 
     private String stripAccents(String input) {

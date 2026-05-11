@@ -18,6 +18,7 @@ import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.service.DashboardService;
 import vn.id.luannv.lutaco.service.GeminiService;
 import vn.id.luannv.lutaco.util.EnumUtils;
+import vn.id.luannv.lutaco.util.SecurityUtils;
 
 @RestController
 @RequestMapping("/api/v1/ai")
@@ -55,7 +56,7 @@ public class AiController {
 
         return ResponseEntity.ok(
                 BaseResponse.success(
-                        geminiService.askDashboard(question, summary),
+                        geminiService.askDashboard(question, summary, SecurityUtils.getCurrentUsername()),
                         "AI phan tich dashboard thanh cong."
                 )
         );
