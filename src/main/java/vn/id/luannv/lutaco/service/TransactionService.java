@@ -16,4 +16,8 @@ public interface TransactionService extends
     void deleteByIdAndWalletId(Long id, Long walletId);
 
     void restoreTransaction(Long id, Long walletId);
+
+    void duplicateOne(@Valid Long existedTransactionId);
+
+    void duplicateMultiple(@Valid Long[] existedTransactionIds);
 }

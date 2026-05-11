@@ -62,6 +62,24 @@ public class TransactionController {
                         "Tạo giao dịch thành công."
                 ));
     }
+
+    @PostMapping("/duplicate/one")
+    public ResponseEntity<BaseResponse<Void>> copyOne(@Valid @RequestBody Long existedTransactionId) {
+        transactionService.duplicateOne(existedTransactionId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.success(
+                        "Copy 1 giao dịch thành công."
+                ));
+    }
+
+    @PostMapping("/duplicate/multiple")
+    public ResponseEntity<BaseResponse<Void>> copyMultiple(@Valid @RequestBody Long[] existedTransactionIds) {
+        transactionService.duplicateMultiple(existedTransactionIds);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.success(
+                        "Copy nhiều giao dịch thành công."
+                ));
+    }
  
     @PostMapping("/bulk")
     public ResponseEntity<BaseResponse<List<TransactionResponse>>> createBulk(

@@ -88,4 +88,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
             @Param("endDate") Instant endDate,
             Pageable pageable
     );
+
+    List<Transaction> findByIdIn(Collection<Long> ids);
+
+    List<Transaction> findByIdInAndUserId(List<Long> list, Long currentId);
 }

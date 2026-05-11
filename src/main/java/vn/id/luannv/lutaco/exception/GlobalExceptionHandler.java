@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
@@ -101,6 +104,33 @@ public class GlobalExceptionHandler {
                 ex.getName(), ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown", ex.getValue(), ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(BaseResponse.error(ErrorCode.VALIDATION_FAILED, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<BaseResponse<Void>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        log.warn("[system]: Multipart upload exceeds allowed size: {}", ex.getMessage());
+        String message = localizationUtils.getLocalizedMessage(ErrorCode.AI_IMAGE_TOO_LARGE.getMessage());
+        return ResponseEntity
+                .status(ErrorCode.AI_IMAGE_TOO_LARGE.getHttpStatus())
+                .body(BaseResponse.error(ErrorCode.AI_IMAGE_TOO_LARGE, message, null));
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<BaseResponse<Void>> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
+        log.warn("[system]: Missing multipart request part: {}", ex.getRequestPartName());
+        String message = localizationUtils.getLocalizedMessage(ErrorCode.REQUIRED_FIELD_MISSING.getMessage());
+        return ResponseEntity
+                .status(ErrorCode.REQUIRED_FIELD_MISSING.getHttpStatus())
+                .body(BaseResponse.error(ErrorCode.REQUIRED_FIELD_MISSING, message, null));
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<BaseResponse<Void>> handleMultipartException(MultipartException ex) {
+        log.warn("[system]: Multipart request error: {}", ex.getMessage());
+        String message = localizationUtils.getLocalizedMessage(ErrorCode.AI_IMAGE_INVALID.getMessage());
+        return ResponseEntity
+                .status(ErrorCode.AI_IMAGE_INVALID.getHttpStatus())
+                .body(BaseResponse.error(ErrorCode.AI_IMAGE_INVALID, message, null));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

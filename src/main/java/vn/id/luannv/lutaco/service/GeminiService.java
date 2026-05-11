@@ -1,13 +1,22 @@
 package vn.id.luannv.lutaco.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MimeType;
+import org.springframework.web.multipart.MultipartFile;
+import vn.id.luannv.lutaco.dto.response.AiExtractResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
 import vn.id.luannv.lutaco.util.LocalizationUtils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +29,7 @@ public class GeminiService {
 
     private static final int MAX_USER_PROMPT_LENGTH = 500;
     private static final int MAX_DASHBOARD_PROMPT_LENGTH = 4000;
+    private static final long MAX_IMAGE_SIZE_BYTES = 10L * 1024 * 1024;
     private static final List<String> ALLOWED_FINANCE_KEYWORDS = List.of(
             "tai chinh", "tài chính",
             "chi tieu", "chi tiêu",
@@ -43,10 +53,12 @@ public class GeminiService {
 
     private final ChatClient chatClient;
     private final LocalizationUtils localizationUtils;
+    private final ObjectMapper objectMapper;
 
-    public GeminiService(ChatClient.Builder builder, LocalizationUtils localizationUtils) {
+    public GeminiService(ChatClient.Builder builder, LocalizationUtils localizationUtils, ObjectMapper objectMapper) {
         this.chatClient = builder.build();
         this.localizationUtils = localizationUtils;
+        this.objectMapper = objectMapper;
     }
 
     public String askGemini(String message) {
@@ -72,6 +84,26 @@ public class GeminiService {
             log.warn("[ai] dashboard analysis fallback because AI call failed: {}", e.getMessage());
             return buildLocalDashboardFallback(dashboard, safeUserName);
         }
+    }
+
+    public AiExtractResponse extractTransactionFromImage(MultipartFile file) {
+        validateExtractionFile(file);
+
+        String rawAnswer;
+        try {
+            rawAnswer = chatClient.prompt()
+                    .system(buildExtractionSystemPrompt())
+                    .user(user -> user
+                            .text(buildExtractionUserPrompt())
+                            .media(resolveMimeType(file), toImageResource(file)))
+                    .call()
+                    .content();
+        } catch (Exception e) {
+            log.warn("[ai] image extraction failed because AI call failed: {}", e.getMessage());
+            return buildFailedExtractionResponse(null, "AI extraction failed. Please try again later.");
+        }
+
+        return parseExtractionResponse(rawAnswer);
     }
 
     private String buildDashboardPrompt(String question, DashboardResponse dashboard, String currentUsername) {
@@ -131,6 +163,119 @@ public class GeminiService {
         return prompt.substring(0, MAX_DASHBOARD_PROMPT_LENGTH)
                 + "\n\n"
                 + localized("dashboard.ai.prompt.truncated");
+    }
+
+    private String buildExtractionSystemPrompt() {
+        return "You are a finance document extraction engine. "
+                + "Extract the content from the provided image and return ONLY valid JSON. "
+                + "Do not add markdown, code fences, explanations, or extra keys. "
+                + "If a value is missing, use null. "
+                + "Amounts must be numbers in VND. "
+                + "If the document is not a bill or a transfer receipt, set success to false and provide a short error message.";
+    }
+
+    private String buildExtractionUserPrompt() {
+        return "Return JSON with this shape: {"
+                + "\"transactionDraft\": {"
+                + "\"amount\": 1430000, "
+                + "\"transactionDate\": \"2026-05-11T10:15:49.187176+00:00\", "
+                + "\"note\": \"MB Bank - Chuyển tiền thành công từ DANG THANH NGA\", "
+                + "\"suggestedCategory\": \"other\""
+                + "}, "
+                + "\"bill\": {"
+                + "\"storeName\": \"MB Bank\", "
+                + "\"storeAddress\": null, "
+                + "\"date\": \"24/04/2025\", "
+                + "\"time\": \"11:57\", "
+                + "\"items\": [], "
+                + "\"subtotal\": null, "
+                + "\"discount\": null, "
+                + "\"tax\": null, "
+                + "\"total\": 1430000, "
+                + "\"currency\": \"VND\", "
+                + "\"paymentMethod\": \"Bank Transfer\", "
+                + "\"category\": \"other\", "
+                + "\"notes\": \"Chuyển tiền thành công từ DANG THANH NGA\""
+                + "}, "
+                + "\"error\": null }";
+    }
+
+    private AiExtractResponse parseExtractionResponse(String rawAnswer) {
+        String rawText = rawAnswer == null ? "" : rawAnswer.trim();
+        if (rawText.isBlank()) {
+            return buildFailedExtractionResponse(rawText, "AI returned an empty response.");
+        }
+
+        String jsonPayload = extractJsonPayload(rawText);
+        try {
+            AiExtractResponse response = objectMapper.readValue(jsonPayload, AiExtractResponse.class);
+            response.setRawText(rawText);
+            return response;
+        } catch (Exception e) {
+            log.warn("[ai] unable to parse extraction response as JSON: {}", e.getMessage());
+            return buildFailedExtractionResponse(rawText, "AI returned invalid JSON.");
+        }
+    }
+
+    private AiExtractResponse buildFailedExtractionResponse(String rawText, String error) {
+        return AiExtractResponse.builder()
+                .rawText(rawText)
+                .error(error)
+                .build();
+    }
+
+    private String extractJsonPayload(String rawText) {
+        String cleaned = rawText
+                .replaceFirst("^```(?:json)?\\s*", "")
+                .replaceFirst("\\s*```$", "")
+                .trim();
+
+        int start = cleaned.indexOf('{');
+        int end = cleaned.lastIndexOf('}');
+        if (start >= 0 && end > start) {
+            return cleaned.substring(start, end + 1);
+        }
+
+        return cleaned;
+    }
+
+    private void validateExtractionFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new BusinessException(ErrorCode.REQUIRED_FIELD_MISSING);
+        }
+
+        if (file.getSize() > MAX_IMAGE_SIZE_BYTES) {
+            throw new BusinessException(ErrorCode.AI_IMAGE_TOO_LARGE);
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
+            throw new BusinessException(ErrorCode.AI_IMAGE_INVALID);
+        }
+    }
+
+    private MimeType resolveMimeType(MultipartFile file) {
+        String contentType = file.getContentType();
+        if (contentType == null || contentType.isBlank()) {
+            return MimeType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        }
+
+        return MimeType.valueOf(contentType);
+    }
+
+    private Resource toImageResource(MultipartFile file) {
+        try {
+            byte[] content = file.getBytes();
+            return new ByteArrayResource(content) {
+                @Override
+                public String getFilename() {
+                    String originalFilename = file.getOriginalFilename();
+                    return originalFilename != null && !originalFilename.isBlank() ? originalFilename : "upload-image";
+                }
+            };
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        }
     }
 
     private String buildLocalDashboardFallback(DashboardResponse dashboard, String currentUsername) {

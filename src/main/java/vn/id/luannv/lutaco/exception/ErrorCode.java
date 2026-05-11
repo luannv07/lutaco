@@ -42,6 +42,8 @@ public enum ErrorCode {
     AI_MESSAGE_BLANK("ai.message.blank", HttpStatus.BAD_REQUEST),
     AI_MESSAGE_TOO_LONG("ai.message.too_long", HttpStatus.BAD_REQUEST),
     AI_MESSAGE_OUT_OF_SCOPE("ai.message.out_of_scope", HttpStatus.BAD_REQUEST),
+    AI_IMAGE_TOO_LARGE("ai.image.too_large", HttpStatus.BAD_REQUEST),
+    AI_IMAGE_INVALID("ai.image.invalid", HttpStatus.BAD_REQUEST),
 
     // =====================================================
     // ================= ENTITY / RESOURCE =================

@@ -3,10 +3,12 @@ package vn.id.luannv.lutaco.service.impl;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,10 +33,7 @@ import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -408,5 +407,76 @@ public class TransactionServiceImpl implements TransactionService {
                 .walletId(t.getWallet().getId())
                 .walletName(t.getWallet().getName())
                 .build();
+    }
+
+    private Transaction copyTransaction(Transaction source) {
+        if (!source.isActiveFlg()) {
+            throw new BusinessException(
+                    ErrorCode.ENTITY_NOT_FOUND,
+                    Map.of("field", "transaction.id")
+            );
+        }
+
+        Transaction duplicated = new Transaction();
+
+        duplicated.setUser(source.getUser());
+        duplicated.setCategory(source.getCategory());
+        duplicated.setWallet(source.getWallet());
+        duplicated.setAmount(source.getAmount());
+        duplicated.setTransactionDate(source.getTransactionDate());
+        duplicated.setNote(source.getNote());
+        walletRepository.updateBalance(source.getWallet().getId(), source.getAmount(), source.getCategory().getCategoryType().name());
+        return duplicated;
+    }
+
+    @Override
+    @Transactional
+    public void duplicateOne(Long existedTransactionId) {
+
+        if (existedTransactionId == null) {
+            throw new BusinessException(
+                    ErrorCode.REQUIRED_FIELD_MISSING,
+                    Map.of("field", "transaction.id")
+            );
+        }
+
+        Transaction source = transactionRepository.findByIdAndUserId(existedTransactionId, SecurityUtils.getCurrentId())
+                .orElseThrow(() -> new BusinessException(
+                        ErrorCode.ENTITY_NOT_FOUND,
+                        Map.of("field", "transaction.id")
+                ));
+        transactionRepository.save(copyTransaction(source));
+    }
+
+    @Override
+    @Transactional
+    public void duplicateMultiple(Long[] existedTransactionIds) {
+
+        if (existedTransactionIds == null || existedTransactionIds.length == 0) {
+            throw new BusinessException(
+                    ErrorCode.REQUIRED_FIELD_MISSING,
+                    Map.of("field", "transaction.id")
+            );
+        }
+
+        List<Transaction> transactions =
+                transactionRepository.findByIdInAndUserId(
+                        Arrays.asList(existedTransactionIds),
+                        SecurityUtils.getCurrentId()
+                );
+
+        if (transactions.isEmpty()) {
+            throw new BusinessException(
+                    ErrorCode.ENTITY_NOT_FOUND,
+                    Map.of("field", "transaction.id")
+            );
+        }
+
+        List<Transaction> toSaved = transactions.stream()
+                .filter(Transaction::isActiveFlg)
+                .map(this::copyTransaction)
+                .toList();
+
+        transactionRepository.saveAll(toSaved);
     }
 }

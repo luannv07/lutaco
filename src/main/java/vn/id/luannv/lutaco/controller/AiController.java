@@ -4,15 +4,20 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.http.MediaType;
 import vn.id.luannv.lutaco.dto.response.BaseResponse;
+import vn.id.luannv.lutaco.dto.response.AiExtractResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardResponse;
 import vn.id.luannv.lutaco.enumerate.PeriodRange;
 import vn.id.luannv.lutaco.service.DashboardService;
@@ -40,6 +45,20 @@ public class AiController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.success(geminiService.askGemini(message), "AI tra loi thanh cong.")
+        );
+    }
+
+    @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<AiExtractResponse>> extract(
+            @RequestPart("file")
+            @NotNull(message = "{validation.required}")
+            org.springframework.web.multipart.MultipartFile file
+    ) {
+        return ResponseEntity.ok(
+                BaseResponse.success(
+                        geminiService.extractTransactionFromImage(file),
+                        "AI trich xuat thanh cong."
+                )
         );
     }
 
