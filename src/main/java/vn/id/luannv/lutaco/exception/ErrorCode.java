@@ -39,6 +39,9 @@ public enum ErrorCode {
     FIELD_TOO_SHORT("validation.field.tooShort", HttpStatus.BAD_REQUEST),
     FIELD_EXISTED("validation.field.existed", HttpStatus.BAD_REQUEST),
     ENUM_NOT_FOUND("validation.enum.notFound", HttpStatus.BAD_REQUEST),
+    AI_MESSAGE_BLANK("ai.message.blank", HttpStatus.BAD_REQUEST),
+    AI_MESSAGE_TOO_LONG("ai.message.too_long", HttpStatus.BAD_REQUEST),
+    AI_MESSAGE_OUT_OF_SCOPE("ai.message.out_of_scope", HttpStatus.BAD_REQUEST),
 
     // =====================================================
     // ================= ENTITY / RESOURCE =================

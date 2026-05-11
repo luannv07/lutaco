@@ -2,7 +2,6 @@ package vn.id.luannv.lutaco.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.dto.InsightDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DashboardResponse {
     DashboardOverview dashboardOverview;
-    List<InsightDto> insight;
+    List<DashboardInsightResponse> insights;
 
     WalletSummary walletSummary;
 

@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import vn.id.luannv.lutaco.repository.RecurringTransactionRepository;
 import vn.id.luannv.lutaco.service.RecurringTransactionService;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +24,7 @@ public class RecurringTransactionJob {
 
     @Scheduled(cron = "0 0 * * * ?") // every hour at minute 0
     public void processRecurringTransactions() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = TimeUtils.today();
         List<Long> dueJobIds = recurringTransactionRepository.findDueActiveJobIds(today);
 
         if (dueJobIds.isEmpty()) {

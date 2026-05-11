@@ -6,9 +6,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +18,7 @@ import vn.id.luannv.lutaco.entity.RecurringTransaction;
 import vn.id.luannv.lutaco.entity.Transaction;
 import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.entity.Wallet;
-import vn.id.luannv.lutaco.enumerate.FrequentType;
+import vn.id.luannv.lutaco.enumerate.Period;
 import vn.id.luannv.lutaco.event.entity.RecurringExecutedEvent;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
@@ -34,10 +31,10 @@ import vn.id.luannv.lutaco.service.RecurringTransactionService;
 import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 import vn.id.luannv.lutaco.util.StringUtils;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +72,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
             throw new BusinessException(ErrorCode.WALLET_INACTIVE);
         }
 
-        FrequentType frequentType = EnumUtils.from(FrequentType.class, request.getFrequentType());
+        Period period = EnumUtils.from(Period.class, request.getFrequentType());
 
         if (request.getEndDate() != null && !request.getEndDate().isAfter(request.getStartDate())) {
             throw new BusinessException(ErrorCode.INVALID_PARAMS, Map.of("field", "endDate", "reason", "recurring.date.end_before_start"));
@@ -88,7 +85,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         template.setWallet(wallet);
         template.setAmount(request.getAmount());
         template.setNote(request.getNote());
-        template.setTransactionDate(request.getStartDate().atStartOfDay(ZoneOffset.UTC).toInstant());
+        template.setTransactionDate(TimeUtils.toUtcStartInstant(request.getStartDate()));
         template.setActiveFlg(false);
         Transaction savedTemplate = transactionRepository.save(template);
 
@@ -96,13 +93,13 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         job.setTransaction(savedTemplate);
         job.setStartDate(request.getStartDate());
         job.setNextDate(request.getStartDate());
-        job.setFrequentType(frequentType);
+        job.setFrequentType(period);
         job.setEndDate(request.getEndDate());
         job.setActiveFlg(true);
         recurringTransactionRepository.save(job);
 
         log.info("Recurring job created for user {}: category={}, wallet={}, freq={}",
-                user.getUsername(), category.getId(), wallet.getId(), frequentType);
+                user.getUsername(), category.getId(), wallet.getId(), period);
         return toResponse(job);
     }
 
@@ -126,7 +123,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
             template.setNote(request.getNote());
         }
         if (StringUtils.hasText(request.getFrequentType())) {
-            job.setFrequentType(EnumUtils.from(FrequentType.class, request.getFrequentType()));
+            job.setFrequentType(EnumUtils.from(Period.class, request.getFrequentType()));
         }
         if (request.getEndDate() != null) {
             if (!request.getEndDate().isAfter(job.getStartDate())) {
@@ -135,7 +132,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
             job.setEndDate(request.getEndDate());
         }
         if (request.getNextDate() != null) {
-            if (request.getNextDate().isBefore(LocalDate.now())) {
+            if (request.getNextDate().isBefore(TimeUtils.today())) {
                 throw new BusinessException(ErrorCode.INVALID_PARAMS, Map.of("field", "nextDate", "reason", "recurring.date.next_in_past"));
             }
             job.setNextDate(request.getNextDate());
@@ -184,10 +181,10 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                 cb.equal(root.get("transaction").get("user").get("id"), userId);
 
         if (StringUtils.hasText(request.getFrequentType())) {
-            try {
-                FrequentType ft = FrequentType.valueOf(request.getFrequentType().toUpperCase());
+            Period ft = EnumUtils.tryFrom(Period.class, request.getFrequentType()).orElse(null);
+            if (ft != null) {
                 spec = spec.and((root, query, cb) -> cb.equal(root.get("frequentType"), ft));
-            } catch (IllegalArgumentException e) {
+            } else {
                 log.warn("Invalid frequentType filter: {}", request.getFrequentType());
             }
         }
@@ -215,8 +212,6 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
             return;
         }
 
-        LocalDate today = LocalDate.now();
-
         // Deactivate expired jobs
         if (job.getEndDate() != null && job.getNextDate().isAfter(job.getEndDate())) {
             job.setActiveFlg(false);
@@ -237,7 +232,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         }
 
         // Create a real transaction from the template
-        Instant txDate = job.getNextDate().atStartOfDay(ZoneOffset.UTC).toInstant();
+        Instant txDate = TimeUtils.toUtcStartInstant(job.getNextDate());
         Transaction newTx = new Transaction();
         newTx.setUser(user);
         newTx.setCategory(category);
@@ -259,7 +254,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         Transaction savedTx = transactionRepository.save(newTx);
 
         // Advance nextDate for next execution
-        LocalDate newNextDate = job.getFrequentType().calculateNextDate(job.getNextDate());
+        LocalDate newNextDate = job.getFrequentType().addTo(job.getNextDate());
         job.setNextDate(newNextDate);
         recurringTransactionRepository.save(job);
 

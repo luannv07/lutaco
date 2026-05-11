@@ -5,9 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +28,12 @@ import vn.id.luannv.lutaco.service.BudgetService;
 import vn.id.luannv.lutaco.util.EnumUtils;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 import vn.id.luannv.lutaco.util.StringUtils;
+import vn.id.luannv.lutaco.util.TimeUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,14 +50,6 @@ public class BudgetServiceImpl implements BudgetService {
     UserRepository userRepository;
     PlanPolicy planPolicy;
 
-    private LocalDate calculateEndDate(LocalDate startDate, Period period) {
-        return switch (period) {
-            case DAY -> startDate.plusDays(1).minusDays(1);
-            case WEEK -> startDate.plusWeeks(1).minusDays(1);
-            case MONTH -> startDate.plusMonths(1).minusDays(1);
-            case YEAR -> startDate.plusYears(1).minusDays(1);
-        };
-    }
     @Override
     @Transactional
     public BudgetResponse create(BudgetCreateRequest request) {
@@ -83,7 +72,7 @@ public class BudgetServiceImpl implements BudgetService {
             throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, Map.of("field", "budget.user_category_period"));
         }
 
-        LocalDate endDate = calculateEndDate(request.getStartDate(), period);
+        LocalDate endDate = period.calculateEndDate(request.getStartDate());
 
         Budget budget = new Budget();
         budget.setUser(user);
@@ -161,10 +150,10 @@ public class BudgetServiceImpl implements BudgetService {
         }
 
         if (StringUtils.hasText(request.getPeriod())) {
-            try {
-                Period period = Period.valueOf(request.getPeriod().toUpperCase());
+            Period period = EnumUtils.tryFrom(Period.class, request.getPeriod()).orElse(null);
+            if (period != null) {
                 spec = spec.and((root, query, cb) -> cb.equal(root.get("period"), period));
-            } catch (IllegalArgumentException e) {
+            } else {
                 log.warn("Invalid period filter value: {}", request.getPeriod());
             }
         }
@@ -229,9 +218,9 @@ public class BudgetServiceImpl implements BudgetService {
     private void recalculate(Budget budget, Long userId, Category category) {
         List<Long> categoryIds = collectCategoryIds(category);
 
-        Instant startInstant = budget.getStartDate().atStartOfDay(ZoneOffset.UTC).toInstant();
+        Instant startInstant = TimeUtils.toUtcStartInstant(budget.getStartDate());
         Instant endInstant = budget.getEndDate() != null
-                ? budget.getEndDate().plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant()
+                ? TimeUtils.toUtcExclusiveEndInstant(budget.getEndDate())
                 : Instant.now().plusSeconds(1);
 
         Long sumLong = transactionRepository.sumAmountByCategoryIdsAndDateRange(userId, categoryIds, startInstant, endInstant);
@@ -322,7 +311,7 @@ public class BudgetServiceImpl implements BudgetService {
         Long budgetCategoryId = budget.getCategory().getId();
         return budgetCategoryId != null && (
                 budgetCategoryId.equals(categoryId)
-                        || (parentCategoryId != null && budgetCategoryId.equals(parentCategoryId))
+                        || budgetCategoryId.equals(parentCategoryId)
         );
     }
 }

@@ -5,7 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import vn.id.luannv.lutaco.enumerate.FrequentType;
+import vn.id.luannv.lutaco.converter.PeriodConverter;
+import vn.id.luannv.lutaco.enumerate.Period;
 
 import java.time.LocalDate;
 
@@ -30,9 +31,9 @@ public class RecurringTransaction extends BaseEntity {
     @Column(name = "next_date")
     LocalDate nextDate;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PeriodConverter.class)
     @Column(name = "frequent_type", nullable = false, length = 50)
-    FrequentType frequentType;
+    Period frequentType;
 
     @Column(name = "active_flg", nullable = false)
     boolean activeFlg = true;

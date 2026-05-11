@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
-import vn.id.luannv.lutaco.enumerate.FrequentType;
+import vn.id.luannv.lutaco.enumerate.Period;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ public class RecurringTransactionResponse {
     String walletName;
     Long amount;
     String note;
-    FrequentType frequentType;
+    Period frequentType;
     LocalDate startDate;
     LocalDate nextDate;
     LocalDate endDate;
