@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.dto.request.TransactionFilterRequest;
 import vn.id.luannv.lutaco.dto.request.TransactionRequest;
@@ -22,6 +23,7 @@ import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.exception.BusinessException;
 import vn.id.luannv.lutaco.exception.ErrorCode;
+import vn.id.luannv.lutaco.event.entity.TransactionChangedEvent;
 import vn.id.luannv.lutaco.repository.CategoryRepository;
 import vn.id.luannv.lutaco.repository.TransactionRepository;
 import vn.id.luannv.lutaco.repository.UserRepository;
@@ -48,6 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
     WalletRepository walletRepository;
     CategoryRepository categoryRepository;
     UserRepository userRepository;
+    ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -150,6 +153,7 @@ public class TransactionServiceImpl implements TransactionService {
             // Soft delete
             transaction.setActiveFlg(false);
             transactionRepository.save(transaction);
+            publishTransactionChangedEvent(transaction);
             log.info("Transaction {} deleted for user {}", transaction.getId(), userId);
         }
     }
@@ -201,6 +205,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
         
         Transaction savedTransaction = transactionRepository.save(transaction);
+        publishTransactionChangedEvent(savedTransaction);
         log.info("Transaction created for user {}: {}", userId, savedTransaction.getId());
         
         return toResponse(savedTransaction);
@@ -279,6 +284,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
         
         Transaction updatedTransaction = transactionRepository.save(transaction);
+        publishTransactionChangedEvent(updatedTransaction);
         log.info("Transaction {} updated for user {}", id, userId);
         
         return toResponse(updatedTransaction);
@@ -309,6 +315,7 @@ public class TransactionServiceImpl implements TransactionService {
         // Soft delete
         transaction.setActiveFlg(false);
         transactionRepository.save(transaction);
+        publishTransactionChangedEvent(transaction);
         log.info("Transaction {} deleted for user {}", id, userId);
     }
 
@@ -342,6 +349,7 @@ public class TransactionServiceImpl implements TransactionService {
         // Soft delete
         transaction.setActiveFlg(false);
         transactionRepository.save(transaction);
+        publishTransactionChangedEvent(transaction);
         log.info("Transaction {} deleted for wallet {} by user {}", id, walletId, userId);
     }
 
@@ -375,7 +383,16 @@ public class TransactionServiceImpl implements TransactionService {
         // Restore transaction
         transaction.setActiveFlg(true);
         transactionRepository.save(transaction);
+        publishTransactionChangedEvent(transaction);
         log.info("Transaction {} restored for wallet {} by user {}", id, walletId, userId);
+    }
+
+    private void publishTransactionChangedEvent(Transaction transaction) {
+        eventPublisher.publishEvent(TransactionChangedEvent.builder()
+                .transactionId(transaction.getId())
+                .userId(transaction.getUser().getId())
+                .categoryId(transaction.getCategory().getId())
+                .build());
     }
 
     private TransactionResponse toResponse(Transaction t) {
