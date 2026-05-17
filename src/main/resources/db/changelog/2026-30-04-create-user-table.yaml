@@ -124,3 +124,72 @@ databaseChangeLog:
 
               - column: { name: created_by, value: system }
               - column: { name: updated_by, value: system }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: user1 }
+              - column: { name: password, value: $2a$10$EAzhv6hsEDuen5Fei44vLuuVvnJpFcFOihvqHHMK6ceqIFHguC5x2 }
+              - column: { name: full_name, value: "Nguyen Van A" }
+              - column: { name: email, value: "user1@local" }
+              - column: { name: gender, value: MALE }
+              - column: { name: user_status, value: ACTIVE }
+              - column: { name: user_plan, value: FREE }
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: created_by, value: system }
+              - column: { name: updated_by, value: system }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: user2 }
+              - column: { name: password, value: $2a$10$EAzhv6hsEDuen5Fei44vLuuVvnJpFcFOihvqHHMK6ceqIFHguC5x2 }
+              - column: { name: full_name, value: "Tran Thi B" }
+              - column: { name: email, value: "user2@local" }
+              - column: { name: gender, value: FEMALE }
+              - column: { name: user_status, value: ACTIVE }
+              - column: { name: user_plan, value: FREE }
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: created_by, value: system }
+              - column: { name: updated_by, value: system }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: user3 }
+              - column: { name: password, value: $2a$10$EAzhv6hsEDuen5Fei44vLuuVvnJpFcFOihvqHHMK6ceqIFHguC5x2 }
+              - column: { name: full_name, value: "Le Van C" }
+              - column: { name: email, value: "user3@local" }
+              - column: { name: gender, value: MALE }
+              - column: { name: user_status, value: ACTIVE }
+              - column: { name: user_plan, value: PREMIUM }
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: created_by, value: system }
+              - column: { name: updated_by, value: system }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: user4 }
+              - column: { name: password, value: $2a$10$EAzhv6hsEDuen5Fei44vLuuVvnJpFcFOihvqHHMK6ceqIFHguC5x2 }
+              - column: { name: full_name, value: "Pham Thi D" }
+              - column: { name: email, value: "user4@local" }
+              - column: { name: gender, value: FEMALE }
+              - column: { name: user_status, value: ACTIVE }
+              - column: { name: user_plan, value: FREE }
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: created_by, value: system }
+              - column: { name: updated_by, value: system }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: user5 }
+              - column: { name: password, value: $2a$10$EAzhv6hsEDuen5Fei44vLuuVvnJpFcFOihvqHHMK6ceqIFHguC5x2 }
+              - column: { name: full_name, value: "Hoang Van E" }
+              - column: { name: email, value: "user5@local" }
+              - column: { name: gender, value: MALE }
+              - column: { name: user_status, value: ACTIVE }
+              - column: { name: user_plan, value: PREMIUM }
+              - column: { name: role_id, valueNumeric: 2 }
+              - column: { name: created_by, value: system }
+              - column: { name: updated_by, value: system }

@@ -23,9 +23,9 @@ public class UserResponse {
 
     String email;
 
-    UserGender gender;
+    UserGender genderCd;
 
-    UserStatus userStatus;
+    UserStatus userStatusCd;
 
     UserType roleName;
 
@@ -37,5 +37,5 @@ public class UserResponse {
 
     Instant updatedDate;
 
-    UserPlan userPlan;
+    UserPlan userPlanCd;
 }

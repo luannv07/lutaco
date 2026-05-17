@@ -21,12 +21,12 @@ public class BudgetResponse {
     String name;
     Long categoryId;
     String categoryName;
-    Period period;
+    Period periodCd;
     BigDecimal targetAmount;
     BigDecimal actualAmount;
     BigDecimal remainingAmount;
     BigDecimal percentage;
-    BudgetStatus status;
+    BudgetStatus budgetStatusCd;
     LocalDate startDate;
     LocalDate endDate;
     String userId;

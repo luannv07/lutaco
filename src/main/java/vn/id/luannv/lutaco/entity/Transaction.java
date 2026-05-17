@@ -1,9 +1,7 @@
 package vn.id.luannv.lutaco.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
@@ -12,6 +10,9 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "transactions")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Transaction extends BaseEntity {
 

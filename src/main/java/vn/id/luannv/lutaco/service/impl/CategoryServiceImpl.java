@@ -147,10 +147,9 @@ public class CategoryServiceImpl implements CategoryService {
         response.setId(entity.getId() != null ? entity.getId().toString() : null);
         response.setCategoryName(entity.getCategoryCode());
         response.setParentId(entity.getParent() != null ? entity.getParent().getId().toString() : null);
-        response.setCategoryType(entity.getCategoryType());
+        response.setCategoryTypeCd(entity.getCategoryType());
         response.setIsSystem(false);
-        response.setCreatedDate(entity.getCreatedDate() != null ? 
-                java.time.LocalDateTime.ofInstant(entity.getCreatedDate(), java.time.ZoneId.systemDefault()) : null);
+        response.setCreatedDate(entity.getCreatedDate());
         response.setCreatedBy(entity.getCreatedBy());
         response.setHasChildren(!entity.getChildren().isEmpty());
 

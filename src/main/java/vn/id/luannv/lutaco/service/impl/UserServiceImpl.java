@@ -218,14 +218,14 @@ public class UserServiceImpl implements UserService {
                 .username(user.getUsername())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
-                .gender(user.getGender())
-                .userStatus(user.getUserStatus())
+                .genderCd(user.getGender())
+                .userStatusCd(user.getUserStatus())
                 .roleName(user.getRole().getCode())
                 .createdBy(user.getCreatedBy())
                 .createdDate(user.getCreatedDate())
                 .updatedBy(user.getUpdatedBy())
                 .updatedDate(user.getUpdatedDate())
-                .userPlan(user.getUserPlan())
+                .userPlanCd(user.getUserPlan())
                 .build();
     }
 }

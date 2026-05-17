@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-transaction-indexes-2
+      author: luan
+      changes:
+        - createIndex:
+            indexName: idx_transaction_user_date
+            tableName: transactions
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: active_flg
+              - column:
+                  name: transaction_date
+                  descending: true
+        - createIndex:
+            indexName: idx_transaction_user_date_wallet
+            tableName: transactions
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: wallet_id
+              - column:
+                  name: active_flg
+              - column:
+                  name: transaction_date
+                  descending: true
+        - createIndex:
+            indexName: idx_transaction_user_date_category
+            tableName: transactions
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: category_id
+              - column:
+                  name: active_flg
+              - column:
+                  name: transaction_date
+                  descending: true

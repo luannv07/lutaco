@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,13 +21,13 @@ public class CategoryResponse {
 
     String parentId;
 
-    CategoryType categoryType;
+    CategoryType categoryTypeCd;
 
     List<CategoryResponse> children;
 
     Boolean isSystem;
 
-    LocalDateTime createdDate;
+    Instant createdDate;
 
     String createdBy;
     Boolean hasChildren = Boolean.FALSE;

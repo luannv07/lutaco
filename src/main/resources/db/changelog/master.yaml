@@ -60,3 +60,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/2026-10-05-add-end-date-to-rec-transaction.yaml
+
+  - include:
+      file: db/changelog/2026-05-16-create-index-transaction.yaml

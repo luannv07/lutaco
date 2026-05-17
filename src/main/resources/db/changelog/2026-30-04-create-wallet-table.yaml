@@ -85,3 +85,131 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
+  - changeSet:
+      id: insert-wallets-data
+      author: luannv
+      changes:
+        # user1
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: name, value: "Ví tiền mặt" }
+              - column: { name: description, value: "Ví tiền mặt hàng ngày" }
+              - column: { name: initial_balance, valueNumeric: 5000000 }
+              - column: { name: balance, valueNumeric: 5000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user1 }
+              - column: { name: updated_by, value: user1 }
+
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: name, value: "Ví ngân hàng" }
+              - column: { name: description, value: "Tài khoản Vietcombank" }
+              - column: { name: initial_balance, valueNumeric: 20000000 }
+              - column: { name: balance, valueNumeric: 20000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user1 }
+              - column: { name: updated_by, value: user1 }
+
+        # user2
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 3 }
+              - column: { name: name, value: "Ví tiền mặt" }
+              - column: { name: description, value: "Ví tiền mặt hàng ngày" }
+              - column: { name: initial_balance, valueNumeric: 3000000 }
+              - column: { name: balance, valueNumeric: 3000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user2 }
+              - column: { name: updated_by, value: user2 }
+
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 3 }
+              - column: { name: name, value: "Ví ngân hàng" }
+              - column: { name: description, value: "Tài khoản Techcombank" }
+              - column: { name: initial_balance, valueNumeric: 15000000 }
+              - column: { name: balance, valueNumeric: 15000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user2 }
+              - column: { name: updated_by, value: user2 }
+
+        # user3
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 4 }
+              - column: { name: name, value: "Ví tiền mặt" }
+              - column: { name: description, value: "Ví tiền mặt hàng ngày" }
+              - column: { name: initial_balance, valueNumeric: 10000000 }
+              - column: { name: balance, valueNumeric: 10000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user3 }
+              - column: { name: updated_by, value: user3 }
+
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 4 }
+              - column: { name: name, value: "Ví đầu tư" }
+              - column: { name: description, value: "Tài khoản chứng khoán" }
+              - column: { name: initial_balance, valueNumeric: 50000000 }
+              - column: { name: balance, valueNumeric: 50000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user3 }
+              - column: { name: updated_by, value: user3 }
+
+        # user4
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 5 }
+              - column: { name: name, value: "Ví tiền mặt" }
+              - column: { name: description, value: "Ví tiền mặt hàng ngày" }
+              - column: { name: initial_balance, valueNumeric: 2000000 }
+              - column: { name: balance, valueNumeric: 2000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user4 }
+              - column: { name: updated_by, value: user4 }
+
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 5 }
+              - column: { name: name, value: "Ví ngân hàng" }
+              - column: { name: description, value: "Tài khoản BIDV" }
+              - column: { name: initial_balance, valueNumeric: 8000000 }
+              - column: { name: balance, valueNumeric: 8000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user4 }
+              - column: { name: updated_by, value: user4 }
+
+        # user5
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 6 }
+              - column: { name: name, value: "Ví tiền mặt" }
+              - column: { name: description, value: "Ví tiền mặt hàng ngày" }
+              - column: { name: initial_balance, valueNumeric: 4000000 }
+              - column: { name: balance, valueNumeric: 4000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user5 }
+              - column: { name: updated_by, value: user5 }
+
+        - insert:
+            tableName: wallets
+            columns:
+              - column: { name: user_id, valueNumeric: 6 }
+              - column: { name: name, value: "Ví ngân hàng" }
+              - column: { name: description, value: "Tài khoản MB Bank" }
+              - column: { name: initial_balance, valueNumeric: 12000000 }
+              - column: { name: balance, valueNumeric: 12000000 }
+              - column: { name: active_flg, valueBoolean: true }
+              - column: { name: created_by, value: user5 }
+              - column: { name: updated_by, value: user5 }

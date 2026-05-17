@@ -25,4 +25,5 @@ public class TransactionFilterRequest extends BaseFilterRequest {
     Long maxAmount;
 
     Long walletId;
+
 }

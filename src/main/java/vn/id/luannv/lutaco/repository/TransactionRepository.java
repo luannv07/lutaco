@@ -1,12 +1,19 @@
 package vn.id.luannv.lutaco.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 import vn.id.luannv.lutaco.dto.projection.CategoryAmountProjection;
 import vn.id.luannv.lutaco.entity.Transaction;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
@@ -15,9 +22,18 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+
+import java.util.List;
 @Repository
-@Transactional
 public interface TransactionRepository extends JpaRepository<Transaction, Long>,
         JpaSpecificationExecutor<Transaction> {
     @Query("""
@@ -88,8 +104,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
             @Param("endDate") Instant endDate,
             Pageable pageable
     );
-
-    List<Transaction> findByIdIn(Collection<Long> ids);
 
     List<Transaction> findByIdInAndUserId(List<Long> list, Long currentId);
 }

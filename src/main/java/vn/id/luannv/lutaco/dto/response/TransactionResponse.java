@@ -21,7 +21,7 @@ public class TransactionResponse {
 
     String categoryName;
 
-    CategoryType categoryType;
+    CategoryType categoryTypeCd;
 
     Long amount;
 

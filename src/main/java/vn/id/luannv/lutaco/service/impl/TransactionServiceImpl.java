@@ -1,7 +1,7 @@
 package vn.id.luannv.lutaco.service.impl;
 
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,7 @@ import vn.id.luannv.lutaco.dto.request.TransactionRequest;
 import vn.id.luannv.lutaco.dto.response.TransactionResponse;
 import vn.id.luannv.lutaco.entity.Category;
 import vn.id.luannv.lutaco.entity.Transaction;
+import vn.id.luannv.lutaco.entity.User;
 import vn.id.luannv.lutaco.entity.Wallet;
 import vn.id.luannv.lutaco.enumerate.CategoryType;
 import vn.id.luannv.lutaco.exception.BusinessException;
@@ -33,6 +31,10 @@ import vn.id.luannv.lutaco.repository.WalletRepository;
 import vn.id.luannv.lutaco.service.TransactionService;
 import vn.id.luannv.lutaco.util.SecurityUtils;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,6 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
     CategoryRepository categoryRepository;
     UserRepository userRepository;
     ApplicationEventPublisher eventPublisher;
+    EntityManager em;
 
     @Override
     @Transactional
@@ -68,62 +71,36 @@ public class TransactionServiceImpl implements TransactionService {
     private Specification<Transaction> buildSpec(TransactionFilterRequest req, Long userId) {
         return (root, query, cb) -> {
 
-            // tránh duplicate khi join
-            if (Transaction.class.equals(query.getResultType())) {
-                root.fetch("category", JoinType.LEFT);
-                root.fetch("wallet", JoinType.LEFT);
-                query.distinct(true);
-            }
+            List<Predicate> predicates = new ArrayList<>();
 
-            Predicate predicate = cb.conjunction();
+            // 1. user_id — selective nhất, có index
+            predicates.add(cb.equal(root.get("user").get("id"), userId));
 
-            // luôn filter theo user
-            predicate = cb.and(predicate,
-                    cb.equal(root.get("user").get("id"), userId)
-            );
+            // 2. wallet_id hoặc category_id — selective cao (ít transaction/wallet hoặc category)
+            if (req.getWalletId() != null)
+                predicates.add(cb.equal(root.get("wallet").get("id"), req.getWalletId()));
 
-            if (req.getCategoryId() != null) {
-                predicate = cb.and(predicate,
-                        cb.equal(root.get("category").get("id"), req.getCategoryId())
-                );
-            }
+            if (req.getCategoryId() != null)
+                predicates.add(cb.equal(root.get("category").get("id"), req.getCategoryId()));
 
-            if (req.getWalletId() != null) {
-                predicate = cb.and(predicate,
-                        cb.equal(root.get("wallet").get("id"), req.getWalletId())
-                );
-            }
+            // 3. active_flg — ít selective (hầu hết = true), nhưng có trong index nên vẫn để sớm
+            predicates.add(cb.isTrue(root.get("activeFlg")));
 
-            if (req.getFromDate() != null) {
-                predicate = cb.and(predicate,
-                        cb.greaterThanOrEqualTo(root.get("transactionDate"), req.getFromDate())
-                );
-            }
+            // 4. date range — range filter, chặn index sau nó
+            if (req.getFromDate() != null)
+                predicates.add(cb.greaterThanOrEqualTo(root.get("transactionDate"), req.getFromDate()));
 
-            if (req.getToDate() != null) {
-                predicate = cb.and(predicate,
-                        cb.lessThanOrEqualTo(root.get("transactionDate"), req.getToDate())
-                );
-            }
+            if (req.getToDate() != null)
+                predicates.add(cb.lessThanOrEqualTo(root.get("transactionDate"), req.getToDate()));
 
-            if (req.getMinAmount() != null) {
-                predicate = cb.and(predicate,
-                        cb.greaterThanOrEqualTo(root.get("amount"), req.getMinAmount())
-                );
-            }
+            // 5. amount range — ít selective nhất, để cuối
+            if (req.getMinAmount() != null)
+                predicates.add(cb.greaterThanOrEqualTo(root.get("amount"), req.getMinAmount()));
 
-            if (req.getMaxAmount() != null) {
-                predicate = cb.and(predicate,
-                        cb.lessThanOrEqualTo(root.get("amount"), req.getMaxAmount())
-                );
-            }
+            if (req.getMaxAmount() != null)
+                predicates.add(cb.lessThanOrEqualTo(root.get("amount"), req.getMaxAmount()));
 
-            // activeFlg
-            predicate = cb.and(predicate,
-                    cb.isTrue(root.get("activeFlg"))
-            );
-
-            return predicate;
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
@@ -224,13 +201,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionResponse> search(TransactionFilterRequest request) {
+        Long id = SecurityUtils.getCurrentId();
 
-        Long userId = SecurityUtils.getCurrentId();
-
-        Specification<Transaction> spec = buildSpec(request, userId);
-
+        Specification<Transaction> spec = buildSpec(request, id);
         Page<Transaction> pageData = transactionRepository.findAll(spec, request.pageable());
-
         return pageData.map(this::toResponse);
     }
 
@@ -399,7 +373,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .id(t.getId())
                 .categoryId(t.getCategory().getId())
                 .categoryName(t.getCategory().getCategoryCode())
-                .categoryType(t.getCategory().getCategoryType())
+                .categoryTypeCd(t.getCategory().getCategoryType())
                 .amount(t.getAmount())
                 .transactionDate(t.getTransactionDate())
                 .note(t.getNote())
