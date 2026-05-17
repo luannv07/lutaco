@@ -149,7 +149,7 @@ public class DashboardServiceImpl implements DashboardService {
         summary.getInsights().forEach(insight ->
                 csv.append("insight,")
                         .append(insight.getCodeCd()).append(",")
-                        .append(insight.getMessage().replace(",", " ")).append("\n")
+                        .append("\n")
         );
 
         writeCsv(response, csv.toString());

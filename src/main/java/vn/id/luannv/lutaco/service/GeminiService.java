@@ -122,7 +122,7 @@ public class GeminiService {
         String insights = dashboard.getInsights() == null || dashboard.getInsights().isEmpty()
                 ? localized("dashboard.ai.prompt.no_insight")
                 : dashboard.getInsights().stream()
-                .map(i -> "- [" + i.getLevelCd() + "] " + i.getMessage() + (i.getRecommendation() != null ? " | Gợi ý: " + i.getRecommendation() : ""))
+                .map(i -> "- [" + i.getLevelCd() + "] ")
                 .collect(Collectors.joining("\n"));
 
         String categories = dashboard.getTopExpenseCategories() == null || dashboard.getTopExpenseCategories().isEmpty()
@@ -309,9 +309,6 @@ public class GeminiService {
             builder.append("\n")
                     .append(localized("dashboard.ai.prompt.insights"))
                     .append(":\n");
-            dashboard.getInsights().stream().limit(3).forEach(insight ->
-                    builder.append("- ").append(insight.getMessage()).append("\n")
-            );
         }
 
         return builder.toString().trim();
