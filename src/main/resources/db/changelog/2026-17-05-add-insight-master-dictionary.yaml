@@ -1,0 +1,89 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 2026-17-05-add-insight-master-dictionary
+      author: luannv
+      changes:
+
+        # ── INSIGHT_LEVEL ────────────────────────────────────────────────────────
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_LEVEL }
+              - column: { name: code, value: SUCCESS }
+              - column: { name: value_vi, value: "Tốt" }
+              - column: { name: value_en, value: "Good" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_LEVEL }
+              - column: { name: code, value: WARN }
+              - column: { name: value_vi, value: "Cảnh báo" }
+              - column: { name: value_en, value: "Warning" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_LEVEL }
+              - column: { name: code, value: DANGER }
+              - column: { name: value_vi, value: "Nguy hiểm" }
+              - column: { name: value_en, value: "Danger" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        # ── INSIGHT_CODE ─────────────────────────────────────────────────────────
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_CODE }
+              - column: { name: code, value: EXPENSE_INCREASE }
+              - column: { name: value_vi, value: "Chi tiêu tăng" }
+              - column: { name: value_en, value: "Expense increased" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_CODE }
+              - column: { name: code, value: EXPENSE_DECREASE }
+              - column: { name: value_vi, value: "Chi tiêu giảm" }
+              - column: { name: value_en, value: "Expense decreased" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_CODE }
+              - column: { name: code, value: INCOME_INCREASE }
+              - column: { name: value_vi, value: "Thu nhập tăng" }
+              - column: { name: value_en, value: "Income increased" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_CODE }
+              - column: { name: code, value: INCOME_DECREASE }
+              - column: { name: value_vi, value: "Thu nhập giảm" }
+              - column: { name: value_en, value: "Income decreased" }
+              - column: { name: display_order, valueNumeric: 4 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_CODE }
+              - column: { name: code, value: NEGATIVE_BALANCE }
+              - column: { name: value_vi, value: "Số dư âm" }
+              - column: { name: value_en, value: "Negative balance" }
+              - column: { name: display_order, valueNumeric: 5 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: INSIGHT_CODE }
+              - column: { name: code, value: CATEGORY_DOMINANT }
+              - column: { name: value_vi, value: "Danh mục chiếm ưu thế" }
+              - column: { name: value_en, value: "Category dominant" }
+              - column: { name: display_order, valueNumeric: 6 }

@@ -34,6 +34,12 @@ public class CacheConfig {
     @Value("${app.cache.otp.maximum-size}")
     private int otpMaximumSize;
 
+    @Value("${app.ai.rate-limit.window-minutes:5}")
+    private long aiRateLimitWindowMinutes;
+
+    @Value("${app.ai.rate-limit.maximum-size:10000}")
+    private int aiRateLimitMaximumSize;
+
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
@@ -58,6 +64,14 @@ public class CacheConfig {
         return Caffeine.newBuilder()
                 .expireAfterWrite(otpExpireAfterWriteMinutes, TimeUnit.MINUTES)
                 .maximumSize(otpMaximumSize)
+                .build();
+    }
+
+    @Bean
+    public Cache<String, AiRateLimitingFilter.AiRateLimitInfo> aiRateLimitCache() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(aiRateLimitWindowMinutes * 2, TimeUnit.MINUTES)
+                .maximumSize(aiRateLimitMaximumSize)
                 .build();
     }
 }

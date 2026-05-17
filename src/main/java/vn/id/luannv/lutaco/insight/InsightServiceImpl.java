@@ -8,13 +8,11 @@ import org.springframework.stereotype.Service;
 import vn.id.luannv.lutaco.config.InsightThresholdConfig;
 import vn.id.luannv.lutaco.dto.response.CategoryExpenseResponse;
 import vn.id.luannv.lutaco.dto.response.DashboardInsightResponse;
-import vn.id.luannv.lutaco.util.LocalizationUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Locale;
 
 
 @Slf4j
@@ -23,7 +21,6 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class InsightServiceImpl implements InsightService {
     InsightThresholdConfig insightConfig;
-    LocalizationUtils localizationUtils;
 
     @Override
     public List<DashboardInsightResponse> generate(InsightContext ctx) {
@@ -49,8 +46,6 @@ public class InsightServiceImpl implements InsightService {
                 .value(value)
                 .unit(unit)
                 .color(resolveColor(level))
-                .message(resolveMessage(code, value))
-                .recommendation(resolveRecommendation(code, level))
                 .build();
     }
 
@@ -167,40 +162,4 @@ public class InsightServiceImpl implements InsightService {
         };
     }
 
-    private String resolveMessage(DashboardInsightResponse.InsightCode code, Double value) {
-        String valueText = value == null ? "0" : String.format(Locale.US, "%.2f", value);
-        return switch (code) {
-            case EXPENSE_INCREASE -> localized(
-                    value != null && value >= insightConfig.getExpense().getDangerRate() * 100
-                            ? "dashboard.insight.expense.increase.danger"
-                            : "dashboard.insight.expense.increase.message",
-                    valueText
-            );
-            case EXPENSE_DECREASE -> localized("dashboard.insight.expense.decrease.message", valueText);
-            case INCOME_INCREASE -> localized("dashboard.insight.income.increase.message", valueText);
-            case INCOME_DECREASE -> localized("dashboard.insight.income.decrease.message", valueText);
-            case NEGATIVE_BALANCE -> localized("dashboard.insight.balance.negative.message", valueText);
-            case CATEGORY_DOMINANT -> localized("dashboard.insight.category.dominant.message", valueText);
-        };
-    }
-
-    private String resolveRecommendation(
-            DashboardInsightResponse.InsightCode code,
-            DashboardInsightResponse.InsightLevel level
-    ) {
-        return switch (code) {
-            case EXPENSE_INCREASE -> level == DashboardInsightResponse.InsightLevel.DANGER
-                    ? localized("dashboard.insight.expense.increase.danger.recommendation")
-                    : localized("dashboard.insight.expense.increase.recommendation");
-            case EXPENSE_DECREASE -> localized("dashboard.insight.expense.decrease.recommendation");
-            case INCOME_INCREASE -> localized("dashboard.insight.income.increase.recommendation");
-            case INCOME_DECREASE -> localized("dashboard.insight.income.decrease.recommendation");
-            case NEGATIVE_BALANCE -> localized("dashboard.insight.balance.negative.recommendation");
-            case CATEGORY_DOMINANT -> localized("dashboard.insight.category.dominant.recommendation");
-        };
-    }
-
-    private String localized(String key, Object... args) {
-        return localizationUtils.getLocalizedMessage(key, args);
-    }
 }

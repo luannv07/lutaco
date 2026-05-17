@@ -13,8 +13,6 @@ import lombok.experimental.FieldDefaults;
 public class DashboardInsightResponse {
     InsightLevel levelCd;
     InsightCode codeCd;
-    String message;
-    String recommendation;
     Double value;
     String unit;
     String color;

@@ -1,0 +1,163 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 2026-17-05-add-category-master-dictionary
+      author: luannv
+      changes:
+
+        # ── CATEGORY (parent-level codes used in topExpenseCategories) ──────────
+
+        # EXPENSE
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: FOOD }
+              - column: { name: value_vi, value: "Ăn uống" }
+              - column: { name: value_en, value: "Food & Drinks" }
+              - column: { name: display_order, valueNumeric: 1 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: HOUSING }
+              - column: { name: value_vi, value: "Nhà ở" }
+              - column: { name: value_en, value: "Housing" }
+              - column: { name: display_order, valueNumeric: 2 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: TRANSPORT }
+              - column: { name: value_vi, value: "Di chuyển" }
+              - column: { name: value_en, value: "Transport" }
+              - column: { name: display_order, valueNumeric: 3 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: ENTERTAINMENT }
+              - column: { name: value_vi, value: "Giải trí" }
+              - column: { name: value_en, value: "Entertainment" }
+              - column: { name: display_order, valueNumeric: 4 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: HEALTHCARE }
+              - column: { name: value_vi, value: "Sức khỏe" }
+              - column: { name: value_en, value: "Healthcare" }
+              - column: { name: display_order, valueNumeric: 5 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: SHOPPING }
+              - column: { name: value_vi, value: "Mua sắm" }
+              - column: { name: value_en, value: "Shopping" }
+              - column: { name: display_order, valueNumeric: 6 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: EDUCATION }
+              - column: { name: value_vi, value: "Giáo dục" }
+              - column: { name: value_en, value: "Education" }
+              - column: { name: display_order, valueNumeric: 7 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: GIFTS_DONATIONS }
+              - column: { name: value_vi, value: "Quà tặng & Từ thiện" }
+              - column: { name: value_en, value: "Gifts & Donations" }
+              - column: { name: display_order, valueNumeric: 8 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: PERSONAL_CARE }
+              - column: { name: value_vi, value: "Chăm sóc cá nhân" }
+              - column: { name: value_en, value: "Personal Care" }
+              - column: { name: display_order, valueNumeric: 9 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: FAMILY }
+              - column: { name: value_vi, value: "Gia đình" }
+              - column: { name: value_en, value: "Family" }
+              - column: { name: display_order, valueNumeric: 10 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: BILLS_FEES }
+              - column: { name: value_vi, value: "Hóa đơn & Phí" }
+              - column: { name: value_en, value: "Bills & Fees" }
+              - column: { name: display_order, valueNumeric: 11 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: TRAVEL }
+              - column: { name: value_vi, value: "Du lịch" }
+              - column: { name: value_en, value: "Travel" }
+              - column: { name: display_order, valueNumeric: 12 }
+
+        # INCOME
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: SALARY }
+              - column: { name: value_vi, value: "Lương" }
+              - column: { name: value_en, value: "Salary" }
+              - column: { name: display_order, valueNumeric: 13 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: BONUS }
+              - column: { name: value_vi, value: "Thưởng" }
+              - column: { name: value_en, value: "Bonus" }
+              - column: { name: display_order, valueNumeric: 14 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: INVESTMENT }
+              - column: { name: value_vi, value: "Đầu tư" }
+              - column: { name: value_en, value: "Investment" }
+              - column: { name: display_order, valueNumeric: 15 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: SIDE_GIG }
+              - column: { name: value_vi, value: "Thu nhập phụ" }
+              - column: { name: value_en, value: "Side Gig" }
+              - column: { name: display_order, valueNumeric: 16 }
+
+        - insert:
+            tableName: master_dictionary
+            columns:
+              - column: { name: dict_group, value: CATEGORY }
+              - column: { name: code, value: GIFTS_RECEIVED }
+              - column: { name: value_vi, value: "Quà nhận" }
+              - column: { name: value_en, value: "Gifts Received" }
+              - column: { name: display_order, valueNumeric: 17 }

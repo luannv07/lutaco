@@ -63,3 +63,12 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/2026-05-16-create-index-transaction.yaml
+
+  # =====================================================
+  # 6. REFERENCE DATA
+  # =====================================================
+  - include:
+      file: db/changelog/2026-17-05-add-insight-master-dictionary.yaml
+
+  - include:
+      file: db/changelog/2026-17-05-add-category-master-dictionary.yaml
