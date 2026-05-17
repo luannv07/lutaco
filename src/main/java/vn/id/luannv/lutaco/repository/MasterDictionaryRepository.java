@@ -18,4 +18,8 @@ public interface MasterDictionaryRepository
     List<MasterDictionary> findByDictGroupOrderByDisplayOrderAscIdAsc(String dictGroup);
 
     List<MasterDictionary> findByDictGroupAndActiveFlgOrderByDisplayOrderAscIdAsc(String dictGroup, Boolean activeFlg);
+
+    List<MasterDictionary> findByDictGroupInOrderByDictGroupAscDisplayOrderAscIdAsc(List<String> dictGroups);
+
+    List<MasterDictionary> findByDictGroupInAndActiveFlgOrderByDictGroupAscDisplayOrderAscIdAsc(List<String> dictGroups, Boolean activeFlg);
 }

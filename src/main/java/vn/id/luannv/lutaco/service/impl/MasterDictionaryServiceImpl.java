@@ -159,6 +159,20 @@ public class MasterDictionaryServiceImpl implements MasterDictionaryService {
         return items.stream().map(this::toResponse).toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<MasterDictionaryResponse> getByGroups(List<String> groups, Boolean activeFlg) {
+        List<String> normalizedGroups = groups.stream()
+                .map(StringUtils::normalizeCode)
+                .toList();
+
+        List<MasterDictionary> items = activeFlg == null
+                ? masterDictionaryRepository.findByDictGroupInOrderByDictGroupAscDisplayOrderAscIdAsc(normalizedGroups)
+                : masterDictionaryRepository.findByDictGroupInAndActiveFlgOrderByDictGroupAscDisplayOrderAscIdAsc(normalizedGroups, activeFlg);
+
+        return items.stream().map(this::toResponse).toList();
+    }
+
     private MasterDictionary getByIdOrThrow(Long id) {
         return masterDictionaryRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(

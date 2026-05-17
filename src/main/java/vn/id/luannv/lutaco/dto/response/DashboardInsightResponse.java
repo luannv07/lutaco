@@ -11,8 +11,8 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DashboardInsightResponse {
-    InsightLevel level;
-    InsightCode code;
+    InsightLevel levelCd;
+    InsightCode codeCd;
     String message;
     String recommendation;
     Double value;

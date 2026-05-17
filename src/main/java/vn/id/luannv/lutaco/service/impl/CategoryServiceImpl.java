@@ -145,7 +145,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         CategoryResponse response = new CategoryResponse();
         response.setId(entity.getId() != null ? entity.getId().toString() : null);
-        response.setCategoryName(entity.getCategoryCode());
+        response.setCategoryNameCd(entity.getCategoryCode());
         response.setParentId(entity.getParent() != null ? entity.getParent().getId().toString() : null);
         response.setCategoryTypeCd(entity.getCategoryType());
         response.setIsSystem(false);

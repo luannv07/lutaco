@@ -10,4 +10,6 @@ public interface MasterDictionaryService
         extends BaseService<MasterDictionaryFilterRequest, MasterDictionaryResponse, MasterDictionaryRequest, Long> {
 
     List<MasterDictionaryResponse> getByGroup(String dictGroup, Boolean activeFlg);
+
+    List<MasterDictionaryResponse> getByGroups(List<String> groups, Boolean activeFlg);
 }

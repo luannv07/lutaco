@@ -44,8 +44,8 @@ public class InsightServiceImpl implements InsightService {
             String unit
     ) {
         return DashboardInsightResponse.builder()
-                .level(level)
-                .code(code)
+                .levelCd(level)
+                .codeCd(code)
                 .value(value)
                 .unit(unit)
                 .color(resolveColor(level))

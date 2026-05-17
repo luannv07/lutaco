@@ -15,4 +15,23 @@ public final class StringUtils {
     public static boolean hasText(String value) {
         return value != null && !value.trim().isEmpty();
     }
+
+    public static String normalizeMarkdown(String text) {
+        if (text == null) return "";
+
+        return text
+                // bold
+                .replaceAll("\\*\\*(.*?)\\*\\*", "$1")
+
+                // italic
+                .replaceAll("\\*(.*?)\\*", "$1")
+
+                // heading
+                .replaceAll("(?m)^#+\\s*", "")
+
+                // multiple blank lines
+                .replaceAll("\\n{3,}", "\n\n")
+
+                .trim();
+    }
 }

@@ -17,7 +17,7 @@ public class CategoryResponse {
 
     String id;
 
-    String categoryName;
+    String categoryNameCd;
 
     String parentId;
 

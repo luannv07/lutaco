@@ -3,6 +3,7 @@ package vn.id.luannv.lutaco.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -71,6 +72,7 @@ public class GeminiService {
         return askDashboard(question, dashboard, null);
     }
 
+    @Cacheable(value = "dashboardAi", key = "#currentUsername + ':' + #question")
     public String askDashboard(String question, DashboardResponse dashboard, String currentUsername) {
         String safeQuestion = normalizeUserPrompt(question, "question");
         ensureFinanceRelevant(safeQuestion);
@@ -120,7 +122,7 @@ public class GeminiService {
         String insights = dashboard.getInsights() == null || dashboard.getInsights().isEmpty()
                 ? localized("dashboard.ai.prompt.no_insight")
                 : dashboard.getInsights().stream()
-                .map(i -> "- [" + i.getLevel() + "] " + i.getMessage() + (i.getRecommendation() != null ? " | Gợi ý: " + i.getRecommendation() : ""))
+                .map(i -> "- [" + i.getLevelCd() + "] " + i.getMessage() + (i.getRecommendation() != null ? " | Gợi ý: " + i.getRecommendation() : ""))
                 .collect(Collectors.joining("\n"));
 
         String categories = dashboard.getTopExpenseCategories() == null || dashboard.getTopExpenseCategories().isEmpty()
